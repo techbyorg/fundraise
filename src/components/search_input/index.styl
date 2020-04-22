@@ -1,0 +1,72 @@
+@require '../../vars'
+
+$zIndexSearchOverlay = 2
+$zIndexForm = 1
+
+.z-search-input
+  position: relative
+
+  &.has-on-click
+    > .form > .input
+      cursor: pointer
+
+  &.is-focused
+    > .form > .input
+      border: 1px solid rgba(0, 0, 0, 0)
+
+  &.is-server-side
+    > .form > .input
+      transition: none
+
+  > .search-overlay
+    position: absolute
+    z-index: $zIndexSearchOverlay
+    width: 100%
+    top: 0
+    left: 0
+    height: 100%
+    display: flex
+    align-items: center
+    box-sizing: border-box
+    pointer-events: none
+
+    > .right-icon, > .left-icon
+      pointer-events: auto
+
+    > .right-icon
+      margin-left: auto
+      margin-right: 4px
+
+  > .form
+    flex1()
+    display: flex
+    position: relative
+    z-index: $zIndexForm
+
+    > .input
+      // shadow-1()
+      flex1()
+      font-subtitle1()
+      appearance: none
+      padding: 14px 14px 14px 68px
+      border-radius: 4px
+      border: 1px solid getColor('$bgText12')
+      box-sizing: border-box
+      transition: border 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+      -webkit-tap-highlight-color: transparent
+      // color: getColor('$bgText70')
+      margin: 0
+      outline: none
+
+      &::placeholder
+        font-subtitle1()
+        opacity: 1
+        // color: getColor('$bgText54')
+
+      &::-moz-placeholder
+        line-height: 1em // should center in ff
+
+  &.is-search-on-submit
+      > .form
+        > .input
+          padding-left: 16px

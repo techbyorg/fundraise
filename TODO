@@ -1,0 +1,29 @@
+- IMPORTANT:
+  - css grid fn (should be in css, not in js/html classname)
+    - https://medium.com/@christinevallaure/understand-css-grid-in-5-minutes-and-translate-into-responsive-sketch-files-fa0caca14ce3
+    - eg grid(1fr 3fr 2fr) ?
+    - ideally a way to specify grid width on different screen sizes too?
+      - i think there's a min size breakpoint that might do that automatically?
+  - container fn (max-width what g-grid used to do)
+
+
+- loading message when onboarding (slow w/ lots of contribs)
+- fix subdomain entityinfo pg
+
+
+- notifications page coming soon
+- login redirect to dashboard
+
+
+- figure out entity_users and which entity to show by default
+  **
+
+- connections / org boxes
+- threads
+- get navigation working
+
+- manually upsert threads?
+- manually upsert metrics, or just use hardcoded for now?
+
+
+- if org/fund is in our system (not just irs), have those show differently in entity search?

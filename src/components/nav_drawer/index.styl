@@ -1,0 +1,183 @@
+@require '../../vars'
+
+$zIndexDrawer = 300
+
+.z-nav-drawer
+  position: relative
+  // z-index: 999
+
+.z-nav-drawer_drawer
+  flex1()
+  display: flex
+  flex-direction: column
+  border-right: 1px solid getColor('$bgText12')
+
+  > .header
+    // shadow-1()
+    // prevents flicker glitch http://stackoverflow.com/a/3921870
+    // backface-visibility: hidden
+    padding: 16px 22px
+    // height: 56px
+    box-sizing: border-box
+    // background: getColor('$header500')
+    background: getColor('$primary500')
+    display: flex
+    align-items: center
+
+    // @media (min-width: $breakPointMedium)
+    //   height: 64px
+
+    > .icon
+      width: 28px
+      height: 44px
+      background: url($cdnUrl + '/substance/logo_dark.svg')
+      background-size: 100%
+      // margin-right: 16px
+
+    > .name
+      font-h5(false)
+      color: getColor('$header500Text')
+
+  > .content
+    flex1()
+    width: 100%
+    box-sizing: border-box
+    // background: getColor('$bgColor')
+    background: getColor('$primary500')
+    // padding: 8px 0
+    overflow-y: auto
+    -webkit-overflow-scrolling: touch
+
+    > .menu
+      flex1()
+      width: 100%
+      list-style-type: none
+      margin: 0
+      padding: 0
+
+      > .sign-in-buttons
+        padding: 0 16px 16px 16px
+        display: flex
+
+        > .button
+          flex1()
+
+          &:first-child
+            margin-right: 16px
+
+      > .divider
+        width: 100%
+        height: 1px
+        background: getColor('$bgText12')
+        margin: 8px 0
+
+      > .subhead
+        font-subtitle1()
+        color: getColor('$primaryMain')
+        padding: 16px
+
+      .menu-item
+        > .menu-item-link
+          font-body1(true, medium)
+          color: getColor('$primaryMainText54')
+          cursor: pointer
+          display: flex
+          align-items: center
+          padding: 12px 22px
+
+          // &:active
+          //   background: getColor('$bgColorAlt2')
+
+          &.is-child
+            color: getColor('$bgText70')
+
+          > .icon
+            margin-right: 36px
+            width: 24px
+            height: 28px
+
+          > .notification
+            &.is-visible
+              display: block
+
+            width: 6px
+            height: 6px
+            display: none
+            border-radius: 50%
+            background: getColor('$secondaryMain')
+            margin-left: 8px
+
+          > .chevron
+            margin-left: auto
+
+        ul
+          list-style-type: none
+          margin: 0
+          padding: 0
+
+          &.children-0
+            padding-left: 16px
+
+        &.is-selected
+          > .menu-item-link
+            color: getColor('$primaryMainText')
+
+    // > .my-entities
+    //   position: relative
+    //   overflow: hidden
+    //
+    //   &:after
+    //     content: ''
+    //     position: absolute
+    //     right: 0
+    //     top: 0
+    //     height: 100%
+    //     width: 60px
+    //     // looks ugly on ios since it does gradient to black (0 opacity black)
+    //     // could make a $bgColorTransparent, but don't want to
+    //     // background: linear-gradient(to right, getColor('$transparent') 0%, getColor('$bgColor') 70%)
+    //     z-index: 999
+    //     pointer-events: none
+    //
+    //   > .my-entities-scroller
+    //     padding: 0 16px
+    //     margin-top: 8px
+    //     white-space: nowrap
+    //     overflow-x: auto
+    //     overflow-y: hidden
+    //     -webkit-overflow-scrolling: touch
+    //
+    //     > .entity-bubble
+    //       display: inline-block
+    //       vertical-align: top
+    //       width: 40px
+    //       height: 44px
+    //       border-radius: 50%
+    //       margin-right: 8px
+    //
+    //       > .icon
+    //         background: getColor('$bgColorAlt2')
+    //         border: 2px solid getColor('$bgText54')
+    //         box-sizing: border-box
+    //         border-radius: 50%
+    //         width: 40px
+    //         height: 40px
+    //         position: relative
+    //         z-index: 1000
+    //         cursor: pointer
+
+
+
+
+@media (min-width: $breakPointLarge)
+  .z-nav-drawer_drawer > .content > .menu .menu-item > .menu-item-link
+    position: relative // for ripple
+    &:active
+      background: none !important
+
+// @media (pointer: fine) and (min-width: $breakPointLarge)
+//   .z-nav-drawer_drawer > .content > .menu .menu-item > .menu-item-link
+//     padding: 4px 16px
+
+    // &:hover
+    //   background: getColor('$bgColor300')
