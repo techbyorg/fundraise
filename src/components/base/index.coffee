@@ -1,6 +1,8 @@
 _map = require 'lodash/map'
 _forEach = require 'lodash/forEach'
 
+# FIXME: work with zorium 3
+
 getDraggable = (el, tries = 0) ->
   parent = el.parentNode
   # go up until we get the draggable class
@@ -22,58 +24,58 @@ isBefore = (el1, el2) ->
   false
 
 module.exports = class Base
-  getCached$: (id, component, args...) =>
-    @cachedComponents or= []
+  getCached$: (id, component, args...) ->
+    cachedComponents or= []
 
-    if @cachedComponents[id]
-      return @cachedComponents[id]
+    if cachedComponents[id]
+      return cachedComponents[id]
     else
       $component = new component args...
-      @cachedComponents[id] = $component
+      cachedComponents[id] = $component
       return $component
 
-  getImageLoadHashByUrl: (url) =>
+  getImageLoadHashByUrl: (url) ->
     unless window?
       return 'is-image-loaded'
 
-    hash = @model.image.getHash url
-    isImageLoaded = @model.image.isLoadedByHash hash
+    hash = model.image.getHash url
+    isImageLoaded = model.image.isLoadedByHash hash
     if isImageLoaded
       return 'is-image-loaded'
     else
-      @model.image.load url
-      .then =>
+      model.image.load url
+      .then ->
         # don't want to re-render entire state every time a pic loads in
         all = document.querySelectorAll(".image-loading-#{hash}")
         _forEach all, (el) -> el.classList.add 'is-image-loaded'
       return "image-loading-#{hash}"
 
-  onDragOver: (e) =>
+  onDragOver: (e) ->
     draggable = getDraggable e.target
-    if isBefore(@$$dragEl, draggable)
-      draggable.parentNode.insertBefore @$$dragEl, draggable
+    if isBefore($$dragEl, draggable)
+      draggable.parentNode.insertBefore $$dragEl, draggable
     else
-      draggable.parentNode.insertBefore @$$dragEl, draggable.nextSibling
+      draggable.parentNode.insertBefore $$dragEl, draggable.nextSibling
 
-  onDragEnd: =>
-    @$$dragEl = null
-    order = _map @$$el.querySelectorAll('.draggable'), ({dataset}) ->
+  onDragEnd: ->
+    $$dragEl = null
+    order = _map $$el.querySelectorAll('.draggable'), ({dataset}) ->
       dataset.id
-    @onReorder order
+    onReorder order
 
-  onDragStart: (e) =>
+  onDragStart: (e) ->
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.setData 'text/plain', null
-    @$$dragEl = e.target
+    $$dragEl = e.target
 
-  afterMount: (@$$el) =>
-    @isImageLoaded = false
-    clearTimeout @clearCacheTimeout
+  afterMount: ($$el) ->
+    isImageLoaded = false
+    clearTimeout clearCacheTimeout
 
-  beforeUnmount: (cachedElStoreTimeMs) =>
+  beforeUnmount: (cachedElStoreTimeMs) ->
     if cachedElStoreTimeMs
-      @clearCacheTimeout = setTimeout =>
-        @cachedComponents = []
+      clearCacheTimeout = setTimeout ->
+        cachedComponents = []
       , cachedElStoreTimeMs
     else
-      @cachedComponents = []
+      cachedComponents = []

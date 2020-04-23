@@ -1,4 +1,5 @@
-z = require 'zorium'
+{z, useEffect, useMemo, useStream} = require 'zorium'
+RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/fromPromise'
 
@@ -9,57 +10,56 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = class UnsubscribeEmailPage
-  constructor: ({@model, requests, @router, serverData}) ->
+module.exports = UnsubscribeEmailPage = ({model, requests, router}) ->
+  useEffect ->
     if window?
-      requests.switchMap ({req, route}) =>
-        RxObservable.fromPromise @model.user.unsubscribeEmail({
+      disposable = requests.switchMap ({req, route}) ->
+        RxObservable.fromPromise model.user.unsubscribeEmail({
           userId: route.params.userId
           tokenStr: route.params.tokenStr
-        }).then =>
-          @state.set isUnsubscribed: true
-        .catch (err) =>
+        }).then ->
+          isUnsubscribedStream.next true
+        .catch (err) ->
           console.log err
-          @state.set error: 'This email isn\'t subscribed'
+          errorStream.next 'This email isn\'t subscribed'
           RxObservable.of null
 
       .take(1)
       .subscribe()
 
-    @$spinner = new Spinner()
-    @$returnHomeButton = new Button()
+    return ->
+      disposable?.unsubscribe()
+  , []
 
-    @state = z.state {
-      windowSize: @model.window.getSize()
-      isUnsubscribed: false
-      error: null
-    }
-
-  getMeta: =>
+  {isUnsubscribedStream, errorStream} = useMemo ->
     {
-      title: @model.l.get 'unsubscribeEmailPage.title'
+      isUnsubscribedStream: new RxBehaviorSubject false
+      errorStream: new RxBehaviorSubject null
     }
+  , []
 
-  render: =>
-    {windowSize, isUnsubscribed, error} = @state.getValue()
+  {windowSize, isUnsubscribed, error} = useStream ->
+    windowSize: model.window.getSize()
+    isUnsubscribed: isUnsubscribedStream
+    error: errorStream
 
-    z '.p-unsubscribe-email', {
-      style:
-        height: "#{windowSize.height}px"
-    },
-      if isUnsubscribed or error
-        z '.is-verified',
-          error or @model.l.get 'unsubscribeEmail.isUnsubscribed'
-          z '.home',
-            z @$returnHomeButton,
-              text: @model.l.get 'unsubscribeEmail.tapHome'
-              onclick: =>
-                @router.go 'home'
-      else
-        [
-          z @$spinner
-          z '.loading', 'Loading...'
-          @router.link z 'a.stuck', {
-            href: @router.get 'home'
-          }, 'Stuck? Tap to go home'
-        ]
+  z '.p-unsubscribe-email', {
+    style:
+      height: "#{windowSize.height}px"
+  },
+    if isUnsubscribed or error
+      z '.is-verified',
+        error or model.l.get 'unsubscribeEmail.isUnsubscribed'
+        z '.home',
+          z $button,
+            text: model.l.get 'unsubscribeEmail.tapHome'
+            onclick: ->
+              router.go 'home'
+    else
+      [
+        z $spinner
+        z '.loading', 'Loading...'
+        router.link z 'a.stuck', {
+          href: router.get 'home'
+        }, 'Stuck? Tap to go home'
+      ]

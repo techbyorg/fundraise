@@ -1,71 +1,65 @@
-z = require 'zorium'
+{z, classKebab, useStream} = require 'zorium'
 _map = require 'lodash/map'
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
-Icon = require '../icon'
+$icon = require '../icon'
 colors = require '../../colors'
 
 if window?
   require './index.styl'
 
-module.exports = class Dropdown
-  constructor: ({@model, @valueStreams, @error, options} = {}) ->
-    @valueStreams ?= new RxReplaySubject 1
-    # @valueStreams.next RxObservable.of null
+module.exports = Dropdown = (props) ->
+  {model, valueStreams, errorStream, options, currentText,
+    isDisabled = false} = props
 
-    @$dropdownArrow = new Icon()
+  {valueStreams} = useMemo ->
+    {valueStreams: valueStreams or new RxReplaySubject 1}
+  , []
+  # valueStreams.next RxObservable.of null
 
-    @state = z.state {
-      value: @valueStreams?.switch()
-      isOpen: false
-      options: options
+  {value, isOpen, options} = useStream ->
+    value: valueStreams?.switch()
+    error: errorStream
+    isOpen: false
+    options: options
+
+  toggle = ->
+    isOpenStream.next not isOpen
+
+  z '.z-dropdown', {
+    className: classKebab {
+      hasValue: value isnt ''
+      isDisabled
+      isOpen
+      isError: error?
     }
+  },
+    z '.wrapper', {
+      onclick: ->
+        toggle()
 
-  toggle: =>
-    {isOpen} = @state.getValue()
-    @state.set isOpen: not isOpen
-
-  render: ({isDisabled, currentText}) =>
-    {value, isOpen, options} = @state.getValue()
-
-    isDisabled ?= false
-
-    console.log 'val', value, options
-
-    z '.z-dropdown', {
-      className: z.classKebab {
-        hasValue: value isnt ''
-        isDisabled
-        isOpen
-        isError: error?
-      }
+    }
+    z '.current', {
+      onclick: toggle
     },
-      z '.wrapper', {
-        onclick: =>
-          @toggle()
-
-      }
-      z '.current', {
-        onclick: @toggle
-      },
-        z '.text',
-          currentText
-        z '.arrow',
-          z @$dropdownArrow,
-            icon: 'chevron-down'
-            isTouchTarget: false
-            color: colors.$secondaryMainText
-      z '.options',
-        _map options, (option) =>
-          z 'label.option', {
-            className: z.classKebab {isSelected: value is option.value}
-            onclick: =>
-              @valueStreams.next RxObservable.of option.value
-              @toggle()
-          },
-            z '.text',
-              option.text
-      if error?
-        z '.error', error
+      z '.text',
+        currentText
+      z '.arrow',
+        z $icon,
+          icon: 'chevron-down'
+          isTouchTarget: false
+          color: colors.$secondaryMainText
+    z '.options',
+      _map options, (option) ->
+        z 'label.option', {
+          className: classKebab {isSelected: value is option.value}
+          onclick: ->
+            valueStreams.next RxObservable.of option.value
+            toggle()
+        },
+          z '.text',
+            option.text
+    if error?
+      z '.error', error

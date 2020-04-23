@@ -1,31 +1,20 @@
-z = require 'zorium'
+{z} = require 'zorium'
 
-AppBar = require '../../components/app_bar'
-ButtonBack = require '../../components/button_back'
-Tos = require '../../components/tos'
+$appBar = require '../../components/app_bar'
+$buttonBack = require '../../components/button_back'
+$privacy = require '../../components/privacy'
 colors = require '../../colors'
 
 if window?
   require './index.styl'
 
-module.exports = class TosPage
-  hideDrawer: true
-
-  constructor: ({@model, requests, @router, serverData, entity}) ->
-    @$appBar = new AppBar {@model}
-    @$backButton = new ButtonBack {@model, @router}
-    @$tos = new Tos {@model, @router}
-
-  getMeta: =>
-    {
-      title: @model.l.get 'tosPage.title'
-      description: @model.l.get 'tosPage.title'
-    }
-
-  render: =>
-    z '.p-tos',
-      z @$appBar, {
-        title: @model.l.get 'tosPage.title'
-        $topLeftButton: z @$backButton, {color: colors.$header500Icon}
+module.exports = TosPage = ({model, router}) ->
+  z '.p-tos',
+    z $appBar, {
+      model
+      title: model.l.get 'tosPage.title'
+      $topLeftButton: z $buttonBack, {
+        model, router, color: colors.$header500Icon
       }
-      @$tos
+    }
+    z $tos, {model, router}

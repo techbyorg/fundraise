@@ -1,3 +1,4 @@
+{z, renderToString} = require 'zorium'
 express = require 'express'
 _every = require 'lodash/every'
 _values = require 'lodash/values'
@@ -5,7 +6,6 @@ _defaults = require 'lodash/defaults'
 _map = require 'lodash/map'
 compress = require 'compression'
 helmet = require 'helmet'
-z = require 'zorium'
 Promise = require 'bluebird'
 cookieParser = require 'cookie-parser'
 fs = require 'fs'
@@ -14,7 +14,7 @@ RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 config = require './src/config'
 gulpPaths = require './gulp_paths'
-App = require './src/app'
+$app = require './src/app'
 Model = require './src/models'
 RouterService = require './src/services/router'
 request = require './src/services/request'
@@ -23,25 +23,6 @@ MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
 RENDER_TO_STRING_TIMEOUT_MS = 1200
 BOT_RENDER_TO_STRING_TIMEOUT_MS = 4500
-
-# memwatch = require 'memwatch-next'
-#
-# hd = undefined
-# snapshotTaken = false
-# # memwatch.on 'stats', (stats) ->
-# console.log 'stats:', stats
-# if snapshotTaken is false
-#   hd = new (memwatch.HeapDiff)
-#   snapshotTaken = true
-#   setTimeout ->
-#     diff = hd.end()
-#     console.log(JSON.stringify(diff, null, '\t'))
-#   , 15000
-# else
-#   # diff = hd.end()
-#   snapshotTaken = false
-#   # console.log(JSON.stringify(diff, null, '\t'))
-
 
 app = express()
 app.use compress()
@@ -91,14 +72,6 @@ app.use '/setCookie', (req, res) ->
   res.setHeader 'Location', decodeURIComponent req.query?.redirect_url
   res.end()
 
-# app.get '/manifest.json', (req, res, next) ->
-#   try
-#     res.setHeader 'Content-Type', 'application/json'
-#     res.send new Buffer(req.query.data, 'base64').toString()
-#   catch err
-#     next err
-
-
 if config.ENV is config.ENVS.PROD
 # service_worker.js max-age modified in load-balancer
 then app.use express.static(gulpPaths.dist, {maxAge: '4h'})
@@ -108,7 +81,6 @@ stats = JSON.parse \
   fs.readFileSync gulpPaths.dist + '/stats.json', 'utf-8'
 
 app.use (req, res, next) ->
-  hasSent = false
   userAgent = req.headers['user-agent']
   host = req.headers.host
   accessToken = req.query.accessToken
@@ -169,8 +141,7 @@ app.use (req, res, next) ->
     if err?.message?.indexOf('Timeout') is -1
       console.log err
     if err.html
-      hasSent = true
-      if err.html.indexOf('<head>') is -1
+      if err.html.indexOf('<HEAD>') is -1
         res.redirect 302, '/'
       else
         res.send '<!DOCTYPE html>' + err.html
@@ -181,7 +152,7 @@ app.use (req, res, next) ->
         next err
 
   try
-    html = await z.renderToString new App({requests, model, serverData, router, isCrawler}), {
+    html = await renderToString (z $app, {requests, model, serverData, router, isCrawler}), {
       timeout: if isCrawler \
                then BOT_RENDER_TO_STRING_TIMEOUT_MS \
                else RENDER_TO_STRING_TIMEOUT_MS
@@ -190,8 +161,7 @@ app.use (req, res, next) ->
     io.disconnect()
     model.dispose()
     disposable = null
-    hasSent = true
-    if html.indexOf('<head>') is -1
+    if html.indexOf('<HEAD>') is -1
       res.redirect 302, '/'
     else
       res.send '<!DOCTYPE html>' + html

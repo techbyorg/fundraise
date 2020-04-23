@@ -1,4 +1,4 @@
-z = require 'zorium'
+{z, classKebab, useRef, useStream, useEffect, useMemo} = require 'zorium'
 
 colors = require '../../colors'
 config = require '../../config'
@@ -9,74 +9,83 @@ if window?
 
 MAX_OVERLAY_OPACITY = 0.5
 
-module.exports = class Drawer
-  constructor: ({@model, @isOpen, @onOpen, @onClose, @side, @key, @isStatic}) ->
-    @transformProperty = @model.window.getTransformProperty()
+# FIXME: store iScrollContainer in state??
 
-    @side ?= 'left'
-    @key ?= 'nav'
-    @isStatic ?= @model.window.getBreakpoint().map (breakpoint) ->
-      breakpoint in ['desktop']
-    .publishReplay(1).refCount()
+module.exports = Drawer = (props) ->
+  {model, isOpenStream, onOpen, onClose, side = 'left', key = 'nav', isStaticStream,
+    $content, hasAppBar} = props
 
-    @state = z.state
-      isOpen: @isOpen
-      isStatic: @isStatic
-      windowSize: @model.window.getSize()
-      breakpoint: @model.window.getBreakpoint()
-      appBarHeight: @model.window.getAppBarHeightVal()
-      drawerWidth: @model.window.getDrawerWidth()
+  $$el = useRef()
 
-  afterMount: (@$$el) =>
-    {drawerWidth} = @state.getValue()
+  {transformProperty, isStaticStream} = useMemo ->
+    {
+      transformProperty: model.window.getTransformProperty()
+      isStaticStream: isStatic or (model.window.getBreakpoint().map (breakpoint) ->
+        breakpoint in ['desktop']
+      .publishReplay(1).refCount())
+    }
+  , []
 
-    onStaticChange = (isStatic) =>
+  {isOpen, windowSize, appBarHeight,
+    drawerWidth, isStatic, breakpoint} = useStream ->
+    {
+      isOpen: isOpenStream
+      isStatic: isStaticStream
+      windowSize: model.window.getSize()
+      breakpoint: model.window.getBreakpoint()
+      appBarHeight: model.window.getAppBarHeightVal()
+      drawerWidth: model.window.getDrawerWidth()
+    }
+
+  useEffect ->
+    onStaticChange = (isStatic) ->
       # sometimes get cannot get length of undefined for gotopage with this
-      setTimeout =>
-        if not @iScrollContainer and not isStatic
-          checkIsReady = =>
-            $$container = @$$el
+      setTimeout ->
+        if not iScrollContainer and not isStatic
+          checkIsReady = ->
+            $$container = $$el
             if $$container and $$container.clientWidth
-              @initIScroll $$container
+              initIScroll $$container
             else
               setTimeout checkIsReady, 1000
 
           checkIsReady()
-        else if @iScrollContainer and isStatic
-          @open 0
-          @iScrollContainer?.destroy()
-          delete @iScrollContainer
-          @disposable?.unsubscribe()
+        else if iScrollContainer and isStatic
+          open 0
+          iScrollContainer?.destroy()
+          delete iScrollContainer
+          disposable?.unsubscribe()
       , 0
-    @isStaticDisposable = @isStatic.subscribe onStaticChange
+    isStaticDisposable = isStaticStream.subscribe onStaticChange
 
-  beforeUnmount: =>
-    @iScrollContainer?.destroy()
-    delete @iScrollContainer
-    @disposable?.unsubscribe()
-    @isStaticDisposable?.unsubscribe()
+    return ->
+      iScrollContainer?.destroy()
+      delete iScrollContainer
+      disposable?.unsubscribe()
+      isStaticDisposable?.unsubscribe()
+  , []
 
-  close: (animationLengthMs = 500) =>
+
+  close = (animationLengthMs = 500) ->
     try
-      if @side is 'right'
-        @iScrollContainer.goToPage 0, 0, animationLengthMs
+      if side is 'right'
+        iScrollContainer.goToPage 0, 0, animationLengthMs
       else
-        @iScrollContainer.goToPage 1, 0, animationLengthMs
+        iScrollContainer.goToPage 1, 0, animationLengthMs
     catch err
       console.log 'caught err', err
 
-  open: (animationLengthMs = 500) =>
+  open = (animationLengthMs = 500) ->
     try
-      if @side is 'right'
-        @iScrollContainer.goToPage 1, 0, animationLengthMs
+      if side is 'right'
+        iScrollContainer.goToPage 1, 0, animationLengthMs
       else
-        @iScrollContainer.goToPage 0, 0, animationLengthMs
+        iScrollContainer.goToPage 0, 0, animationLengthMs
     catch err
       console.log 'caught err', err
 
-  initIScroll: ($$container) =>
-    {drawerWidth} = @state.getValue()
-    @iScrollContainer = new IScroll $$container, {
+  initIScroll = ($$container) ->
+    iScrollContainer = new IScroll $$container, {
       scrollX: true
       scrollY: false
       eventPassthrough: true
@@ -85,24 +94,15 @@ module.exports = class Drawer
       deceleration: 0.002
     }
 
-    # the scroll listener in IScroll (iscroll-probe.js) is really slow
-    updateOpacity = =>
-      if @side is 'right'
-        opacity = -1 * @iScrollContainer.x / drawerWidth
-      else
-        opacity = 1 + @iScrollContainer.x / drawerWidth
-
-      @$$overlay.style.opacity = opacity * MAX_OVERLAY_OPACITY
-
-    @disposable = @isOpen.subscribe (isOpen) =>
-      if isOpen then @open() else @close()
-      @$$overlay = @$$el.querySelector '.overlay-tab'
+    disposable = isOpenStream.subscribe (isOpen) ->
+      if isOpen then open() else close()
+      $$overlay = $$el.querySelector '.overlay-tab'
       updateOpacity()
 
     isScrolling = false
-    @iScrollContainer.on 'scrollStart', =>
+    iScrollContainer.on 'scrollStart', ->
       isScrolling = true
-      @$$overlay = @$$el.querySelector '.overlay-tab'
+      $$overlay = $$el.querySelector '.overlay-tab'
       update = ->
         updateOpacity()
         if isScrolling
@@ -110,66 +110,73 @@ module.exports = class Drawer
       update()
       updateOpacity()
 
-    @iScrollContainer.on 'scrollEnd', =>
-      {isOpen} = @state.getValue()
+    iScrollContainer.on 'scrollEnd', ->
       isScrolling = false
 
-      openPage = if @side is 'right' then 1 else 0
+      openPage = if side is 'right' then 1 else 0
 
-      newIsOpen = @iScrollContainer.currentPage.pageX is openPage
+      newIsOpen = iScrollContainer.currentPage.pageX is openPage
 
       # landing on new tab
       if newIsOpen and not isOpen
-        @onOpen()
+        onOpen()
       else if not newIsOpen and isOpen
-        @onClose()
+        onClose()
 
-  render: ({$content, hasAppBar}) =>
-    {isOpen, windowSize, appBarHeight,
-      drawerWidth, isStatic, breakpoint} = @state.getValue()
 
-    # HACK: isStatic is null on first render for some reason
-    isStatic ?= breakpoint is 'desktop'
+  # the scroll listener in IScroll (iscroll-probe.js) is really slow
+  updateOpacity = ->
+    if side is 'right'
+      opacity = -1 * iScrollContainer.x / drawerWidth
+    else
+      opacity = 1 + iScrollContainer.x / drawerWidth
 
-    height = windowSize.height
-    if hasAppBar and isStatic
-      height -= appBarHeight
+    $$overlay.style.opacity = opacity * MAX_OVERLAY_OPACITY
 
-    x = if @side is 'right' or isStatic then 0 else -drawerWidth
+  # HACK: isStatic is null on first render for some reason
+  # FIXME: is this still the case w/ zorium 3?
+  isStatic ?= breakpoint is 'desktop'
 
-    $drawerTab =
-      z '.drawer-tab.tab',
-        z '.drawer', {
-          style:
-            width: "#{drawerWidth}px"
-        },
-          $content
+  height = windowSize.height
+  if hasAppBar and isStatic
+    height -= appBarHeight
 
-    $overlayTab =
-      z '.overlay-tab.tab', {
-        onclick: =>
-          @onClose()
-      },
-        z '.grip'
+  x = if side is 'right' or isStatic then 0 else -drawerWidth
 
-    z '.z-drawer', {
-      className: z.classKebab {isOpen, isStatic, isRight: @side is 'right'}
-      key: "drawer-#{@key}"
-      style:
-        display: if windowSize.width then 'block' else 'none'
-        height: "#{height}px"
-        width: if not isStatic \
-               then '100%' \
-               else "#{drawerWidth}px"
-    },
-      z '.drawer-wrapper', {
+  $drawerTab =
+    z '.drawer-tab.tab',
+      z '.drawer', {
         style:
-          width: "#{drawerWidth + windowSize.width}px"
-          # make sure drawer is hidden before js laods
-          "#{@transformProperty}":
-            "translate(#{x}px, 0px) translateZ(0px)"
+          width: "#{drawerWidth}px"
       },
-        if @side is 'right'
-          [$overlayTab, $drawerTab]
-        else
-          [$drawerTab, $overlayTab]
+        $content
+
+  $overlayTab =
+    z '.overlay-tab.tab', {
+      onclick: ->
+        onClose()
+    },
+      z '.grip'
+
+  z '.z-drawer', {
+    rel: $$el
+    className: classKebab {isOpen, isStatic, isRight: side is 'right'}
+    key: "drawer-#{key}"
+    style:
+      display: if windowSize.width then 'block' else 'none'
+      height: "#{height}px"
+      width: if not isStatic \
+             then '100%' \
+             else "#{drawerWidth}px"
+  },
+    z '.drawer-wrapper', {
+      style:
+        width: "#{drawerWidth + windowSize.width}px"
+        # make sure drawer is hidden before js laods
+        "#{transformProperty}":
+          "translate(#{x}px, 0px) translateZ(0px)"
+    },
+      if side is 'right'
+        [$overlayTab, $drawerTab]
+      else
+        [$drawerTab, $overlayTab]

@@ -1,29 +1,20 @@
-z = require 'zorium'
+{z} = require 'zorium'
 
-AppBar = require '../../components/app_bar'
-ButtonBack = require '../../components/button_back'
-Privacy = require '../../components/privacy'
+$appBar = require '../../components/app_bar'
+$buttonBack = require '../../components/button_back'
+$privacy = require '../../components/privacy'
 colors = require '../../colors'
 
 if window?
   require './index.styl'
 
-module.exports = class PrivacyPage
-  constructor: ({@model, requests, @router, serverData, entity}) ->
-    @$appBar = new AppBar {@model}
-    @$backButton = new ButtonBack {@model, @router}
-    @$privacy = new Privacy {@model, @router}
-
-  getMeta: =>
-    {
-      title: @model.l.get 'privacyPage.title'
-      description: @model.l.get 'privacyPage.title'
-    }
-
-  render: =>
-    z '.p-privacy',
-      z @$appBar, {
-        title: @model.l.get 'privacyPage.title'
-        $topLeftButton: z @$backButton, {color: colors.$header500Icon}
+module.exports = PrivacyPage = ({model, router}) ->
+  z '.p-privacy',
+    z $appBar, {
+      model
+      title: model.l.get 'privacyPage.title'
+      $topLeftButton: z $buttonBack, {
+        model, router, color: colors.$header500Icon
       }
-      @$privacy
+    }
+    z $privacy, {model, router}

@@ -1,4 +1,4 @@
-z = require 'zorium'
+{z, classKebab, useEffect, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
 _filter = require 'lodash/filter'
 _clone = require 'lodash/clone'
@@ -8,412 +8,120 @@ require 'rxjs/add/observable/of'
 require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/operator/switchMap'
 
-Avatar = require '../avatar'
-Dialog = require '../dialog'
-Icon = require '../icon'
+$avatar = require '../avatar'
+$dialog = require '../dialog'
+$icon = require '../icon'
 colors = require '../../colors'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = class ProfileDialog
-  constructor: (options) ->
-    {@model, @router, @user, entityUser, entity, @onEditMessage,
-      @onDeleteMessage, @onDeleteMessagesLast7d} = options
+module.exports = ProfileDialog = (props) ->
+  {model, router, userStreamy, entityUserStream, entityStream} = options
 
-    unless @user?.map
-      @user = RxObservable.of @user
+  {isVisibleStream, loadingItemsStream, meStream, userStream, entityAndMeStream,
+    entityAndUserStream, expandedItemsStream} = useMemo ->
 
-    @$dialog = new Dialog {
-      onLeave: =>
-        @model.overlay.close()
+    meStream = model.user.getMe()
+    userStream = if userStreamy?.map then userStreamy else RxObservable.of user
+    {
+      isVisibleStream: new RxBehaviorSubject false
+      loadingItemsStream: new RxBehaviorSubject []
+      expandedItemsStream: new RxBehaviorSubject []
+      meStream
+      userStream
+      entityAndMeStream: RxObservable.combineLatest(
+        entityStream or RxObservable.of null
+        meStream
+        (vals...) -> vals
+      )
+      entityAndUserStream: RxObservable.combineLatest(
+        entityStream or RxObservable.of null
+        userStream
+        (vals...) -> vals
+      )
     }
-    @$avatar = new Avatar()
+  , []
 
-    @$profileIcon = new Icon()
-    @$friendIcon = new Icon()
-    @$messageIcon = new Icon()
-    @$manageIcon = new Icon()
-    @$flagIcon = new Icon()
-    @$blockIcon = new Icon()
-    @$banIcon = new Icon()
-    @$tempBanIcon = new Icon()
-    @$permaBanIcon = new Icon()
-    @$ipBanIcon = new Icon()
-    @$deleteIcon = new Icon()
-    @$delete1Icon = new Icon()
-    @$delete24hIcon = new Icon()
-    @$delete7dIcon = new Icon()
-    @$editIcon = new Icon()
-    @$banChevronIcon = new Icon()
-    @$deleteChevronIcon = new Icon()
-    @$closeIcon = new Icon()
-    @$copyIcon = new Icon()
+  useEffect ->
+    isVisibleStream.next true
+    return ->
+      isVisibleStream.next false
+  , []
 
-    me = @model.user.getMe()
+  {me, $links, meEntityUser, user, entityUser, isVisible, entity,
+    loadingItems, windowSize} = useStream ->
 
-    entityAndMe = RxObservable.combineLatest(
-      entity or RxObservable.of null
-      me
-      (vals...) -> vals
-    )
+    me: meStream
+    $links: userStream.map (user) ->
+      _filter _map user?.links, (link, type) ->
+        if link
+          {
+            type: type
+            link: link
+          }
+    meEntityUser: entityAndMeStream.switchMap ([entity, me]) ->
+      if entity and me
+        model.entityUser.getByEntityIdAndUserId entity.id, me.id
+      else
+        RxObservable.of null
+    user: userStream
+    entityUser: entityUserStream
+    isVisible: isVisibleStream
+    entity: entity
+    loadingItems: loadingItemsStream
+    expandedItems: expandedItemsStream
+    windowSize: model.window.getSize()
 
-    entityAndUser = RxObservable.combineLatest(
-      entity or RxObservable.of null
-      @user
-      (vals...) -> vals
-    )
-
-    @state = z.state
-      me: me
-      $links: @user.map (user) ->
-        _filter _map user?.links, (link, type) ->
-          if link
-            {
-              $icon: new Icon()
-              type: type
-              link: link
-            }
-      meEntityUser: entityAndMe.switchMap ([entity, me]) =>
-        if entity and me
-          @model.entityUser.getByEntityIdAndUserId entity.id, me.id
-        else
-          RxObservable.of null
-      user: @user
-      entityUser: entityUser
-      isBanned: entityAndUser.switchMap ([entity, user]) =>
-        if entity and user
-          @model.ban.getByEntityIdAndUserId entity.id, user.id
-        else
-          RxObservable.of null
-      isFriends: @user.switchMap (user) =>
-        if user
-          @model.connection.isConnectedByUserIdAndType(
-            user.id, 'friend'
-          )
-        else
-          RxObservable.of false
-      isFriendRequested: @user.switchMap (user) =>
-        if user
-          @model.connection.isConnectedByUserIdAndType(
-            user.id, 'friendRequestSent'
-          )
-        else
-          RxObservable.of false
-      isVisible: false
-      entity: entity
-      loadingItems: []
-      expandedItems: []
-      blockedUserIds: [] # TODO: @model.userBlock.getAllIds()
-      windowSize: @model.window.getSize()
-
-  afterMount: =>
-    @state.set isVisible: true
-
-  beforeUnmount: =>
-    @state.set isVisible: false
-
-  isLoadingByText: (text) =>
-    {loadingItems} = @state.getValue()
+  isLoadingByText = (text) ->
     loadingItems.indexOf(text) isnt -1
 
-  setLoadingByText: (text) =>
-    {loadingItems} = @state.getValue()
-    @state.set loadingItems: loadingItems.concat [text]
+  setLoadingByText = (text) ->
+    loadingItemsStream.next loadingItems.concat [text]
 
-  unsetLoadingByText: (text) =>
-    {loadingItems} = @state.getValue()
+  unsetLoadingByText = (text) ->
     loadingItems = _clone loadingItems
     loadingItems.splice loadingItems.indexOf(text), 1
-    @state.set loadingItems: loadingItems
+    loadingItemsStream.next loadingItems
 
-  getModOptions: =>
-    {me, user, meEntityUser, entity, isBanned} = @state.getValue()
-
-    isMe = user?.id is me?.id
-
-    hasDeleteMessagePermission = isMe or @model.entityUser.hasPermission {
-      entity, meEntityUser, me
-      permissions: ['deleteMessage']
-    }
-    hasTempBanPermission = @model.entityUser.hasPermission {
-      entity, meEntityUser, me
-      permissions: ['tempBanUser']
-    }
-    hasPermaBanPermission = @model.entityUser.hasPermission {
-      entity, meEntityUser, me
-      permissions: ['permaBanUser']
-    }
-    hasManagePermission = @model.entityUser.hasPermission {
-      entity, meEntityUser, me
-      permissions: ['manageRole']
-    }
-
-    modOptions = _filter [
-      if hasTempBanPermission
-        {
-          icon: 'warning'
-          $icon: @$banIcon
-          $chevronIcon: @$banChevronIcon
-          text: @model.l.get 'profileDialog.ban'
-          isVisible: not isMe
-          children: _filter [
-            if hasTempBanPermission
-              {
-                icon: 'warning'
-                $icon: @$tempBanIcon
-                text:
-                  if isBanned
-                    @model.l.get 'profileDialog.unban'
-                  else
-                    @model.l.get 'profileDialog.tempBan'
-                isVisible: not isMe
-                onclick: =>
-                  if isBanned
-                    @model.ban.unbanByEntityIdAndUserId entity?.id, user?.id
-                  else
-                    @model.ban.banByEntityIdAndUserId entity?.id, user?.id, {
-                      duration: '24h', entityId: entity?.id
-                    }
-                  @model.overlay.close()
-              }
-            if hasPermaBanPermission
-              {
-                icon: 'perma-ban'
-                $icon: @$permaBanIcon
-                text:
-                  if isBanned
-                    @model.l.get 'profileDialog.unban'
-                  else
-                    @model.l.get 'profileDialog.permaBan'
-                isVisible: not isMe
-                onclick: =>
-                  if isBanned
-                    @model.ban.unbanByEntityIdAndUserId entity?.id, user?.id
-                  else
-                    @model.ban.banByEntityIdAndUserId entity?.id, user?.id, {
-                      duration: 'permanent'
-                    }
-                  @model.overlay.close()
-              }
-            if hasPermaBanPermission
-              {
-                icon: 'ip-ban'
-                $icon: @$ipBanIcon
-                text:
-                  if isBanned
-                    @model.l.get 'profileDialog.unban'
-                  else
-                    @model.l.get 'profileDialog.ipBan'
-                isVisible: not isMe
-                onclick: =>
-                  if isBanned
-                    @model.ban.unbanByEntityIdAndUserId entity?.id, user?.id
-                  else
-                    @model.ban.banByEntityIdAndUserId entity?.id, user?.id, {
-                      type: 'ip', duration: 'permanent'
-                    }
-                  @model.overlay.close()
-              }
-          ]
-        }
-      if hasDeleteMessagePermission and @onDeleteMessage
-        {
-          icon: 'edit'
-          $icon: @$deleteIcon
-          $chevronIcon: @$deleteChevronIcon
-          text: @model.l.get 'profileDialog.edit'
-          isVisible: true
-          children: _filter [
-            {
-              icon: 'edit'
-              $icon: @$editIcon
-              text: if @isLoadingByText @model.l.get 'profileDialog.edit' \
-                    then @model.l.get 'general.loading' \
-                    else @model.l.get 'profileDialog.edit'
-              isVisible: true
-              onclick: =>
-                @onEditMessage()
-            }
-            {
-              icon: 'delete'
-              $icon: @$delete1Icon
-              text: if @isLoadingByText @model.l.get 'profileDialog.delete' \
-                    then @model.l.get 'general.loading' \
-                    else @model.l.get 'profileDialog.delete'
-              isVisible: true
-              onclick: =>
-                unless confirm @model.l.get 'general.confirm'
-                  return
-                @setLoadingByText @model.l.get 'profileDialog.delete'
-                @onDeleteMessage()
-                .then =>
-                  @unsetLoadingByText @model.l.get 'profileDialog.delete'
-                  @model.overlay.close()
-            }
-            if entity
-              {
-                icon: 'delete'
-                $icon: @$delete7dIcon
-                text: if @isLoadingByText @model.l.get 'profileDialog.deleteMessagesLast7d' \
-                      then @model.l.get 'general.loading' \
-                      else @model.l.get 'profileDialog.deleteMessagesLast7d'
-                isVisible: true
-                onclick: =>
-                  @setLoadingByText(
-                    @model.l.get 'profileDialog.deleteMessagesLast7d'
-                  )
-                  @onDeleteMessagesLast7d()
-                  .then =>
-                    @unsetLoadingByText(
-                      @model.l.get 'profileDialog.deleteMessagesLast7d'
-                    )
-                    @model.overlay.close()
-              }
-          ]
-        }
-      if hasManagePermission and entity
-        {
-          icon: 'settings'
-          $icon: @$manageIcon
-          text: @model.l.get 'general.manage'
-          isVisible: true
-          onclick: =>
-            @model.entity.goPath entity, 'adminManage', {
-              @router, replacements: {userId: user?.id}
-            }
-            @model.overlay.close()
-        }
-    ]
-
-  getUserOptions: =>
-    {me, user, blockedUserIds, isFlagged,
-      isFriends, isFriendRequested, entity} = @state.getValue()
-
-    isBlocked = @model.userBlock.isBlocked blockedUserIds, user?.id
+  getUserOptions = ->
+    isBlocked = model.userBlock.isBlocked blockedUserIds, user?.id
 
     isMe = user?.id is me?.id
 
     _filter [
       {
         icon: 'profile'
-        $icon: @$profileIcon
-        text: @model.l.get 'general.profile'
+        text: model.l.get 'general.profile'
         isVisible: true
-        onclick: =>
+        onclick: ->
           if user?.username
-            @router.go 'profile', {username: user?.username}
+            router.go 'profile', {username: user?.username}
           else
-            @router.go 'profileById', {id: user?.id}
-          @model.overlay.close()
-      }
-      {
-        icon: 'chat-bubble'
-        $icon: @$messageIcon
-        text:
-          if @isLoadingByText @model.l.get 'profileDialog.message'
-          then @model.l.get 'general.loading'
-          else @model.l.get 'profileDialog.message'
-        isVisible: not isMe
-        onclick: =>
-          unless @isLoadingByText @model.l.get 'profileDialog.message'
-            @setLoadingByText @model.l.get 'profileDialog.message'
-            @model.conversation.create {
-              userIds: [user.id]
-            }
-            .then (conversation) =>
-              @unsetLoadingByText @model.l.get 'profileDialog.message'
-              @router.go 'conversation', {id: conversation.id}
-              @model.overlay.close()
-      }
-      {
-        icon: 'add-friend'
-        $icon: @$friendIcon
-        text:
-          if isFriends
-          then @model.l.get 'profile.unfriend'
-          else if isFriendRequested
-          then @model.l.get 'profile.sentFriendRequest'
-          else if @isLoadingByText @model.l.get 'profile.addFriend'
-          then @model.l.get 'general.loading'
-          else @model.l.get 'profile.addFriend'
-        isVisible: not isMe
-        onclick: =>
-          isLoading = @isLoadingByText @model.l.get 'profile.addFriend'
-          if not isLoading
-            @model.user.requestLoginIfGuest me
-            .then =>
-              if isFriends
-                isConfirmed = confirm @model.l.get 'profile.confirmUnfriend'
-                fn = =>
-                  @model.connection.deleteByUserIdAndType(
-                    user.id, 'friend'
-                  )
-              else
-                isConfirmed = true
-                fn = =>
-                  @model.connection.upsertByUserIdAndType(
-                    user.id, 'friendRequestSent'
-                  )
-              if isConfirmed and not isFriendRequested
-                @setLoadingByText @model.l.get 'profile.addFriend'
-                fn()
-                .then =>
-                  @unsetLoadingByText @model.l.get 'profile.addFriend'
-      }
-      unless user?.flags?.isModerator
-        {
-          icon: 'block'
-          $icon: @$blockIcon
-          text:
-            if isBlocked
-            then @model.l.get 'profileDialog.unblock'
-            else @model.l.get 'profileDialog.block'
-          isVisible: not isMe
-          onclick: =>
-            if confirm @model.l.get 'general.confirm'
-              if isBlocked
-                @model.userBlock.unblockByUserId user?.id
-              else
-                @model.userBlock.blockByUserId user?.id
-              @model.overlay.close()
-        }
-      {
-        icon: 'warning'
-        isVisible: not isMe
-        $icon: @$flagIcon
-        text: if isFlagged \
-              then @model.l.get 'profileDialog.isFlagged' \
-              else @model.l.get 'profileDialog.flag'
-        onclick: =>
-          @state.set isFlagged: true
-          setTimeout =>
-            @model.overlay.close()
-          , 1000
+            router.go 'profileById', {id: user?.id}
+          model.overlay.close()
       }
     ]
 
-  renderItem: (options) =>
-    {icon, $icon, $chevronIcon, text, onclick,
+  renderItem = (options) ->
+    {icon, text, onclick,
       children, isVisible} = options
 
     unless isVisible
       return
 
-    {expandedItems} = @state.getValue()
-
     hasChildren = not _isEmpty children
     isExpanded = expandedItems.indexOf(text) isnt -1
 
     z 'li.menu-item', {
-      onclick: =>
+      onclick: ->
         if hasChildren and isExpanded
           expandedItems = _clone expandedItems
           expandedItems.splice expandedItems.indexOf(text), 1
-          @state.set expandedItems: expandedItems
+          expandedItemsStream.next expandedItems
         else if hasChildren
-          @state.set expandedItems: expandedItems.concat [text]
+          expandedItemsStream.next expandedItems.concat [text]
         else
           onclick()
     },
@@ -427,7 +135,7 @@ module.exports = class ProfileDialog
         z '.text', text
         if not _isEmpty children
           z '.chevron',
-            z $chevronIcon,
+            z $icon,
               icon: if isExpanded \
                     then 'chevron-up' \
                     else 'chevron-down'
@@ -435,65 +143,54 @@ module.exports = class ProfileDialog
               isTouchTarget: false
       if isExpanded
         z 'ul.menu',
-        _map children, @renderItem
+        _map children, renderItem
 
 
-  render: =>
-    {me, user, entity, entityUser, isVisible,
-      windowSize, $links} = @state.getValue()
 
-    isMe = user?.id is me?.id
+  isMe = user?.id is me?.id
 
-    userOptions = @getUserOptions()
-    modOptions = @getModOptions()
+  userOptions = getUserOptions()
 
-    z '.z-profile-dialog', {
-      className: z.classKebab {isVisible: me and user and isVisible}
-    },
-      z @$dialog,
-        $content:
-          z '.z-profile-dialog_dialog', {
-            style:
-              maxHeight: "#{windowSize.height}px"
-          },
-            z '.header',
-              z '.avatar',
-                z @$avatar, {user, bgColor: colors.$grey100, size: '72px'}
-              z '.about',
-                z '.name', @model.user.getDisplayName user
-                if not _isEmpty entityUser?.roleNames
-                  z '.roles', entityUser?.roleNames.join ', '
-                z '.links',
-                  _map $links, ({$icon, link, type}) =>
-                    @router.link z 'a.link', {
-                      href: link
-                      target: '_system'
-                      rel: 'nofollow'
-                    },
-                      z $icon, {
-                        icon: type
-                        size: '18px'
-                        isTouchTarget: false
-                        color: colors.$primaryMain
-                      }
-              z '.close',
-                z '.icon',
-                  z @$closeIcon,
-                    icon: 'close'
-                    color: colors.$primaryMain
-                    isAlignedTop: true
-                    isAlignedRight: true
-                    onclick: =>
-                      @model.overlay.close()
+  z '.z-profile-dialog', {
+    className: classKebab {isVisible: me and user and isVisible}
+  },
+    z $dialog,
+      onLeave: ->
+        model.overlay.close(
+      $content:
+        z '.z-profile-dialog_dialog', {
+          style:
+            maxHeight: "#{windowSize.height}px"
+        },
+          z '.header',
+            z '.avatar',
+              z $avatar, {user, bgColor: colors.$grey100, size: '72px'}
+            z '.about',
+              z '.name', model.user.getDisplayName user
+              if not _isEmpty entityUser?.roleNames
+                z '.roles', entityUser?.roleNames.join ', '
+              z '.links',
+                _map $links, ({link, type}) ->
+                  router.link z 'a.link', {
+                    href: link
+                    target: '_system'
+                    rel: 'nofollow'
+                  },
+                    z $icon, {
+                      icon: type
+                      size: '18px'
+                      isTouchTarget: false
+                      color: colors.$primaryMain
+                    }
+            z '.close',
+              z '.icon',
+                z $icon,
+                  icon: 'close'
+                  color: colors.$primaryMain
+                  isAlignedTop: true
+                  isAlignedRight: true
+                  onclick: ->
+                    model.overlay.close()
 
-            z 'ul.menu',
-              [
-                _map userOptions, @renderItem
-
-                if not _isEmpty modOptions
-                  [
-                  # z 'ul.content',
-                    z '.divider'
-                    _map modOptions, @renderItem
-                  ]
-              ]
+          z 'ul.menu',
+            _map userOptions, renderItem

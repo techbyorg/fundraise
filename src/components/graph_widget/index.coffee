@@ -1,4 +1,4 @@
-z = require 'zorium'
+{z, useRef, useEffect} = require 'zorium'
 # TODO: webpack chunk import
 Chartist = if window? then require 'chartist' else null
 
@@ -7,23 +7,20 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = class Graph
-  type: 'Widget'
+module.exports = Graph = ({labels = [], series = [], options = {}})->
+  $$el = useRef()
 
-  constructor: ->
-    @labels = []
-    @series = []
-    @options = {}
+  chart = null
 
-  afterMount: (@$$el) =>
+  useEffect ->
     console.log 'mount'
     console.log '=================================='
     console.log '=================================='
     console.log '=================================='
     console.log '=================================='
-    @chart = new Chartist.Line @$$el, {@labels, @series}, @options
+    chart = new Chartist.Line $$el, {labels, series}, options
     # allow for gradient
-    @chart.on 'created', (ctx) ->
+    chart.on 'created', (ctx) ->
       document.getElementsByClassName('ct-chart-line')?[0]?.setAttribute('style', 'overflow: visible !important;')
       defs = ctx.svg.elem('defs')
       defs.elem('linearGradient',
@@ -41,13 +38,15 @@ module.exports = class Graph
         offset: 1
         'stop-color': colors.$secondaryMain
 
-  beforeUnmount: =>
-    @chart?.detach()
+    return beforeUnmount
+  , []
 
-  getChartist: ->
+  beforeUnmount = ->
+    chart?.detach()
+
+  getChartist = ->
     Chartist
 
-  render: ({@labels, @series, @options}) =>
-    console.log 'update', {@labels, @series}, @options
-    @chart?.update {@labels, @series}, @options
-    z '.z-graph-widget', {key: 'graph-widget'}
+  console.log 'update', {labels, series}, options
+  chart?.update {labels, series}, options
+  z '.z-graph-widget', {ref: $$el, key: 'graph-widget'}

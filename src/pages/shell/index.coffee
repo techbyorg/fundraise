@@ -1,8 +1,8 @@
-z = require 'zorium'
+{z, useStream} = require 'zorium'
 
-AppBar = require '../../components/app_bar'
-ButtonMenu = require '../../components/button_menu'
-Spinner = require '../../components/spinner'
+$appBar = require '../../components/app_bar'
+$buttonMenu = require '../../components/button_menu'
+$spinner = require '../../components/spinner'
 config = require '../../config'
 colors = require '../../colors'
 
@@ -10,28 +10,19 @@ if window?
   require './index.styl'
 
 # generic page that gets loaded from cache for any page w/o a specific shell
-module.exports = class ShellPage
-  hideDrawer: true
+module.exports = ShellPage = ({model, router, requests, entitySteam}) ->
+  # subscribe so they're in exoid cache
+  {} = useStream ->
+    me: model.user.getMe()
+    entity: entityStream
 
-  constructor: ({@model, @router, requests, entity}) ->
-    @$appBar = new AppBar {@model}
-    @$buttonMenu = new ButtonMenu {@model, @router}
-    @$spinner = new Spinner()
-
-    # subscribe so they're in exoid cache
-    @state = z.state
-      me: @model.user.getMe()
-      entity: entity
-
-  getMeta: ->
-    {}
-
-  render: =>
-    z '.p-shell',
-      z @$appBar, {
-        title: ''
-        style: 'primary'
-        $topLeftButton: z @$buttonMenu, {color: colors.$header500Icon}
-      }
-      z '.spinner',
-        @$spinner
+  z '.p-shell',
+    z $appBar, {
+      model
+      title: ''
+      style: 'primary'
+      $topLeftButton:
+        z $buttonMenu, {model, router, color: colors.$header500Icon}
+    }
+    z '.spinner',
+      $spinner

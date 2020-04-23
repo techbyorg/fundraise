@@ -1,12 +1,9 @@
-z = require 'zorium'
+{z, useEffect, useRef, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-_find = require 'lodash/find'
-_uniq = require 'lodash/uniq'
 _every = require 'lodash/every'
 
 Base = require '../base'
 Tooltip = require '../tooltip'
-colors = require '../../colors'
 
 if window?
   require './index.styl'
@@ -15,84 +12,84 @@ if window?
 # if we render it here, it has issues with iscroll (having a position: fixed
 # inside a transform)
 
-module.exports = class TooltipPositioner extends Base
-  TOOLTIPS:
-    placeSearch:
-      prereqs: null
-    mapLayers:
-      prereqs: ['placeSearch']
-    mapTypes:
-      prereqs: ['mapLayers']
-    mapFilters:
-      prereqs: ['mapTypes']
-    placeTooltip:
-      prereqs: null
-    itemGuides:
-      prereqs: null
+# FIXME: move this somewhere where it can be accessed by other ocmponents
+TOOLTIPS =
+  placeSearch:
+    prereqs: null
+  mapLayers:
+    prereqs: ['placeSearch']
+  mapTypes:
+    prereqs: ['mapLayers']
+  mapFilters:
+    prereqs: ['mapTypes']
+  placeTooltip:
+    prereqs: null
+  itemGuides:
+    prereqs: null
 
-  constructor: (options) ->
-    unless window? # could also return right away if cookie exists for perf
-      return
-    {@model, @isVisible, @offset, @key, @anchor, @$title, @$content,
-      @zIndex} = options
+module.exports = TooltipPositioner = (props) ->
+  unless window? # could also return right away if cookie exists for perf
+    return
+  {model, isVisibleStream, offset, key, anchor, $title, $content,
+    zIndex} = props
 
-    @isVisible ?= new RxBehaviorSubject false
+  $$el = useRef()
 
-    @$title ?= @model.l.get "tooltips.#{@key}Title"
-    @$content ?= @model.l.get "tooltips.#{@key}Content"
+  {isVisibleStream, shouldBeShownStream} = useMemo ->
+    {
+      isVisibleStream: isVisibleStream or new RxBehaviorSubject false
+      shouldBeShownStream: model.cookie.getStream().map (cookies) ->
+        completed = cookies.completedTooltips?.split(',') or []
+        isCompleted = completed.indexOf(key) isnt -1
+        prereqs = TOOLTIPS[key]?.prereqs
+        not isCompleted and _every prereqs, (prereq) ->
+          completed.indexOf(prereq) isnt -1
+      .publishReplay(1).refCount()
+    }
 
-    @isShown = false
-
-    @shouldBeShown = @model.cookie.getStream().map (cookies) =>
-      completed = cookies.completedTooltips?.split(',') or []
-      isCompleted = completed.indexOf(@key) isnt -1
-      prereqs = @TOOLTIPS[@key]?.prereqs
-      not isCompleted and _every prereqs, (prereq) ->
-        completed.indexOf(prereq) isnt -1
-    .publishReplay(1).refCount()
-
-  afterMount: (@$$el) =>
-    super
-    @disposable = @shouldBeShown.subscribe (shouldBeShown) =>
+  useEffect ->
+    isShown = false
+    disposable = shouldBeShownStream.subscribe (shouldBeShown) ->
       # TODO: show main page tooltips when closing overlayPage?
       # one option is to have model.tooltip store all visible tooltips
-      if shouldBeShown and not @isShown
-        @isShown = true
+      if shouldBeShown and not isShown
+        isShown = true
         # despite having this, ios still calls this twice, hence the flag above
-        @disposable?.unsubscribe()
-        setTimeout =>
-          checkIsReady = =>
-            if @$$el and @$$el.clientWidth
-              @_show @$$el
+        disposable?.unsubscribe()
+        setTimeout ->
+          checkIsReady = ->
+            if $$el and $$el.clientWidth
+              _show $$el
             else
               setTimeout checkIsReady, 100
           checkIsReady()
         , 0 # give time for re-render...
 
-  beforeUnmount: =>
-    @disposable?.unsubscribe()
-    @isShown = false
-    @isVisible.next false
+    return ->
+      disposable?.unsubscribe()
+      isShown = false
+      isVisible.next false
+  , []
 
-  close: =>
-    @$tooltip?.close()
+  # FIXME: useref for parent to access? or stream/subject?
+  close = ->
+    $tooltip?.close()
 
-  _show: ($$el) =>
+  _show = ($$el) ->
     rect = $$el.getBoundingClientRect()
     initialPosition = {x: rect.left, y: rect.top}
 
-    @$tooltip = new Tooltip {
-      @model
-      @key
-      @anchor
-      @offset
-      @isVisible
-      @zIndex
+    $tooltip = new Tooltip {
+      model
+      key
+      anchor
+      offset
+      isVisible
+      zIndex
       initialPosition
-      $title: @$title
-      $content: @$content
+      $title: $title
+      $content: $content
     }
-    @model.tooltip.set$ @$tooltip
+    model.tooltip.set$ $tooltip
 
-  render: =>
-    z '.z-tooltip-positioner', {key: "tooltip-#{@key}"}
+  z '.z-tooltip-positioner', {ref: $$el, key: "tooltip-#{key}"}

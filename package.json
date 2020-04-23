@@ -13,6 +13,7 @@
     "b-assert": "^0.1.4",
     "clay-coffeescript-style-guide": "^1.1.0",
     "coffee-loader": "^0.9.0",
+    "coffee-unused": "^0.2.1",
     "coffeelint": "^2.1.0",
     "coffeescript": "^2.5.1",
     "cors": "^2.8.5",
@@ -71,7 +72,6 @@
     "promiz": "^1.0.4",
     "qs": "^5.2.0",
     "remark-parse": "^6.0.3",
-    "remark-vdom": "^5.0.0",
     "rxjs": "^5.4.3",
     "semver-compare": "^1.0.0",
     "simpleheat": "^0.4.0",
@@ -82,10 +82,9 @@
     "unified": "^7.0.2",
     "uuid-by-string": "^0.5.2",
     "vdom-parser": "^1.4.1",
-    "virtual-dom": "^2.1.1",
     "whatwg-fetch": "^0.10.1",
     "xhr-request": "^1.1.0",
-    "zorium": "git://github.com/claydotio/zorium.git"
+    "zorium": "git://github.com/Zorium/zorium.git#dyo"
   },
   "directories": {
     "test": "test"

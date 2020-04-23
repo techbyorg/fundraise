@@ -1,24 +1,14 @@
-z = require 'zorium'
+{z} = require 'zorium'
 
-Policies = require '../../components/policies'
+$policies = require '../../components/policies'
 
 if window?
   require './index.styl'
 
-module.exports = class PoliciesPage
-  hideDrawer: true
-
-  constructor: ({@model, requests, @router, serverData, entity}) ->
-    isIab = requests.map ({req}) ->
-      req.query.isIab
-
-    @$policies = new Policies {@model, @router, isIab}
-
-  getMeta: =>
-    {
-      title: @model.l.get 'policiesPage.title'
+module.exports = PoliciesPage = ({model, requests, router}) ->
+  z '.p-policies',
+    z $policies, {
+      model, router
+      isIabStream: requests.map ({req}) ->
+        req.query.isIab
     }
-
-  render: =>
-    z '.p-policies',
-      @$policies

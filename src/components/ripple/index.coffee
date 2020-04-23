@@ -1,4 +1,4 @@
-z = require 'zorium'
+{z, classKebab, useRef, useMemo} = require 'zorium'
 Environment = require '../../services/environment'
 
 colors = require '../../colors'
@@ -14,18 +14,13 @@ if window?
 
 ANIMATION_TIME_MS = 350
 
-module.exports = class Ripple
-  type: 'Widget'
+module.exports = Ripple = ({color, isCircle, isCenter, onComplete, fadeIn}) ->
+  $$el = useRef()
 
-  constructor: -> null
+  ripple = ({$$el, color, isCenter, mouseX, mouseY, onComplete, fadeIn} = {}) ->
+    $$wave = $$el.querySelector '.wave'
 
-  afterMount: (@$$el) =>
-    @$$wave = @$$el.querySelector '.wave'
-
-  ripple: ({$$el, color, isCenter, mouseX, mouseY, onComplete, fadeIn} = {}) =>
-    $$el ?= @$$el
-
-    unless @$$wave
+    unless $$wave
       return
 
     {width, height, top, left} = $$el.getBoundingClientRect()
@@ -37,15 +32,12 @@ module.exports = class Ripple
       x = mouseX - left
       y = mouseY - top
 
-    # $$wave = document.createElement 'div'
-    $$wave = @$$wave
     $$wave.style.top = y + 'px'
     $$wave.style.left = x + 'px'
     $$wave.style.backgroundColor = color
     $$wave.className = if fadeIn \
                        then 'wave fade-in is-visible' \
                        else 'wave is-visible'
-    # $$el.appendChild $$wave
 
     new Promise (resolve, reject) ->
       setTimeout ->
@@ -56,22 +48,22 @@ module.exports = class Ripple
         , 100 # give some time for onComplete to render
       , ANIMATION_TIME_MS
 
-  render: ({color, isCircle, isCenter, onComplete, fadeIn}) ->
-    onTouch = (e) =>
-      $$el = e.target
-      @ripple {
-        $$el
-        color
-        isCenter
-        onComplete
-        fadeIn
-        mouseX: e.clientX or e.touches?[0]?.clientX
-        mouseY: e.clientY or e.touches?[0]?.clientY
-      }
+  onTouch = (e) ->
+    $$el = e.target
+    ripple {
+      $$el
+      color
+      isCenter
+      onComplete
+      fadeIn
+      mouseX: e.clientX or e.touches?[0]?.clientX
+      mouseY: e.clientY or e.touches?[0]?.clientY
+    }
 
-    z '.z-ripple', {
-      className: z.classKebab {isCircle}
-      ontouchstart: onTouch
-      onmousedown: if Environment.isAndroid() then null else onTouch
-    },
-      z '.wave'
+  z '.z-ripple', {
+    ref: $$el
+    className: classKebab {isCircle}
+    ontouchstart: onTouch
+    onmousedown: if Environment.isAndroid() then null else onTouch
+  },
+    z '.wave'

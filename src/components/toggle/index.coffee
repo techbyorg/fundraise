@@ -1,4 +1,4 @@
-z = require 'zorium'
+{z, classKebab, useMemo, useStream} = require 'zorium'
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -6,38 +6,38 @@ require 'rxjs/add/observable/of'
 if window?
   require './index.styl'
 
-module.exports = class Toggle
-  constructor: ({@isSelected, @isSelectedStreams, @model, @onToggle}) ->
-    unless @isSelectedStreams
-      @isSelectedStreams = new RxReplaySubject 1
-      @isSelected ?= RxObservable.of ''
-      @isSelectedStreams.next @isSelected
+module.exports = Toggle (props) ->
+  {isSelectedStreams, isSelectedStreams, model, onToggle, withText} = props
 
-    @state = z.state
-      isSelected: @isSelectedStreams.switch()
+  {isSelectedStreams} = useMemo ->
+    unless isSelectedStreams
+      isSelectedStreams = new RxReplaySubject 1
+      isSelectedStreams ?= RxObservable.of ''
+      isSelectedStreams.next isSelectedStream
+    {
+      isSelectedStreams
+    }
+  , []
 
-  toggle: ({onToggle} = {}) =>
-    {isSelected} = @state.getValue()
+  {isSelected} = useStream ->
+    isSelected: isSelectedStreams.switch()
 
-    if @isSelected
-      @isSelected.next not isSelected
+  toggle = ({onToggle} = {}) ->
+    if isSelected
+      isSelected.next not isSelected
     else
-      @isSelectedStreams.next RxObservable.of not isSelected
+      isSelectedStreams.next RxObservable.of not isSelected
     onToggle? not isSelected
 
-  render: ({onToggle, withText} = {}) =>
-    {isSelected} = @state.getValue()
 
-    onToggle ?= @onToggle
+  z '.z-toggle', {
+    className: classKebab {isSelected, withText}
+    onclick: -> toggle {onToggle}
+  },
+    z '.track',
+      if withText and isSelected
+        model.l.get 'general.yes'
+      else if withText
+        model.l.get 'general.no'
 
-    z '.z-toggle', {
-      className: z.classKebab {isSelected, withText}
-      onclick: => @toggle {onToggle}
-    },
-      z '.track',
-        if withText and isSelected
-          @model.l.get 'general.yes'
-        else if withText
-          @model.l.get 'general.no'
-
-      z '.knob'
+    z '.knob'

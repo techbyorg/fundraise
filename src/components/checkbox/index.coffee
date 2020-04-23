@@ -1,63 +1,61 @@
-z = require 'zorium'
+{z, useRef, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 _defaults = require 'lodash/defaults'
 
-Icon = require '../icon'
+$icon = require '../icon'
 allColors = require '../../colors'
 
 if window?
   require './index.styl'
 
-module.exports = class Checkbox
-  constructor: ({@value, @valueStreams} = {}) ->
-    @value ?= new RxBehaviorSubject null
-    @error ?= new RxBehaviorSubject null
+module.exports = Checkbox = (props) ->
+  {valueStream, valueStreams, isDisabled, colors, onChange} = props
 
-    @$icon = new Icon()
-
-    @state = z.state {
-      value: @valueStreams?.switch() or @value
+  {valueStream, errorStream} = useMemo ->
+    {
+      valueStream: value or new RxBehaviorSubject null
+      errorStream: new RxBehaviorSubject null
     }
+  , []
 
-  afterMount: (@$$el) => null
+  # $$el = useRef (props) ->
+  #   props.ref.current = {isChecked: -> ref.current.checked}
 
-  isChecked: =>
-    @$$el.querySelector('.checkbox').checked
+  {value} = useStream ->
+    value: valueStreams?.switch() or value
 
-  render: ({isDisabled, colors, onChange}) =>
-    {value} = @state.getValue()
+  colors = _defaults colors or {}, {
+    checked: allColors.$primaryMain
+    checkedBorder: allColors.$primary900
+    border: allColors.$bgText26
+    background: allColors.$tertiary0
+  }
 
-    colors = _defaults colors or {}, {
-      checked: allColors.$primaryMain
-      checkedBorder: allColors.$primary900
-      border: allColors.$bgText26
-      background: allColors.$tertiary0
+  z '.z-checkbox', {
+    # ref: $$el
+  },
+    z 'input.checkbox', {
+      type: 'checkbox'
+      style:
+        background: if value then colors.checked else colors.background
+        border: if value \
+                then "1px solid #{colors.checkedBorder}"
+                else "1px solid #{colors.border}"
+      disabled: if isDisabled then true else undefined
+      checked: if value then true else undefined
+      onchange: (e) ->
+        if valueStreams
+          valueStreams.next RxObservable.of e.target.checked
+        else
+          value.next e.target.checked
+        onChange?()
+        e.target.blur()
     }
-
-    z '.z-checkbox',
-      z 'input.checkbox', {
-        type: 'checkbox'
-        style:
-          background: if value then colors.checked else colors.background
-          border: if value \
-                  then "1px solid #{colors.checkedBorder}"
-                  else "1px solid #{colors.border}"
-        attributes:
-          disabled: if isDisabled then true else undefined
-        checked: if value then true else undefined
-        onchange: z.ev (e, $$el) =>
-          if @valueStreams
-            @valueStreams.next RxObservable.of $$el.checked
-          else
-            @value.next $$el.checked
-          onChange?()
-          $$el.blur()
-      }
-      z '.icon',
-        z @$icon,
-          icon: 'check'
-          isTouchTarget: false
-          color: allColors.$primaryMainText
-          size: '16px'
+    z '.icon',
+      z $icon,
+        icon: 'check'
+        isTouchTarget: false
+        color: allColors.$primaryMainText
+        size: '16px'

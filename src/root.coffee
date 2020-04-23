@@ -1,8 +1,6 @@
 require './polyfill'
 
-_map = require 'lodash/map'
-_mapValues = require 'lodash/mapValues'
-z = require 'zorium'
+{z, render} = require 'zorium'
 cookie = require 'cookie'
 LocationRouter = require 'location-router'
 Environment = require './services/environment'
@@ -15,16 +13,14 @@ require './root.styl'
 DateService = require './services/date'
 RouterService = require './services/router'
 PushService = require './services/push'
-SemverService = require './services/semver'
 ServiceWorkerService = require './services/service_worker'
-App = require './app'
+$app = require './app'
 Model = require './models'
 Portal = require './models/portal'
 config = require './config'
 colors = require './colors'
 
 MAX_ERRORS_LOGGED = 5
-MIN_DAYS_FOR_DONATE_DIALOG = 5
 
 ###########
 # LOGGING #
@@ -163,17 +159,15 @@ init = ->
   # to not start with null
   # (flash with whatever obs data is on page going empty for 1 frame), then
   # render after a few ms
-  root = document.getElementById('zorium-root').cloneNode(true)
+  # root = document.getElementById('zorium-root').cloneNode(true)
   requests = router.getStream().publishReplay(1).refCount()
-  app = new App {
+  render (z $app, {
     requests
     model
     router
     isBackendUnavailable
     currentNotification
-  }
-  $app = z app
-  z.bind root, $app
+  }), document.body # document.documentElement
 
   # re-fetch and potentially replace data, in case html is served from cache
   model.validateInitialCache()
@@ -189,17 +183,6 @@ init = ->
   model.portal.call 'statusBar.setBackgroundColor', {
     color: colors.getRawColor colors.$primary700
   }
-  # if model.ad.isVisible() and Environment.isNativeApp()
-  #   if Environment.isIos()
-  #     adId = '' # TODO
-  #   else
-  #     adId = '' # TODO
-  #
-  #   model.portal?.call 'admob.showBanner', {
-  #     position: 'bottom'
-  #     overlap: false
-  #     adId: adId
-  #   }
 
   model.portal.call 'app.onBack', ->
     router.back({fromNative: true})
@@ -264,7 +247,6 @@ init = ->
     console.log 'top on data', e
     routeHandler e
 
-  start = Date.now()
   (if Environment.isNativeApp()
     portal.call 'top.getData'
   else
@@ -293,9 +275,9 @@ init = ->
     ).subscribe()
 
     # nextTick prevents white flash, lets first render happen
-    window.requestAnimationFrame ->
-      $$root = document.getElementById 'zorium-root'
-      $$root.parentNode.replaceChild root, $$root
+    # window.requestAnimationFrame ->
+    #   $$root = document.getElementById 'zorium-root'
+    #   $$root.parentNode.replaceChild root, $$root
 
   # window.addEventListener 'resize', app.onResize
   # model.portal.call 'orientation.onChange', app.onResize

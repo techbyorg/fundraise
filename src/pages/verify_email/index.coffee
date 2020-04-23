@@ -1,4 +1,5 @@
-z = require 'zorium'
+{z, useEffect, useMemo, useStream} = require 'zorium'
+RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/fromPromise'
 
@@ -9,57 +10,56 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = class VerifyEmailPage
-  constructor: ({@model, requests, @router, serverData}) ->
+module.exports = VerifyEmailPage = ({model, requests, router}) ->
+  useEffect ->
     if window?
-      requests.switchMap ({req, route}) =>
-        RxObservable.fromPromise @model.user.verifyEmail({
+      disposable = requests.switchMap ({req, route}) ->
+        RxObservable.fromPromise model.user.verifyEmail({
           userId: route.params.userId
           tokenStr: route.params.tokenStr
-        }).then =>
-          @state.set isVerified: true
-        .catch (err) =>
+        }).then ->
+          isVerifiedStream.next true
+        .catch (err) ->
           console.log err
-          @state.set error: 'The was an error verifying your email'
+          errorStream.next 'There was an error verifying your email!'
           RxObservable.of null
 
       .take(1)
       .subscribe()
 
-    @$spinner = new Spinner()
-    @$returnHomeButton = new Button()
+    return ->
+      disposable?.unsubscribe()
+  , []
 
-    @state = z.state {
-      windowSize: @model.window.getSize()
-      isVerified: false
-      error: null
-    }
-
-  getMeta: =>
+  {isVerifiedStream, errorStream} = useMemo ->
     {
-      title: @model.l.get 'verifyEmailpage.title'
+      isVerifiedStream: new RxBehaviorSubject false
+      errorStream: new RxBehaviorSubject null
     }
+  , []
 
-  render: =>
-    {windowSize, isVerified, error} = @state.getValue()
+  {windowSize, isVerified, error} = useStream ->
+    windowSize: model.window.getSize()
+    isVerified: isVerifiedStream
+    error: errorStream
 
-    z '.p-verify-email', {
-      style:
-        height: "#{windowSize.height}px"
-    },
-      if isVerified or error
-        z '.is-verified',
-          error or @model.l.get 'verifyEmail.isVerified'
-          z '.home',
-            z @$returnHomeButton,
-              text: @model.l.get 'verifyEmail.tapHome'
-              onclick: =>
-                @router.go 'home'
-      else
-        [
-          z @$spinner
-          z '.loading', 'Loading...'
-          @router.link z 'a.stuck', {
-            href: @router.get 'home'
-          }, 'Stuck? Tap to go home'
-        ]
+  z '.p-verify-email', {
+    style:
+      height: "#{windowSize.height}px"
+  },
+    if isVerified or error
+      z '.is-verified',
+        error or model.l.get 'verifyEmail.isVerified'
+        z '.home',
+          z $button,
+            text: model.l.get 'verifyEmail.tapHome'
+            onclick: ->
+              router.go 'home'
+    else
+      [
+        z $spinner
+        z '.loading', 'Loading...'
+        router.link z 'a.stuck', {
+          href: router.get 'home'
+        }, 'Stuck? Tap to go home'
+      ]

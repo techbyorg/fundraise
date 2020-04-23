@@ -1,59 +1,61 @@
-z = require 'zorium'
+{z, classKebab, useMemo, useStream} = require 'zorium'
 _defaults = require 'lodash/defaults'
+RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-Icon = require '../icon'
-Input = require '../input'
+$icon = require '../icon'
+$input = require '../input'
 allColors = require '../../colors'
 
 
 if window?
   require './index.styl'
 
-module.exports = class PrimaryInput extends Input
-  constructor: ->
-    super arguments...
-    @state = z.state isPasswordVisible: false
-    @$eyeIcon = new Icon()
+module.exports = PrimaryInput = (props) ->
+  {isPasswordVisibleStream} = useMemo ->
+    {
+      isPasswordVisibleStream: new RxBehaviorSubject false
+    }
+  , []
 
-  render: (opts) =>
-    {isPasswordVisible} = @state.getValue()
+  {isPasswordVisible} = useStream ->
+    isPasswordVisible: isPasswordVisibleStream
 
-    optType = opts.type
+  propsType = props.type
 
-    opts.type = if isPasswordVisible then 'text' else opts.type
+  props.type = if isPasswordVisible then 'text' else props.type
 
-    isFullWidth = opts.isFullWidth
+  isFullWidth = props.isFullWidth
 
-    colors = opts.colors or
-      # background: colors.$bgColor
-      c200: allColors.$bgText54
-      c500: allColors.$bgText
-      c600: allColors.$bgText87
-      c700: allColors.$bgText70
-      ink: allColors.$bgText
+  colors = props.colors or
+    # background: colors.$bgColor
+    c200: allColors.$bgText54
+    c500: allColors.$bgText
+    c600: allColors.$bgText87
+    c700: allColors.$bgText70
+    ink: allColors.$bgText
 
-    z '.z-primary-input', {
-      className: z.classKebab {isFullWidth}
-    },
-      super _defaults opts, {
-        isRaised: true
-        isFloating: true
-        isDark: true
-        colors: colors
-      }
-      if optType is 'password'
-        z '.make-visible', {
-          onclick: =>
-            @state.set isPasswordVisible: not isPasswordVisible
-        },
-          z @$eyeIcon,
-            icon: 'eye'
-            color: colors.ink
-      else if opts.onInfo
-        z '.make-visible', {
-          onclick: ->
-            opts.onInfo()
-        },
-          z @$eyeIcon,
-            icon: 'help'
-            color: colors.ink
+  z '.z-primary-input', {
+    className: classKebab {isFullWidth}
+  },
+    z $input, _defaults props, {
+      isRaised: true
+      isFloating: true
+      isDark: true
+      colors: colors
+    }
+    if propsType is 'password'
+      z '.make-visible', {
+        onclick: ->
+          isPasswordVisibleStream.next not isPasswordVisible
+      },
+        z $icon,
+          icon: 'eye'
+          color: colors.ink
+    else if props.onInfo
+      z '.make-visible', {
+        onclick: ->
+          props.onInfo()
+      },
+        z $icon,
+          icon: 'help'
+          color: colors.ink

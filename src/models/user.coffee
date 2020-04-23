@@ -1,4 +1,3 @@
-SignInOverlay = require '../components/sign_in_overlay'
 config = require '../config'
 
 module.exports = class User
@@ -63,15 +62,15 @@ module.exports = class User
   isMember: (user) ->
     Boolean user?.email
 
-  requestLoginIfGuest: (user) =>
-    new Promise (resolve, reject) =>
-      if @isMember user
-        resolve true
-      else
-        @overlay.open new SignInOverlay({
-          model: {@l, @auth, @overlay, @portal, user: this}
-        }), {
-          data: 'join'
-          onComplete: resolve
-          onCancel: reject
-        }
+  # requestLoginIfGuest: (user) =>
+  #   new Promise (resolve, reject) =>
+  #     if @isMember user
+  #       resolve true
+  #     else
+  #       @overlay.open new SignInOverlay({
+  #         model: {@l, @auth, @overlay, @portal, user: this}
+  #       }), {
+  #         data: 'join'
+  #         onComplete: resolve
+  #         onCancel: reject
+  #       }

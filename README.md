@@ -13,6 +13,21 @@
 
 More to come soonish
 
+- all BehaviorSubject / Observable named ____Stream (eg valueStream)
+  - if it's something that can be either stream or String/Bool/Number (useStream doesn't care), call it ____Streamy
+- all ReplaySubjects named ____Streams (eg valueStreams)
+- $$ for dom refs (typically $$el)
+- order
+  - props
+  - useRef
+  - useMemo for all observable instantiation / state prep
+  - useEffect
+    - be explicity about return for beforeUnmount, or use beforeUnmount fn
+    - always include return, even if no fn (return null)
+  - useStream for state
+  - functions
+  - z
+
 
 ### Cleanup
 Occassionally run node /usr/lib/node_modules/coffee-unused/index.js --src ./src and clean up unused vars

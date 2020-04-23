@@ -1,80 +1,75 @@
-z = require 'zorium'
+{z, classKebab, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
-_defaults = require 'lodash/defaults'
-Environment = require '../../services/environment'
+_uniq = require 'lodash/uniq'
+RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 Icon = require '../icon'
 Button = require '../button'
 Privacy = require '../privacy'
 Tos = require '../tos'
+Environment = require '../../services/environment'
 colors = require '../../colors'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = class Policies
-  constructor: ({@model, @router, isIab}) ->
-    me = @model.user.getMe()
+module.exports = Policies = ({model, router, isIabStream, $dropdowns}) ->
+  $dropdowns = [
+    {
+      $title: 'Privacy Policy'
+      $content: z $privacy, {model, router}
+      isVisible: false
+    }
+    {
+      $title: 'Terms of Service'
+      $content: z $tos, {model, router}
+      isVisible: false
+    }
+  ]
 
-    @$privacy = new Privacy {@model, @router}
-    @$tos = new Tos {@model, @router}
-    @$continueButton = new Button()
+  {visibleDropdownsStream} = useMemo ->
+    {
+      visibleDropdownsStream: new RxBehaviorSubject []
+    }
+  , []
 
-    $dropdowns = [
-      {
-        $title: 'Privacy Policy'
-        $content: @$privacy
-        $icon: new Icon()
-        isVisible: false
-      }
-      {
-        $title: 'Terms of Service'
-        $content: @$tos
-        $icon: new Icon()
-        isVisible: false
-      }
-    ]
+  {isIab, visibleDropdowns} = useStream ->
+    isIab: isIab
+    visibleDropdowns: visibleDropdownsStream
 
-    @state = z.state
-      $dropdowns: $dropdowns
-      isIab: isIab
+  z '.z-policies',
+    z '.title', model.l.get 'policies.title'
+    z '.description',
+      model.l.get 'policies.description'
 
-  render: =>
-    {$dropdowns, isIab} = @state.getValue()
+    _map $dropdowns, ($dropdown, i) ->
+      {$content, $title} = $dropdown
+      isVisible = visibleDropdowns.indexOf(i) isnt -1
+      [
+        z '.divider'
+        z '.dropdown',
+          z '.block', {
+            onclick: ->
+              if isVisible
+                visibleDropdownsStream.next _filter visibleDropdowns, (index) ->
+                  index isnt i
+              else
+                visibleDropdownsStream.next _uniq visibleDropdowns.concat i
+          },
+            z '.title', $title
+            z '.icon',
+              z $icon,
+                icon: 'expand-more'
+                isTouchTarget: false
+                color: colors.$primaryMain
+          z '.content', {className: classKebab {isVisible}},
+            $content
+      ]
 
-    z '.z-policies',
-      z '.title', @model.l.get 'policies.title'
-      z '.description',
-        @model.l.get 'policies.description'
-
-      _map $dropdowns, ($dropdown, i) =>
-        {$content, $title, $icon, isVisible} = $dropdown
-        [
-          z '.divider'
-          z '.dropdown',
-            z '.block', {
-              onclick: =>
-                @state.set $dropdowns: _map $dropdowns, ($dropdown, j) ->
-                  newIsContentVisible = if i is j \
-                                        then not isVisible \
-                                        else false
-                  _defaults {isVisible: newIsContentVisible}, $dropdown
-
-            },
-              z '.title', $title
-              z '.icon',
-                z $icon,
-                  icon: 'expand-more'
-                  isTouchTarget: false
-                  color: colors.$primaryMain
-            z '.content', {className: z.classKebab {isVisible}},
-              $content
-        ]
-
-      unless isIab
-        z '.continue-button',
-          z @$continueButton,
-            text: 'Continue'
-            onclick: =>
-              @router.goPath '/'
+    unless isIab
+      z '.continue-button',
+        z $button,
+          text: 'Continue'
+          onclick: ->
+            router.goPath '/'

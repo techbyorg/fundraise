@@ -1,4 +1,4 @@
-z = require 'zorium'
+{z, classKebab, useMemo, useStream} = require 'zorium'
 _defaults = require 'lodash/defaults'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
@@ -10,87 +10,83 @@ allColors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = class Input
-  constructor: ({@value, @valueStreams, @error, @isFocused} = {}) ->
-    console.log 'val', @value
-    @value ?= new RxBehaviorSubject ''
-    @error ?= new RxBehaviorSubject null
+module.exports = Input = (props) ->
+  {valueStream, valueStreams, errorStream, isFocusedStream
+    colors, hintText = '', type = 'text', isFloating = false,
+    isDisabled = false, isFullWidth,  autoCapitalize = true
+    height, isDark, isCentered, disableAutoComplete} = props
 
-    @isFocused ?= new RxBehaviorSubject false
-
-    @state = z.state {
-      isFocused: @isFocused
-      value: @valueStreams?.switch() or @value
-      error: @error
+  {valueStream, errorStream, isFocusedStream} = useMemo ->
+    {
+      valueStream: valueStream or new RxBehaviorSubject ''
+      errorStream: errorStream or new RxBehaviorSubject null
+      isFocusedStream: isFocusedStream or new RxBehaviorSubject false
     }
+  , []
 
-  render: (props) =>
-    {colors, hintText, type, isFloating, isDisabled, isFullWidth, autoCapitalize
-      height, isDark, isCentered, disableAutoComplete} = props
+  {value, error, isFocused} = useStream ->
+    value: valueStreams?.switch() or valueStream
+    error: errorStream
+    isFocused: isFocusedStream
 
-    {value, error, isFocused} = @state.getValue()
 
-    colors = _defaults colors, {
-      c500: allColors.$bgColor
-      background: allColors.$bgColor
-      underline: allColors.$primaryMain
+  colors = _defaults colors, {
+    c500: allColors.$bgColor
+    background: allColors.$bgColor
+    underline: allColors.$primaryMain
+  }
+
+  console.log 'input', value, error, isFocused
+
+  z '.z-input',
+    style:
+      height: height
+      minHeight: height
+    className: classKebab {
+      isDark
+      isFloating
+      hasValue: type is 'date' or value isnt ''
+      isFocused
+      isDisabled
+      isCentered
+      isError: error?
     }
-    hintText ?= ''
-    type ?= 'text'
-    isFloating ?= false
-    isDisabled ?= false
-    autoCapitalize ?= true
-
-    z '.z-input',
+    # style:
+    #   backgroundColor: colors.background
+    z '.hint', {
       style:
-        height: height
-        minHeight: height
-      className: z.classKebab {
-        isDark
-        isFloating
-        hasValue: type is 'date' or value isnt ''
-        isFocused
-        isDisabled
-        isCentered
-        isError: error?
-      }
+        color: colors.ink
       # style:
-      #   backgroundColor: colors.background
-      z '.hint', {
+      #   color: if isFocused and not error? \
+      #          then colors.c500 else null
+    },
+      hintText
+    z 'input.input',
+      disabled: if isDisabled then true else undefined
+      autocomplete: if disableAutoComplete then 'off' else undefined
+      # hack to get chrome to not autofill
+      readonly: if disableAutoComplete then true else undefined
+      autocapitalize: if not autoCapitalize then 'off' else undefined
+      type: type
+      # FIXME?
+      style: "color: #{colors.ink};height: #{height};-webkit-text-fill-color:#{colors.ink} !important;-webkit-box-shadow: 0 0 0 30px #{colors.background} inset !important"
+      value: "#{value}" or ''
+      oninput: (e) ->
+        if valueStreams
+          valueStreams.next RxObservable.of e.target.value
+        else
+          valueStream.next e.target.value
+      onfocus: (e) ->
+        if disableAutoComplete
+          e.target.removeAttribute 'readonly' # hack to get chrome to not autofill
+        isFocusedStream.next true
+      onblur: (e) ->
+        isFocusedStream.next false
+    z '.underline-wrapper',
+      z '.underline',
         style:
-          color: colors.ink
-        # style:
-        #   color: if isFocused and not error? \
-        #          then colors.c500 else null
-      },
-        hintText
-      z 'input.input',
-        attributes:
-          disabled: if isDisabled then true else undefined
-          autocomplete: if disableAutoComplete then 'off' else undefined
-          # hack to get chrome to not autofill
-          readonly: if disableAutoComplete then true else undefined
-          autocapitalize: if not autoCapitalize then 'off' else undefined
-          type: type
-          # HACK: webkit text fill color doesn't work in normal style obj
-          style: "color: #{colors.ink};height: #{height};-webkit-text-fill-color:#{colors.ink} !important;-webkit-box-shadow: 0 0 0 30px #{colors.background} inset !important"
-        value: "#{value}" or ''
-        oninput: z.ev (e, $$el) =>
-          if @valueStreams
-            @valueStreams.next RxObservable.of $$el.value
-          else
-            @value.next $$el.value
-        onfocus: z.ev (e, $$el) =>
-          if disableAutoComplete
-            $$el.removeAttribute 'readonly' # hack to get chrome to not autofill
-          @isFocused.next true
-        onblur: z.ev (e, $$el) =>
-          @isFocused.next false
-      z '.underline-wrapper',
-        z '.underline',
-          style:
-            backgroundColor: if isFocused and not error? \
-                             then colors.underline or colors.c500 \
-                             else colors.ink
-      if error?
-        z '.error', error
+          backgroundColor: if isFocused and not error? \
+                           then colors.underline or colors.c500 \
+                           else colors.ink
+    if error?
+      z '.error', error
