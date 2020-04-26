@@ -1,3 +1,5 @@
+don't include all of rxjs, lodash
+
 - separate vendor and client bundles
   - vendor bundle less likely to get updated frequently
   - https://calendar.perfplanet.com/2019/bundling-javascript-for-performance-best-practices/

@@ -158,7 +158,7 @@ module.exports = NavDrawer = ({model, router, entityStream, currentPath}) ->
 
   entity ?= {}
 
-  console.log 'entity', entity
+  console.log '----------------------ENTITY', entity
 
   translateX = if isOpen then 0 else "-#{drawerWidth}px"
   # adblock plus blocks has-ad

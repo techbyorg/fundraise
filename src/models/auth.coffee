@@ -18,19 +18,41 @@ module.exports = class Auth
       accessToken = @cookie.get config.AUTH_COOKIE
       language = @l.getLanguageStr()
       (if accessToken
-        @exoid.getCached 'users.getMe'
+        @exoid.getCached 'graphql',
+          graphql: '''
+            query Query { me { id, name, data { bio } } }
+          '''
         .then (user) =>
           if user?
-            return {accessToken}
-          @exoid.call 'users.getMe'
+            return {data: userLoginAnon: {accessToken}}
+          @exoid.call 'graphql',
+            graphql: '''
+              query Query { me { id, name, data { bio } } }
+            '''
           .then ->
-            return {accessToken}
+            return {data: userLoginAnon: {accessToken}}
         .catch =>
-          @exoid.call 'auth.login', {language}
+          @exoid.call 'graphql',
+            # FIXME: cleanup all this duplication
+            graphql: '''
+              mutation LoginAnon {
+                userLoginAnon {
+                  accessToken
+                }
+              }
+            '''
       else
-        @exoid.call 'auth.login', {language})
-      .then ({accessToken}) =>
-        @setAccessToken accessToken
+        @exoid.call 'graphql',
+          graphql: '''
+            mutation LoginAnon {
+              userLoginAnon {
+                accessToken
+              }
+            }
+          ''')
+      .then ({data}) =>
+        console.log 'RESPONSE', data
+        @setAccessToken data?.userLoginAnon.accessToken
     .publishReplay(1).refCount()
 
   setAccessToken: (accessToken) =>
@@ -39,9 +61,16 @@ module.exports = class Auth
   logout: =>
     @setAccessToken ''
     language = @l.getLanguageStr()
-    @exoid.call 'auth.login', {language}
-    .then ({accessToken}) =>
-      @setAccessToken accessToken
+    @exoid.call 'graphql',
+      graphql: '''
+        mutation LoginAnon {
+          userLoginAnon {
+            accessToken
+          }
+        }
+      '''
+    .then ({data}) =>
+      @setAccessToken data?.userLoginAnon.accessToken
       @exoid.invalidateAll()
 
   join: ({name, email, password} = {}) =>
@@ -69,28 +98,47 @@ module.exports = class Auth
       .catch -> null
 
   login: ({email, password} = {}) =>
-    @exoid.call 'auth.loginEmail', {email, password}
+    @exoid.call 'graphql',
+      graphql: '''
+        mutation UserLoginEmail($email: String!, $password: String!) {
+          userLoginEmail(email: $email, password: $password) {
+            accessToken
+          }
+        }
+      '''
+      variables: {email, password}
     .then @afterLogin
 
   loginLink: ({userId, tokenStr} = {}) =>
-    @exoid.call 'auth.loginLink', {userId, tokenStr}
+    @exoid.call 'graphql',
+      graphql: '''
+        mutation UserLoginLink($userId: ID!, $tokenStr: String!) {
+          userLoginLink(userId: $userId, tokenStr: $tokenStr) {
+            accessToken
+          }
+        }
+      '''
+      variables: {userId, tokenStr}
     .then @afterLogin
 
-  stream: (path, body, options = {}) =>
+  stream: ({graphql, variables}, options = {}) =>
     options = _pick options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn'
       'isStreamed', 'limit'
     ]
     @waitValidAuthCookie
     .switchMap =>
-      @exoid.stream path, body, options
+      @exoid.stream 'graphql', {graphql, variables}, options
 
-  call: (path, body, options = {}) =>
+  call: ({graphql, variables}, options = {}) =>
     {invalidateAll, invalidateSingle, additionalDataStream} = options
+
+    unless graphql
+      console.warn 'missing', arguments[0]
 
     @waitValidAuthCookie.take(1).toPromise()
     .then =>
-      @exoid.call path, body, {additionalDataStream}
+      @exoid.call 'graphql', {graphql, variables}, {additionalDataStream}
     .then (response) =>
       if invalidateAll
         console.log 'Invalidating all'

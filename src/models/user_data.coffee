@@ -1,3 +1,5 @@
+# TODO: need to convert to graphql before this will work
+
 module.exports = class UserData
   namespace: 'userData'
 

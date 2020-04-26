@@ -1,59 +1,65 @@
+DEFAULT_FIELDS = "id, slug"
+
 module.exports = class Entity
   namespace: 'entities'
 
   constructor: ({@auth}) -> null
 
-  create: ({name, description, mode}) =>
-    @auth.call "#{@namespace}.create", {
-      name, description, mode
-    }, {invalidateAll: true}
+  getAll: =>
+    @auth.stream
+      graphql: """
+        query EntityGetAll { entities { #{DEFAULT_FIELDS} }
+      """
 
-  onboard: ({ein, type}) =>
-    @auth.call "#{@namespace}.onboard", {
-      ein, type
-    }, {invalidateAll: true}
+  getAllByUserId: (userId) =>
+    @auth.stream
+      graphql: """
+        query EntityGetallByUserId($userId: ID!) {
+          entities(userId: $userId) {
+            #{DEFAULT_FIELDS}
+          }
+        }
+      """
+      variables: {userId}
 
-  getAll: ({filter, language, embed} = {}) =>
-    embed ?= ['channels', 'userCount']
-    @auth.stream "#{@namespace}.getAll", {filter, language, embed}
+  getById: (id) =>
+    @auth.stream
+      graphql: """
+        query EntityGetById($slug: ID!) { entity(id: $id) { #{DEFAULT_FIELDS} }
+      """
+      variables: {id}
 
-  getAllByUserId: (userId, {embed} = {}) =>
-    embed ?= ['meEntityUser', 'channels', 'userCount']
-    @auth.stream "#{@namespace}.getAllByUserId", {userId, embed}
+  getBySlug: (slug) =>
+    @auth.stream
+      graphql: """
+        query EntityGetBySlug($slug: String!) { entity(slug: $slug) { #{DEFAULT_FIELDS} }
+      """
+      variables: {slug}
 
-  getById: (id, {autoJoin} = {}) =>
-    @auth.stream "#{@namespace}.getById", {id, autoJoin}
-
-  getBySlug: (slug, {autoJoin} = {}) =>
-    @auth.stream "#{@namespace}.getBySlug", {slug, autoJoin}
-
-  getDefaultEntity: ({autoJoin} = {}) =>
-    @auth.stream "#{@namespace}.getDefault", {autoJoin}
-
-  getAllConversationsById: (id) =>
-    @auth.stream "#{@namespace}.getAllConversationsById", {id}
+  getDefaultEntity: =>
+    @auth.stream
+      graphql: """
+        query EntityGetDefault { entity { #{DEFAULT_FIELDS} } }
+      """
 
   joinById: (id) =>
-    @auth.call "#{@namespace}.joinById", {id}, {
-      invalidateAll: true
-    }
+    @auth.call {
+      graphql: "
+        mutation EntityJoinById($id: ID!) {
+          entityJoinById(id: $id: entity { #{DEFAULT_FIELDS} }
+        }
+      "
+      variables: {id}
+    }, {invalidateAll: true}
 
   leaveById: (id) =>
-    @auth.call "#{@namespace}.leaveById", {id}, {
-      invalidateAll: true
-    }
-
-  inviteById: (id, {userIds}) =>
-    @auth.call "#{@namespace}.inviteById", {id, userIds}, {invalidateAll: true}
-
-  sendNotificationById: (id, {title, description, pathKey}) =>
-    @auth.call "#{@namespace}.sendNotificationById", {
-      id, title, description, pathKey
-      }, {invalidateAll: true}
-
-  updateById: (id, {name, description, mode}) =>
-    @auth.call "#{@namespace}.updateById", {
-      id, name, description, mode
+    @auth.call {
+      graphql: "
+        mutation EntityLeaveById($id: ID!) {
+          entityLeaveById(id: $id: entity { #{DEFAULT_FIELDS} }
+        }
+      "
+      variables: {id}
     }, {invalidateAll: true}
 
   getDisplayName: (entity) ->

@@ -114,10 +114,12 @@ module.exports = App = (props) ->
 
     entitySlug or= model.cookie.get 'lastEntitySlug'
 
-    (if entitySlug and entitySlug isnt 'undefined' and entitySlug isnt 'null'
-      model.entity.getBySlug entitySlug, {autoJoin: false}
-    else
-      model.entity.getDefaultEntity {autoJoin: false}
+    # FIXME
+    # (if entitySlug and entitySlug isnt 'undefined' and entitySlug isnt 'null'
+    #   model.entity.getBySlug entitySlug, {autoJoin: false}
+    # else
+    console.log 'gogogogo'
+    (model.entity.getDefaultEntity()
     ).map (entity) ->
       entity or false
   .publishReplay(1).refCount()
@@ -141,11 +143,7 @@ module.exports = App = (props) ->
       serverPath = serverData.req.path
     getRoutes().get(serverPath).handler?()
   else
-    null
-
-  $backupPage or= new Pages.FourOhFourPage {
-    model, router, serverData
-  }
+    Pages.FourOhFourPage
 
   {request, $backupPage, me, hideDrawer, statusBarData, windowSize,
     $overlays, $tooltip} = useStream ->
@@ -179,9 +177,6 @@ module.exports = App = (props) ->
     #       serverData?.res?.redirect 302, route
 
 
-
-  console.log '======== RENDER =========='
-
   userAgent = model.window.getUserAgent()
   isIos = Environment.isIos {userAgent}
   isAndroid = Environment.isAndroid {userAgent}
@@ -212,8 +207,6 @@ module.exports = App = (props) ->
       # FIXME
       $page instanceof Page
   }
-
-  console.log 'ppp', $page, pageProps
 
   $body =
     z '#zorium-root', {
@@ -281,4 +274,5 @@ module.exports = App = (props) ->
         isPlain: $page?.isPlain
         meta: $page?.getMeta?()
       }
-      z 'body', $body
+      # FIXME: rm options
+      z 'body', {}, $body

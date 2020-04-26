@@ -1,3 +1,5 @@
+# TODO: need to convert to graphql before this will work
+
 module.exports = class Subscription
   namespace: 'subscriptions'
 
@@ -12,9 +14,6 @@ module.exports = class Subscription
     @auth.call "#{@namespace}.unsubscribe", {
       entityId, sourceType, sourceId, isTopic
     }, {invalidateAll: true}
-
-  sync: ({entityId}) =>
-    @auth.call "#{@namespace}.sync", {entityId}, {invalidateAll: true}
 
   getAllByEntityId: (entityId) =>
     @auth.stream "#{@namespace}.getAllByEntityId", {entityId}

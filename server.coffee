@@ -141,7 +141,7 @@ app.use (req, res, next) ->
     if err?.message?.indexOf('Timeout') is -1
       console.log err
     if err.html
-      if err.html.indexOf('<HEAD>') is -1
+      if err.html.indexOf('<HEAD') is -1
         res.redirect 302, '/'
       else
         res.send '<!DOCTYPE html>' + err.html
@@ -161,9 +161,12 @@ app.use (req, res, next) ->
     io.disconnect()
     model.dispose()
     disposable = null
-    if html.indexOf('<HEAD>') is -1
+    console.log html
+    if html.indexOf('<HEAD') is -1
+      console.log 'redir'
       res.redirect 302, '/'
     else
+      console.log 'send'
       res.send '<!DOCTYPE html>' + html
   catch err
     onError err

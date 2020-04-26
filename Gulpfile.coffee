@@ -39,6 +39,9 @@ webpackBase =
     exprContextCritical: false
   resolve:
     extensions: ['.coffee', '.js', '.json']
+    alias:
+      react: 'preact/compat'
+      'react-dom': 'preact/compat'
   output:
     filename: 'bundle.js'
     publicPath: "#{config.SCRIPTS_CDN_URL}/"

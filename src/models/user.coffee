@@ -6,36 +6,48 @@ module.exports = class User
   constructor: ({@auth, @proxy, @exoid, @cookie, @l, @overlay, @portal}) -> null
 
   getMe: ({embed} = {}) =>
-    @auth.stream "#{@namespace}.getMe", {embed}
+    @auth.stream
+      graphql: '''
+        query UserGetMe { me { id, name, data { bio } } }
+      '''
+
+  getById: (id) =>
+    @auth.stream
+      graphql: '''
+        query UserGetById($id: ID!) { user(id: $id) { id, name, data { bio } } }
+      '''
+      variables: {id}
 
   getIp: =>
     @cookie.get 'ip'
 
-  getCountry: =>
-    @auth.stream "#{@namespace}.getCountry"
-
-  getById: (id, {embed} = {}) =>
-    @auth.stream "#{@namespace}.getById", {id, embed}
-
-  search: ({query, limit}) =>
-    @auth.stream "#{@namespace}.search", {query, limit}
-
-  getReferrer: =>
-    @auth.stream "#{@namespace}.getReferrer", {}
-
-  setReferrer: (referrer) =>
-    @auth.call "#{@namespace}.setReferrer", {referrer}
-
   unsubscribeEmail: ({userId, tokenStr}) =>
-    @auth.call "#{@namespace}.unsubscribeEmail", {userId, tokenStr}
+    @auth.call
+      graphql: '''
+        mutation UserUnsubscribeEmail($userId: ID!, $tokenStr: String!) {
+          userUnsubscribeEmail(userId: $userId, tokenStr: $tokenStr): Boolean
+        }
+      '''
+      variables: {userId, tokenStr}
 
   verifyEmail: ({userId, tokenStr}) =>
-    @auth.call "#{@namespace}.verifyEmail", {userId, tokenStr}
+    @auth.call
+      graphql: '''
+        mutation UserVerifyEmail($userId: ID!, $tokenStr: String!) {
+          userVerifyEmail(userId: $userId, tokenStr: $tokenStr): Boolean
+        }
+      '''
+      variables: {userId, tokenStr}
 
   resendVerficationEmail: =>
-    @auth.call "#{@namespace}.resendVerficationEmail", {}
+    @auth.call
+      graphql: '''
+        mutation UserResendVerficationEmail {
+          userResendVerficationEmail: Boolean
+        }
+      '''
 
-  upsert: (userDiff, {file} = {}) =>
+  upsert: (diff, {file} = {}) =>
     if file
       formData = new FormData()
       formData.append 'file', file, file.name
@@ -43,8 +55,21 @@ module.exports = class User
       @proxy config.API_URL + '/upload', {
         method: 'post'
         query:
-          path: "#{@namespace}.upsert"
-          body: JSON.stringify {userDiff}
+          path: 'graphql'
+          body: JSON.stringify {
+            graphql: '''
+              mutation UserUpsert($diff UserInput!) {
+                userUpsert($diff) {
+                  user {
+                    id # FIXME: fragment?
+                    name
+                    email
+                  }
+                }
+              }
+            '''
+            variables: {input: diff}
+          }
         body: formData
       }
       # this (exoid.update) doesn't actually work... it'd be nice
@@ -54,7 +79,20 @@ module.exports = class User
         setTimeout @exoid.invalidateAll, 0
         response
     else
-      @auth.call "#{@namespace}.upsert", {userDiff}, {invalidateAll: true}
+      @auth.call
+        graphql: '''
+          mutation UserUpsert($diff UserInput!) {
+            userUpsert($diff) {
+              user {
+                id # FIXME: fragment?
+                name
+                email
+              }
+            }
+          }
+        '''
+        variables: {input: diff}
+      , {invalidateAll: true}
 
   getDisplayName: (user) =>
     user?.name or @l.get 'general.anonymous'

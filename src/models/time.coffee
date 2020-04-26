@@ -10,9 +10,10 @@ module.exports = class Time
     , 100
 
   updateServerTime: =>
-    @auth.call 'time.get', {}
-    .then (timeObj) =>
-      @serverTime = Date.parse timeObj.now
+    @auth.call
+      graphql: 'query Time { time }'
+    .then ({data}) =>
+      @serverTime = Date.parse data.time.now
 
   getServerTime: =>
     @serverTime

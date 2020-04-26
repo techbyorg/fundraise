@@ -1,3 +1,8 @@
+- FIXME:
+  - auth.coffee exoid.getCached
+  - exoid should always use graphql route? not at exoid level, but auth.call and auth.stream
+
+
 - IMPORTANT:
   - css grid fn (should be in css, not in js/html classname)
     - https://medium.com/@christinevallaure/understand-css-grid-in-5-minutes-and-translate-into-responsive-sketch-files-fa0caca14ce3

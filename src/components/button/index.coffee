@@ -43,4 +43,4 @@ module.exports = Button = (props) ->
           color: colors.$white # FIXME
       text
       if hasRipple
-        $ripple
+        z $ripple

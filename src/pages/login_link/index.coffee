@@ -16,8 +16,8 @@ module.exports = LoginLinkPage = ({model, requests, router, serverData}) ->
           route.params.userId
           route.params.tokenStr
         )
-        .switchMap (loginLink) ->
-          path = loginLink?.data?.path or {key: 'home'}
+        .switchMap ({data}) ->
+          path = data?.loginLink?.data?.path or {key: 'home'}
           # this can fail. if link is expired, won't login
           RxObservable.fromPromise model.auth.loginLink({
             userId: route.params.userId
@@ -25,7 +25,7 @@ module.exports = LoginLinkPage = ({model, requests, router, serverData}) ->
           }).then ->
             # can't really invalidate since bots/crawlers may hit this url
             # model.loginLink.invalidateById route.params.id
-            path = loginLink?.data?.path or 'home'
+            path = data?.loginLink?.data?.path or 'home'
             if window?
               router?.go path.key, null, {qs: path.qs}
             path

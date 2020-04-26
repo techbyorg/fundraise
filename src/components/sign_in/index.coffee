@@ -9,7 +9,11 @@ config = require '../../config'
 if window?
   require './index.styl'
 
+# FIXME: passing stream to child component causes 2 renders of child
+# since state updates in 2 places
+
 module.exports = SignIn = ({model, router, modeStream}) ->
+  console.log 'render sign in'
   {nameValueStream, nameErrorStream, passwordValueStream, passwordErrorStream,
     emailValueStream, emailErrorStream, modeStream,
     isLoadingStream, hasErrorStream} = useMemo ->
@@ -24,7 +28,7 @@ module.exports = SignIn = ({model, router, modeStream}) ->
     }
   , []
 
-  {me, mode, isLoading, hasError} = useStream ->
+  {me, mode, isLoading, hasError, nameValue} = useStream ->
     me: model.user.getMe()
     mode: modeStream
     isLoading: isLoadingStream
