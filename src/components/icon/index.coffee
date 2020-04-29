@@ -8,7 +8,7 @@ if window?
 
 module.exports = Icon = (props) ->
   {icon, size, isAlignedTop, isAlignedLeft, isAlignedRight,
-    isAlignedBottom, isTouchTarget, color, onclick,
+    isAlignedBottom, isTouchTarget, color, onclick, onmousedown,
     viewBox, heightRatio, hasRipple,
     touchHeight, touchWidth} = props
 
@@ -18,7 +18,7 @@ module.exports = Icon = (props) ->
   isTouchTarget ?= true
   touchWidth ?= '48px'
   touchHeight ?= '48px'
-  isClickable = Boolean onclick
+  isClickable = Boolean onclick or onmousedown
 
   tag = if hasRipple then 'a' else 'div'
 
@@ -31,6 +31,7 @@ module.exports = Icon = (props) ->
     }
     tabindex: if hasRipple then tabindex: 0 else undefined
     onclick: onclick
+    onmousedown: onmousedown
     style:
       minWidth: if isTouchTarget then touchWidth else '100%'
       minHeight: if isTouchTarget then touchHeight else '100%'

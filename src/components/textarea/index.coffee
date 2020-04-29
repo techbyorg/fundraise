@@ -57,20 +57,6 @@ module.exports = Textarea = (props) ->
     if updateDom
       $$textarea.value = value
 
-  setModifier = ({pattern}) ->
-    startPos = $$textarea.selectionStart
-    endPos = $$textarea.selectionEnd
-    selectedText = value.substring startPos, endPos
-    newSelectedText = pattern.replace '$0', selectedText
-    newOffset = pattern.indexOf '$0'
-    if newOffset is -1
-      newOffset = pattern.length
-    newValue = value.substring(0, startPos) + newSelectedText +
-               value.substring(endPos, value.length)
-    setValue newValue, {updateDom: true}
-    $$textarea.focus()
-    $$textarea.setSelectionRange startPos + newOffset, endPos + newOffset
-
   resizeTextarea = (e) ->
     $$textarea = e.target
     $$textarea.style.height = "#{defaultHeight or DEFAULT_TEXTAREA_HEIGHT}px"

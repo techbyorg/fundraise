@@ -1,6 +1,6 @@
 @require '../../vars'
 
-.z-markdown-editor
+.z-editor
   flex1()
   display: flex
   flex-direction: column
@@ -11,6 +11,9 @@
     > .icon
       display: inline-block
       position: relative
+
+      &.is-active
+        background: red
 
       > .upload-overlay
         position: absolute
@@ -24,6 +27,7 @@
   > .textarea
     width: 100%
     display: flex
+    flex-direction: column
     flex1()
     // background: getColor('$bg')
     // padding: 16px

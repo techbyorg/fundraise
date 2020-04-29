@@ -1,4 +1,5 @@
 {
+  "editor": "/:entitySlug/editor",
   "join": "/:entitySlug/join",
   "loginLink": "/:entitySlug/login-link/:userId/:tokenStr",
   "notifications": "/:entitySlug/notifications",

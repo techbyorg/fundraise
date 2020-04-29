@@ -149,6 +149,7 @@ model.portal.listen()
 ###
 
 init = ->
+  console.log 'INIIIIIIIT'
   router = new RouterService {
     model: model
     router: new LocationRouter()

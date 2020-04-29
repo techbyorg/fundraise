@@ -25,7 +25,8 @@ More to come soonish
     - be explicity about return for beforeUnmount, or use beforeUnmount fn
     - always include return, even if no fn (return null)
   - useStream for state
-  - functions
+  - usecallback functions
+  - normal functions?
   - z
 
 

@@ -18,17 +18,18 @@ $bottomBar = require './components/bottom_bar'
 Environment = require './services/environment'
 
 Pages =
-  HomePage: require './pages/home'
-  LoginLinkPage: require './pages/login_link'
-  NotificationsPage: require './pages/notifications'
-  PoliciesPage: require './pages/policies'
-  PrivacyPage: require './pages/privacy'
-  ShellPage: require './pages/shell'
-  SignInPage: require './pages/sign_in'
-  TosPage: require './pages/tos'
-  UnsubscribeEmailPage: require './pages/unsubscribe_email'
-  VerifyEmailPage: require './pages/verify_email'
-  FourOhFourPage: require './pages/404'
+  $homePage: require './pages/home'
+  $editorPage: require './pages/editor'
+  $loginLinkPage: require './pages/login_link'
+  $notificationsPage: require './pages/notifications'
+  $policiesPage: require './pages/policies'
+  $privacyPage: require './pages/privacy'
+  $shellPage: require './pages/shell'
+  $signInPage: require './pages/sign_in'
+  $tosPage: require './pages/tos'
+  $unsubscribeEmailPage: require './pages/unsubscribe_email'
+  $verifyEmaiLPage: require './pages/verify_email'
+  $404Page: require './pages/404'
 
 module.exports = App = (props) ->
   {requests, serverData, model, router, isCrawler} = props
@@ -48,18 +49,19 @@ module.exports = App = (props) ->
       _map paths, (path) ->
         routes.set path, -> Page
 
-    route 'loginLink', 'LoginLinkPage'
-    route ['home', 'signIn'], 'SignInPage'
-    route 'notifications', 'NotificationsPage'
-    route 'policies', 'PoliciesPage'
-    route 'privacy', 'PrivacyPage'
+    route 'editor', '$editorPage'
+    route 'loginLink', '$loginLinkPage'
+    route ['home', 'signIn'], '$signInPage'
+    route 'notifications', '$notificationsPage'
+    route 'policies', '$policiesPage'
+    route 'privacy', '$privacyPage'
     route 'settings', 'SettingsPage'
-    route 'shell', 'ShellPage'
-    route 'termsOfService', 'TosPage'
-    route 'unsubscribeEmail', 'UnsubscribeEmailPage'
-    route 'verifyEmail', 'VerifyEmailPage'
+    route 'shell', '$shellPage'
+    route 'termsOfService', '$tosPage'
+    route 'unsubscribeEmail', '$unsubscribeEmailPage'
+    route 'verifyEmail', '$verifyEmaiLPage'
 
-    route '404', 'FourOhFourPage'
+    route '404', '$404Page'
     routes
 
   routes = model.window.getBreakpoint().map getRoutes
@@ -88,7 +90,7 @@ module.exports = App = (props) ->
     #
     # if subdomain # equiv to /entitySlug/route
     #   route = routes.get "/#{subdomain}#{req.path}"
-    #   if route.handler?() instanceof Pages['FourOhFourPage']
+    #   if route.handler?() instanceof Pages['$404Page']
     #     route = routes.get req.path
     # else
     route = routes.get req.path
@@ -143,7 +145,7 @@ module.exports = App = (props) ->
       serverPath = serverData.req.path
     getRoutes().get(serverPath).handler?()
   else
-    Pages.FourOhFourPage
+    Pages.$404Page
 
   {request, $backupPage, me, hideDrawer, statusBarData, windowSize,
     $overlays, $tooltip} = useStream ->
@@ -160,7 +162,7 @@ module.exports = App = (props) ->
       else RxObservable.of (hideDrawer or false)
     request: requests.do ({$page, req}) ->
       # FIXME
-      # if $page instanceof Pages['FourOhFourPage']
+      # if $page instanceof Pages['$404Page']
       #   serverData?.res?.status? 404
 
     # authed: requestsAndMe.do ([{$page, req}, me, entity]) ->
@@ -251,7 +253,7 @@ module.exports = App = (props) ->
           _map $overlays, ($overlay) ->
             z $overlay
 
-          z $tooltip
+          # z $tooltip
 
           # used in color.coffee to detect support
           z '#css-variable-test',
