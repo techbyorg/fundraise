@@ -251,6 +251,8 @@ module.exports = App = (props) ->
               z $overlayPage, pageProps
 
           _map $overlays, ($overlay) ->
+            # could use React.Portal for dialogs/overlays
+            # instead of @model.overlay.open? need to weight pros/cons
             z $overlay
 
           # z $tooltip
