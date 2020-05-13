@@ -103,6 +103,7 @@ module.exports = App = (props) ->
   # used for overlay pages
   router.setRequests requests
 
+  # FIXME: memoize all this stuff
   entityStream = requests.switchMap ({route}) ->
     host = serverData?.req?.headers.host or window?.location?.host
     entitySlug = route.params.entitySlug

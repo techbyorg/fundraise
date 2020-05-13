@@ -11,7 +11,7 @@ module.exports = class Time
 
   updateServerTime: =>
     @auth.call
-      graphql: 'query Time { time }'
+      query: 'query Time { time }'
     .then ({data}) =>
       @serverTime = Date.parse data.time.now
 

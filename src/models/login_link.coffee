@@ -5,7 +5,7 @@ module.exports = class LoginLink
 
   getByUserIdAndToken: (userId, tokenStr) =>
     @auth.stream
-      graphql: """
+      query: """
         query LoginLinkGetByUserIdAndToken($userId: ID!, tokenStr: String!) {
           loginLinkGetByUserIdAndToken(userId: $userId, tokenStr: $tokenStr) {
             { loginLink { data } }

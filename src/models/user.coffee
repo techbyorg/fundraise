@@ -7,13 +7,13 @@ module.exports = class User
 
   getMe: ({embed} = {}) =>
     @auth.stream
-      graphql: '''
+      query: '''
         query UserGetMe { me { id, name, data { bio } } }
       '''
 
   getById: (id) =>
     @auth.stream
-      graphql: '''
+      query: '''
         query UserGetById($id: ID!) { user(id: $id) { id, name, data { bio } } }
       '''
       variables: {id}
@@ -23,7 +23,7 @@ module.exports = class User
 
   unsubscribeEmail: ({userId, tokenStr}) =>
     @auth.call
-      graphql: '''
+      query: '''
         mutation UserUnsubscribeEmail($userId: ID!, $tokenStr: String!) {
           userUnsubscribeEmail(userId: $userId, tokenStr: $tokenStr): Boolean
         }
@@ -32,7 +32,7 @@ module.exports = class User
 
   verifyEmail: ({userId, tokenStr}) =>
     @auth.call
-      graphql: '''
+      query: '''
         mutation UserVerifyEmail($userId: ID!, $tokenStr: String!) {
           userVerifyEmail(userId: $userId, tokenStr: $tokenStr): Boolean
         }
@@ -41,7 +41,7 @@ module.exports = class User
 
   resendVerficationEmail: =>
     @auth.call
-      graphql: '''
+      query: '''
         mutation UserResendVerficationEmail {
           userResendVerficationEmail: Boolean
         }
@@ -57,7 +57,7 @@ module.exports = class User
         query:
           path: 'graphql'
           body: JSON.stringify {
-            graphql: '''
+            query: '''
               mutation UserUpsert($diff UserInput!) {
                 userUpsert($diff) {
                   user {
@@ -80,7 +80,7 @@ module.exports = class User
         response
     else
       @auth.call
-        graphql: '''
+        query: '''
           mutation UserUpsert($diff UserInput!) {
             userUpsert($diff) {
               user {

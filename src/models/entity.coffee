@@ -7,13 +7,13 @@ module.exports = class Entity
 
   getAll: =>
     @auth.stream
-      graphql: """
+      query: """
         query EntityGetAll { entities { #{DEFAULT_FIELDS} }
       """
 
   getAllByUserId: (userId) =>
     @auth.stream
-      graphql: """
+      query: """
         query EntityGetallByUserId($userId: ID!) {
           entities(userId: $userId) {
             #{DEFAULT_FIELDS}
@@ -24,27 +24,27 @@ module.exports = class Entity
 
   getById: (id) =>
     @auth.stream
-      graphql: """
+      query: """
         query EntityGetById($slug: ID!) { entity(id: $id) { #{DEFAULT_FIELDS} }
       """
       variables: {id}
 
   getBySlug: (slug) =>
     @auth.stream
-      graphql: """
+      query: """
         query EntityGetBySlug($slug: String!) { entity(slug: $slug) { #{DEFAULT_FIELDS} }
       """
       variables: {slug}
 
   getDefaultEntity: =>
     @auth.stream
-      graphql: """
+      query: """
         query EntityGetDefault { entity { #{DEFAULT_FIELDS} } }
       """
 
   joinById: (id) =>
     @auth.call {
-      graphql: "
+      query: "
         mutation EntityJoinById($id: ID!) {
           entityJoinById(id: $id: entity { #{DEFAULT_FIELDS} }
         }
@@ -54,7 +54,7 @@ module.exports = class Entity
 
   leaveById: (id) =>
     @auth.call {
-      graphql: "
+      query: "
         mutation EntityLeaveById($id: ID!) {
           entityLeaveById(id: $id: entity { #{DEFAULT_FIELDS} }
         }

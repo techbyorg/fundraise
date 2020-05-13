@@ -19,14 +19,14 @@ module.exports = class Auth
       language = @l.getLanguageStr()
       (if accessToken
         @exoid.getCached 'graphql',
-          graphql: '''
+          query: '''
             query Query { me { id, name, data { bio } } }
           '''
         .then (user) =>
           if user?
             return {data: userLoginAnon: {accessToken}}
           @exoid.call 'graphql',
-            graphql: '''
+            query: '''
               query Query { me { id, name, data { bio } } }
             '''
           .then ->
@@ -34,7 +34,7 @@ module.exports = class Auth
         .catch =>
           @exoid.call 'graphql',
             # FIXME: cleanup all this duplication
-            graphql: '''
+            query: '''
               mutation LoginAnon {
                 userLoginAnon {
                   accessToken
@@ -43,7 +43,7 @@ module.exports = class Auth
             '''
       else
         @exoid.call 'graphql',
-          graphql: '''
+          query: '''
             mutation LoginAnon {
               userLoginAnon {
                 accessToken
@@ -52,7 +52,9 @@ module.exports = class Auth
           ''')
       .then ({data}) =>
         console.log 'RESPONSE', data
-        @setAccessToken data?.userLoginAnon.accessToken
+        accessToken = data?.userLoginAnon.accessToken
+        if accessToken and accessToken isnt 'undefined'
+          @setAccessToken data?.userLoginAnon.accessToken
     .publishReplay(1).refCount()
 
   setAccessToken: (accessToken) =>
@@ -62,7 +64,7 @@ module.exports = class Auth
     @setAccessToken ''
     language = @l.getLanguageStr()
     @exoid.call 'graphql',
-      graphql: '''
+      query: '''
         mutation LoginAnon {
           userLoginAnon {
             accessToken
@@ -99,7 +101,7 @@ module.exports = class Auth
 
   login: ({email, password} = {}) =>
     @exoid.call 'graphql',
-      graphql: '''
+      query: '''
         mutation UserLoginEmail($email: String!, $password: String!) {
           userLoginEmail(email: $email, password: $password) {
             accessToken
@@ -111,7 +113,7 @@ module.exports = class Auth
 
   loginLink: ({userId, tokenStr} = {}) =>
     @exoid.call 'graphql',
-      graphql: '''
+      query: '''
         mutation UserLoginLink($userId: ID!, $tokenStr: String!) {
           userLoginLink(userId: $userId, tokenStr: $tokenStr) {
             accessToken
@@ -121,24 +123,24 @@ module.exports = class Auth
       variables: {userId, tokenStr}
     .then @afterLogin
 
-  stream: ({graphql, variables}, options = {}) =>
+  stream: ({query, variables}, options = {}) =>
     options = _pick options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn'
       'isStreamed', 'limit'
     ]
     @waitValidAuthCookie
     .switchMap =>
-      @exoid.stream 'graphql', {graphql, variables}, options
+      @exoid.stream 'graphql', {query, variables}, options
 
-  call: ({graphql, variables}, options = {}) =>
+  call: ({query, variables}, options = {}) =>
     {invalidateAll, invalidateSingle, additionalDataStream} = options
 
-    unless graphql
+    unless query
       console.warn 'missing', arguments[0]
 
     @waitValidAuthCookie.take(1).toPromise()
     .then =>
-      @exoid.call 'graphql', {graphql, variables}, {additionalDataStream}
+      @exoid.call 'graphql', {query, variables}, {additionalDataStream}
     .then (response) =>
       if invalidateAll
         console.log 'Invalidating all'

@@ -159,7 +159,7 @@ module.exports = class Portal
     iosAppUrl = config.IOS_APP_URL
     googlePlayAppUrl = config.GOOGLE_PLAY_APP_URL
 
-    if Environment.isAndroid() and @isChrome()
+    if Environment.isAndroid() and @isChrome() and false # FIXME
       if @installOverlay.prompt
         prompt = @installOverlay.prompt
         @installOverlay.setPrompt null

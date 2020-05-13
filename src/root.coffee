@@ -174,10 +174,10 @@ init = ->
   # re-fetch and potentially replace data, in case html is served from cache
   model.validateInitialCache()
 
-  window.addEventListener 'beforeinstallprompt', (e) ->
-    e.preventDefault()
-    model.installOverlay.setPrompt e
-    return false
+  # window.addEventListener 'beforeinstallprompt', (e) ->
+  #   e.preventDefault()
+  #   model.installOverlay.setPrompt e
+  #   return false
 
   model.portal.call 'networkInformation.onOffline', onOffline
   model.portal.call 'networkInformation.onOnline', onOnline
