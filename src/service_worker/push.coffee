@@ -44,7 +44,7 @@ module.exports = class Push
         if not isFocused or (
           contextId and contextId isnt message.data?.contextId
         )
-          self.registration.showNotification 'Substance',
+          self.registration.showNotification 'Breezy',
             icon: if message.icon \
                   then message.icon \
                   else "#{config.CDN_URL}/android-chrome-192x192.png"

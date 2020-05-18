@@ -44,7 +44,7 @@ class RouterService
     unless ignoreHistory
       @history.push(path or window?.location.pathname)
 
-    if @history[0] is '/' or @history[0] is @get('places') or reset
+    if @history[0] is '/' or @history[0] is @get('home') or reset
       @history = [path]
 
     if path
@@ -222,10 +222,10 @@ class RouterService
       return hostParts[0]
 
   link: (node) =>
-    node.properties.onclick = ev (e, $$el) =>
+    node.props.onclick = ev (e, $$el) =>
       if isSimpleClick e
         e.preventDefault()
-        @openLink $$el.href
+        @openLink node.props.href
 
     return node
 

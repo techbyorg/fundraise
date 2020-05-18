@@ -1,16 +1,19 @@
 {
-  "editor": "/:entitySlug/editor",
   "join": "/:entitySlug/join",
   "loginLink": "/:entitySlug/login-link/:userId/:tokenStr",
   "notifications": "/:entitySlug/notifications",
-  "policies": "/:entitySlug/policies",
-  "privacy": "/:entitySlug/privacy",
   "settings": "/:entitySlug/settings",
-  "shell": "/:entitySlug/cache-shell",
   "signIn": "/:entitySlug/sign-in",
-  "termsOfService": "/:entitySlug/tos",
   "unsubscribeEmail": "/:entitySlug/unsubscribe-email/:userId/:tokenStr",
   "verifyEmail": "/:entitySlug/verify-email/:userId/:tokenStr",
+  "404": "/:entitySlug/*",
+
   "home": "/",
-  "404": "/:entitySlug/*"
+  "fundByEin": "/fund/ein/:ein",
+  "orgByEin": "/org/ein/:ein",
+  "policies": "/policies",
+  "privacy": "/privacy",
+  "search": "/search",
+  "shell": "/cache-shell",
+  "termsOfService": "/tos"
 }

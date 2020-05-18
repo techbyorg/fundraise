@@ -40,7 +40,7 @@ module.exports = AppBar = (props) ->
           if hasLogo
             [
               z '.icon'
-              'substance'
+              'breezy'
             ]
           else
             title

@@ -123,14 +123,18 @@ module.exports = class Auth
       variables: {userId, tokenStr}
     .then @afterLogin
 
-  stream: ({query, variables}, options = {}) =>
+  stream: ({query, variables, pull}, options = {}) =>
     options = _pick options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn'
       'isStreamed', 'limit'
     ]
     @waitValidAuthCookie
     .switchMap =>
-      @exoid.stream 'graphql', {query, variables}, options
+      stream = @exoid.stream 'graphql', {query, variables}, options
+      if pull
+        stream.map ({data}) -> data[pull]
+      else
+        stream
 
   call: ({query, variables}, options = {}) =>
     {invalidateAll, invalidateSingle, additionalDataStream} = options

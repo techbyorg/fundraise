@@ -129,11 +129,11 @@ module.exports = Head = (props) ->
     # reccomended 32 x 32 png
     # favicon: config.CDN_URL + '/favicon.png'
     # FIXME
-    favicon: 'https://www.substance.app/assets/favicon-eec4bba32550de64c3ba12e7acaa5ef6573b23096d6cb083f72f35bae35d7f7a.png'
+    favicon: 'https://www.breezy.app/assets/favicon-eec4bba32550de64c3ba12e7acaa5ef6573b23096d6cb083f72f35bae35d7f7a.png'
     manifestUrl: '/manifest.json'
   }, meta
 
-  meta.title = "#{meta.title} | Substance"
+  meta.title = "#{meta.title} | Breezy"
 
   meta = _merge {
     # twitter:

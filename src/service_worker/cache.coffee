@@ -102,9 +102,9 @@ module.exports = class Cache
     request = event.request
     # console.log 'fetch'
     # console.log event.request.url
-    if event.request.url.match /(:\/\/substance.app|localhost:50340)([^\.]*)$/i
-      request = 'https://substance.app/cache-shell'
-      # request = 'https://staging.substance.app/cache-shell'
+    if event.request.url.match /(:\/\/breezy.app|localhost:50340)([^\.]*)$/i
+      request = 'https://breezy.app/cache-shell'
+      # request = 'https://staging.breezy.app/cache-shell'
       # request = 'http://localhost:50340/cache-shell'
 
     event.respondWith(

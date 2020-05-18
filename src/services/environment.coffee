@@ -48,7 +48,7 @@ class Environment
 
   getAppKey: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
-    matches = userAgent.match /substance\/([a-zA-Z0-9-]+)/
+    matches = userAgent.match /breezy\/([a-zA-Z0-9-]+)/
     matches?[1] or 'browser'
 
   hasPushSupport: ->

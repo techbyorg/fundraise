@@ -1,5 +1,6 @@
-{z, classKebab, useStream} = require 'zorium'
+{z, classKebab, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
+RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -14,15 +15,18 @@ module.exports = Dropdown = (props) ->
   {model, valueStreams, errorStream, options, currentText,
     isDisabled = false} = props
 
-  {valueStreams} = useMemo ->
-    {valueStreams: valueStreams or new RxReplaySubject 1}
+  {valueStreams, isOpenStream} = useMemo ->
+    {
+      valueStreams: valueStreams or new RxReplaySubject 1
+      isOpenStream: new RxBehaviorSubject false
+    }
   , []
   # valueStreams.next RxObservable.of null
 
   {value, isOpen, options} = useStream ->
     value: valueStreams?.switch()
     error: errorStream
-    isOpen: false
+    isOpen: isOpenStream
     options: options
 
   toggle = ->

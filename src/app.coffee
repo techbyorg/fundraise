@@ -18,13 +18,15 @@ $bottomBar = require './components/bottom_bar'
 Environment = require './services/environment'
 
 Pages =
+  $fundPage: require './pages/fund'
   $homePage: require './pages/home'
-  $editorPage: require './pages/editor'
+  $orgPage: require './pages/org'
   $loginLinkPage: require './pages/login_link'
   $notificationsPage: require './pages/notifications'
   $policiesPage: require './pages/policies'
   $privacyPage: require './pages/privacy'
   $shellPage: require './pages/shell'
+  $searchPage: require './pages/search'
   $signInPage: require './pages/sign_in'
   $tosPage: require './pages/tos'
   $unsubscribeEmailPage: require './pages/unsubscribe_email'
@@ -49,14 +51,16 @@ module.exports = App = (props) ->
       _map paths, (path) ->
         routes.set path, -> Page
 
-    route 'editor', '$editorPage'
+    route 'fundByEin', '$fundPage'
     route 'loginLink', '$loginLinkPage'
-    route ['home', 'signIn'], '$signInPage'
     route 'notifications', '$notificationsPage'
+    route 'orgByEin', '$orgPage'
     route 'policies', '$policiesPage'
     route 'privacy', '$privacyPage'
-    route 'settings', 'SettingsPage'
+    route 'settings', '$settingsPage'
+    route ['home', 'search'], '$searchPage'
     route 'shell', '$shellPage'
+    route 'signIn', '$signInPage'
     route 'termsOfService', '$tosPage'
     route 'unsubscribeEmail', '$unsubscribeEmailPage'
     route 'verifyEmail', '$verifyEmaiLPage'
@@ -206,9 +210,10 @@ module.exports = App = (props) ->
     # $bottomBar: if $page.hasBottomBar then z $bottomBar, {
     #   model, router, requests, entityStream, serverData
     # }
-    requests: requests.filter ({$page}) ->
-      # FIXME
-      $page instanceof Page
+    requests: requests
+    # .filter ({$page}) ->
+    #   # FIXME
+    #   $page instanceof Page
   }
 
   $body =
