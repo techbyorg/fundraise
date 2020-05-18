@@ -124,13 +124,13 @@ module.exports = Org = ({model, router, irsOrgStream}) ->
                 z '.top-metrics',
                   z '.metric',
                     z '.value',
-                      FormatService.number irsOrg990?.employeeCount or 0
+                      FormatService.number irsOrg?.employeeCount or 0
                     z '.name',
                       model.l.get 'org.employees'
                   z '.metric',
                     z '.value',
                       '$'
-                      FormatService.number irsOrg990Stats?.last?.assets
+                      FormatService.number irsOrg?.assets
                     z '.name',
                       model.l.get 'org.assets'
                 z '.block',

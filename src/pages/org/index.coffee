@@ -27,7 +27,7 @@ module.exports = OrgPage = ({model, requests, router}) ->
   z '.p-org',
     z $appBar, {
       model
-      title: irsOrg?.data?.irsOrg.name
+      title: irsOrg?.name
       $topLeftButton: z $buttonBack, {
         model, router, color: colors.$header500Icon
       }

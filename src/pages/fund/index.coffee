@@ -27,7 +27,7 @@ module.exports = FundPage = ({model, requests, router}) ->
   z '.p-fund',
     z $appBar, {
       model
-      title: irsFund?.data?.irsFund.name
+      title: irsFund?.name
       $topLeftButton: z $buttonBack, {
         model, router, color: colors.$header500Icon
       }
