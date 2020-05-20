@@ -14,3 +14,6 @@ don't include all of rxjs, lodash
 - Set user and entityUser in avatar header instead of as props
 - https://github.com/IguMail/socketio-shared-webworker
 - optimize FormattedMessage. markdown parser is slow (1-5ms per message)
+
+
+- hopefully deferred resolvers will become a think in apollo-server, then we can implement instead of manually doing multiple queries (though it's less of a perf gain, more about clean code)

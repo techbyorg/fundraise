@@ -6,7 +6,18 @@ module.exports = class IrsPerson
   constructor: ({@auth}) -> null
 
   getAllByEin: (ein) =>
-    @auth.stream "#{@namespace}.getAllByEin", {ein}
+    @auth.stream
+      query: '''
+        query IrsPersonGetAllByEin($ein: String!) {
+          irsPersons(ein: $ein) {
+            nodes { name, ein }
+          }
+        }
+      '''
+      variables: {ein}
+      pull: 'irsPersons'
+    , {ignoreCache: true}
+
 
   search: ({query, limit}) =>
     @auth.stream
@@ -14,5 +25,5 @@ module.exports = class IrsPerson
         query IrsPersonSearch($query: JSON!) { irsPersons(query: $query) { nodes { name, ein } } }
       '''
       variables: {query}
-      pull: 'irsPerson'
+      pull: 'irsPersons'
     , {ignoreCache: true}

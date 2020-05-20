@@ -41,7 +41,7 @@ module.exports = Checkbox = (props) ->
       style:
         background: if value then colors.checked else colors.background
         border: if value \
-                then "1px solid #{colors.checkedBorder}"
+                then "1px solid #{colors.checkedBorder}" \
                 else "1px solid #{colors.border}"
       disabled: if isDisabled then true else undefined
       checked: if value then true else undefined

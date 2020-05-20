@@ -4,7 +4,7 @@ require 'rxjs/add/observable/of'
 
 $appBar = require '../../components/app_bar'
 $buttonBack = require '../../components/button_back'
-# $fund = require '../../components/fund'
+$fund = require '../../components/fund'
 colors = require '../../colors'
 
 if window?
@@ -14,15 +14,12 @@ module.exports = FundPage = ({model, requests, router}) ->
   {irsFundStream} = useMemo ->
     {
       irsFundStream: requests.switchMap ({route}) =>
-        console.log 'get', route.params.ein
         model.irsFund.getByEin route.params.ein
     }
   , []
 
   {irsFund} = useStream ->
     irsFund: irsFundStream
-
-  console.log 'fund', irsFund
 
   z '.p-fund',
     z $appBar, {
@@ -32,4 +29,4 @@ module.exports = FundPage = ({model, requests, router}) ->
         model, router, color: colors.$header500Icon
       }
     }
-    # z $fund, {model, router, irsFundStream}
+    z $fund, {model, router, irsFundStream}

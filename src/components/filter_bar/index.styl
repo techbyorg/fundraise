@@ -1,0 +1,66 @@
+@require '../../vars'
+
+.z-filter-bar
+  pointer-events: all
+
+  > .bar
+    background: getColor('$tertiary0')
+    width: 100%
+    min-height: 39px
+    border-bottom: 1px solid getColor('$black12')
+    box-sizing: border-box
+    display: flex
+    // margin-top: 60px
+
+    > .show
+      font-caption(false)
+      cursor: pointer
+      // background: getColor('$bg600')
+      padding: 0 16px
+      height: 34px
+      // margin-right: 4px
+      position: relative
+      display: flex
+      align-items: center
+
+    > .filters
+      flex1()
+      white-space: nowrap
+      overflow-x: auto
+      overflow-y: hidden
+      -webkit-overflow-scrolling: touch
+
+      > .filter
+        // TODO: shared with coordinate sheet button, make an fn for this?
+        font-body2()
+        cursor: pointer
+        display: inline-block
+        background: getColor('$tertiary0')
+        border: 1px solid getColor('$tertiary300')
+        border-radius: 16px
+        margin: 0 4px 12px 4px
+        padding: 6px 12px
+        position: relative
+
+        &.has-value
+          color: getColor('$primaryMain')
+          border: 1px solid getColor('$primaryMain')
+
+          &.has-more
+            &:after
+              border-top: 4px solid getColor('$primaryMain')
+
+        &.has-more
+          padding-right: 24px
+
+          &:after
+            content: ''
+            position: absolute
+            top: 50%
+            margin-top: -2px
+            right: 10px
+            width: 0
+            height: 0
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid getColor('$tertiary800')

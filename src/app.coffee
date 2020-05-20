@@ -184,6 +184,8 @@ module.exports = App = (props) ->
     #       serverData?.res?.redirect 302, route
 
 
+  console.log 'overlays', $overlays
+
   userAgent = model.window.getUserAgent()
   isIos = Environment.isIos {userAgent}
   isAndroid = Environment.isAndroid {userAgent}
@@ -259,7 +261,7 @@ module.exports = App = (props) ->
           _map $overlays, ($overlay) ->
             # could use React.Portal for dialogs/overlays
             # instead of @model.overlay.open? need to weight pros/cons
-            z $overlay
+            $overlay
 
           # z $tooltip
 

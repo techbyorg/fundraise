@@ -8,7 +8,11 @@ module.exports = class IrsFund
   getByEin: (ein) =>
     @auth.stream
       query: '''
-        query IrsFundGetByEin($ein: String!) { irsFund(ein: $ein) { name, ein } }
+        query IrsFundGetByEin($ein: String!) {
+          irsFund(ein: $ein) {
+            name, ein
+          }
+        }
       '''
       variables: {ein}
       pull: 'irsFund'
@@ -16,7 +20,11 @@ module.exports = class IrsFund
   search: ({query, limit}) =>
     @auth.stream
       query: '''
-        query IrsFundSearch($query: JSON!) { irsFunds(query: $query) { nodes { name, ein } } }
+        query IrsFundSearch($query: JSON!) {
+          irsFunds(query: $query) {
+            nodes { name, ein }
+          }
+        }
       '''
       variables: {query}
       pull: 'irsFunds'
