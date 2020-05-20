@@ -58,7 +58,7 @@ module.exports = TooltipPositioner = (props) ->
         disposable?.unsubscribe()
         setTimeout ->
           checkIsReady = ->
-            if $$el and $$el.clientWidth
+            if $$el and $$el.current.clientWidth
               _show $$el
             else
               setTimeout checkIsReady, 100
@@ -76,7 +76,7 @@ module.exports = TooltipPositioner = (props) ->
     $tooltip?.close()
 
   _show = ($$el) ->
-    rect = $$el.getBoundingClientRect()
+    rect = $$el.current.getBoundingClientRect()
     initialPosition = {x: rect.left, y: rect.top}
 
     $tooltip = new Tooltip {

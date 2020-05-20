@@ -12,10 +12,9 @@ _startCase = require 'lodash/startCase'
 _zipObject = require 'lodash/zipObject'
 
 $checkbox = require '../checkbox'
-Icon = require '../icon'
-PrimaryInput = require '../primary_input'
-Input = require '../input'
-InputRange = require '../input_range'
+$icon = require '../icon'
+$input = require '../input'
+$inputRange = require '../input_range'
 colors = require '../../colors'
 config = require '../../config'
 
@@ -28,7 +27,6 @@ module.exports = FilterContent = ({model, filter, isGrouped}) ->
       when 'gtlt'
         operatorStream = new RxBehaviorSubject filterValue?.operator
         valueStream = new RxBehaviorSubject filterValue?.value or ''
-        $input = new Input {value: valueStream}
         filter.valueStreams.next RxObservable.combineLatest(
           operatorStream, valueStream, (vals...) -> vals
         ).map ([operator, value]) ->

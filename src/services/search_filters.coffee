@@ -13,16 +13,12 @@ _some = require 'lodash/some'
 _zipWith = require 'lodash/zipWith'
 
 class SearchFiltersService
-  getFundFilters: ->
+  getFundFilters: (model) ->
     [
       {
-        field: 'subType'
-        type: 'fieldList'
-        items: [
-          {key: 'public', label: '1'}
-          {key: 'private', label: 'two'}
-        ]
-        name: 'abc'
+        field: 'assets'
+        type: 'gtlt'
+        name: model.l.get 'filter.assets'
       }
   ]
 
@@ -85,7 +81,7 @@ class SearchFiltersService
     .publishReplay(1).refCount()
 
 
-  getESQueryFromFilters: (filters) =>
+  getESQueryFilterFromFilters: (filters) =>
     groupedFilters = _groupBy filters, 'field'
     filter = _filter _map groupedFilters, (fieldFilters, field) =>
       unless _some fieldFilters, 'value'

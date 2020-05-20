@@ -155,7 +155,7 @@ module.exports = ProfileDialog = (props) ->
     className: classKebab {isVisible: me and user and isVisible}
   },
     z $dialog,
-      onLeave: ->
+      onClose: ->
         model.overlay.close(
       $content:
         z '.z-profile-dialog_dialog', {

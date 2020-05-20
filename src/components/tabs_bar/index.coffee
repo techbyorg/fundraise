@@ -13,7 +13,7 @@ module.exports = TabsBar = (props) ->
   $$el = useRef()
 
   useEffect ->
-    $$el.addEventListener 'touchmove', onTouchMove
+    $$el.current.addEventListener 'touchmove', onTouchMove
 
     return ->
       $$el?.current.removeEventListener 'touchmove', onTouchMove

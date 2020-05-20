@@ -8,25 +8,33 @@ if window?
   require './index.styl'
 
 module.exports = OrgBox = ({model, router, org}) ->
-  {esQueryStream, filtersStream} = useMemo ->
+  {searchResultsStream, filtersStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {
-      model, filters: SearchFiltersService.getFundFilters()
+      model, filters: SearchFiltersService.getFundFilters(model)
     }
+
+    esQueryFilterStream = filtersStream.map (filters) ->
+      SearchFiltersService.getESQueryFilterFromFilters(
+        filters
+      )
 
     {
       filtersStream
-      esQueryStream: filtersStream.map (filters) ->
-        console.log 'get query', filters
-        SearchFiltersService.getESQueryFromFilters(
-          filters
-        )
+      searchResultsStream: esQueryFilterStream.switchMap (esQueryFilter) ->
+        console.log 'query', esQueryFilter
+        model.irsOrg.search {
+          query:
+            bool:
+              filter: esQueryFilter
+          limit: 10
+        }
     }
   , []
 
-  {esQuery} = useStream ->
-    esQuery: esQueryStream
+  {searchResults} = useStream ->
+    searchResults: searchResultsStream
 
-  console.log 'esquery', esQuery
+  console.log 'RESSSS', searchResults
 
   z '.z-search',
     z $filterBar, {model, filtersStream}

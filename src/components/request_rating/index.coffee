@@ -20,7 +20,7 @@ module.exports = RequestRating = ({model}) ->
 
   z '.z-request-rating',
       z $dialog,
-        onLeave: ->
+        onClose: ->
           localStorage.hasSeenRequestRating = '1'
           model.overlay.close()
         isVanilla: true

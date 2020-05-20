@@ -24,7 +24,7 @@ module.exports = Tooltip = (props) ->
   useEffect ->
     setTimeout ->
       checkIsReady = ->
-        if $$el and $$el.clientWidth
+        if $$el and $$el.current.clientWidth
           _setPosition $$el
         else
           setTimeout checkIsReady, 100
@@ -41,7 +41,7 @@ module.exports = Tooltip = (props) ->
 
   _setPosition = ($$el) ->
     isPositionSet = true
-    rect = $$el.getBoundingClientRect()
+    rect = $$el.current.getBoundingClientRect()
     windowSize = model.window.getSize().getValue()
     position = {x: rect.left, y: rect.top}
     size = {width: rect.width, height: rect.height}

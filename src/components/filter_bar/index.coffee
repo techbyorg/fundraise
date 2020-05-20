@@ -4,8 +4,7 @@ require 'rxjs/add/observable/of'
 _map = require 'lodash/map'
 _orderBy = require 'lodash/orderBy'
 
-# $filterSheet = require '../filter_sheet'
-$filterContent = require '../filter_content'
+$filterSheet = require '../filter_sheet'
 colors = require '../../colors'
 
 if window?
@@ -17,12 +16,12 @@ module.exports = FilterBar = ({model, filtersStream}) ->
     filters: filtersStream.map (filters) ->
       _orderBy filters, (({value}) -> value?), 'desc'
 
-  console.log 'ff', filters
-
   showFilterSheet = (filter) =>
     id = Date.now()
-    model.overlay.open (z $filterContent, {
+    model.overlay.open (z $filterSheet, {
       model, filter, id
+      onClose: ->
+        model.overlay.close id
     }), {id}
 
   z '.z-filter-bar',

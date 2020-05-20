@@ -13,12 +13,12 @@ if window?
   require './index.styl'
 
 module.exports = Sheet = (props) ->
-  {model, router, id, icon, message, submitButton, $content}
+  {model, router, id, icon, message, submitButton, onClose, $content} = props
 
   $$el = useRef()
 
   useEffect ->
-    $$el.classList.add 'is-visible'
+    $$el.current.classList.add 'is-visible'
 
     return null
   , []
@@ -27,9 +27,13 @@ module.exports = Sheet = (props) ->
     ref: $$el
     key: id
   },
+    z '.backdrop', {
+      onclick: onClose
+    }
+
     z '.overlay',
       onclick: ->
-        $$el.classList.remove 'is-visible'
+        $$el.current.classList.remove 'is-visible'
         setTimeout ->
           model.overlay.close {id}
         , CLOSE_DELAY_MS

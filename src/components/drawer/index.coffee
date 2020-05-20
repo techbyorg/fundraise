@@ -96,13 +96,13 @@ module.exports = Drawer = (props) ->
 
     disposable = isOpenStream.subscribe (isOpen) ->
       if isOpen then open() else close()
-      $$overlay = $$el.querySelector '.overlay-tab'
+      $$overlay = $$el.current.querySelector '.overlay-tab'
       updateOpacity()
 
     isScrolling = false
     iScrollContainer.on 'scrollStart', ->
       isScrolling = true
-      $$overlay = $$el.querySelector '.overlay-tab'
+      $$overlay = $$el.current.querySelector '.overlay-tab'
       update = ->
         updateOpacity()
         if isScrolling

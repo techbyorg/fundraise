@@ -18,12 +18,12 @@ module.exports = Ripple = ({color, isCircle, isCenter, onComplete, fadeIn}) ->
   $$el = useRef()
 
   ripple = ({$$el, color, isCenter, mouseX, mouseY, onComplete, fadeIn} = {}) ->
-    $$wave = $$el.querySelector '.wave'
+    $$wave = $$el.current.querySelector '.wave'
 
     unless $$wave
       return
 
-    {width, height, top, left} = $$el.getBoundingClientRect()
+    {width, height, top, left} = $$el.current.getBoundingClientRect()
 
     if isCenter
       x = width / 2

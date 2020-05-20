@@ -10,31 +10,31 @@ $button = require '../button'
 colors = require '../../colors'
 
 module.exports = Dialog = (props) ->
-  {onLeave, $content = '', $title, cancelButton, resetButton, submitButton, isVanilla,
+  {onClose, $content = '', $title, cancelButton, resetButton, submitButton, isVanilla,
     isWide} = props
 
   $$el = useRef()
 
   useEffect ->
-    $$el.classList.add 'is-mounted'
+    $$el.current.classList.add 'is-mounted'
     window.addEventListener 'keydown', keyListener
 
     return ->
-      $$el.classList.remove 'is-mounted'
+      $$el.current.classList.remove 'is-mounted'
       window.removeEventListener 'keydown', keyListener
   , []
 
   keyListener = (e) ->
     if (e.key == 'Escape' or e.key == 'Esc' or e.keyCode == 27)
       e.preventDefault()
-      onLeave()
+      onClose()
 
   z '.z-dialog', {
     ref: $$el
     className: classKebab {isVanilla, isWide}
   },
     z '.backdrop', {
-      onclick: onLeave
+      onclick: onClose
     }
 
     z '.dialog',

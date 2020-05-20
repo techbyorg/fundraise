@@ -35,7 +35,7 @@ module.exports = Textarea = (props) ->
     error: errorStream
 
   useEffect ->
-    $$textarea = $$el.querySelector('#textarea')
+    $$textarea = $$el.current.querySelector('#textarea')
     valueStreams.take(1).subscribe ->
       setTimeout ->
         resizeTextarea {target: $$textarea}
@@ -107,9 +107,9 @@ module.exports = Textarea = (props) ->
       oninput: z.ev (e, $$el) ->
         resizeTextarea e
         if valueStreams
-          valueStreams.next RxObservable.of $$el.value
+          valueStreams.next RxObservable.of $$el.current.value
         else
-          value.next $$el.value
+          value.next $$el.current.value
       onfocus: z.ev (e, $$el) ->
         isFocused.next true
       onblur: z.ev (e, $$el) ->

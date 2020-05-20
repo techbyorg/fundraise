@@ -15,7 +15,7 @@ module.exports = GetAppDialog = ({model}) ->
 
   z '.z-get-app-dialog',
     z $dialog,
-      onLeave: ->
+      onClose: ->
         model.overlay.close()
       isVanilla: true
       $title: model.l.get 'getAppDialog.title'

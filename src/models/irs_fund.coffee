@@ -20,12 +20,12 @@ module.exports = class IrsFund
   search: ({query, limit}) =>
     @auth.stream
       query: '''
-        query IrsFundSearch($query: JSON!) {
-          irsFunds(query: $query) {
+        query IrsFundSearch($query: JSON!, $limit: Int) {
+          irsFunds(query: $query, limit: $limit) {
             nodes { name, ein }
           }
         }
       '''
-      variables: {query}
+      variables: {query, limit}
       pull: 'irsFunds'
     , {ignoreCache: true}

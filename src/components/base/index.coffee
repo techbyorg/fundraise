@@ -59,7 +59,7 @@ module.exports = class Base
 
   onDragEnd: ->
     $$dragEl = null
-    order = _map $$el.querySelectorAll('.draggable'), ({dataset}) ->
+    order = _map $$el.current.querySelectorAll('.draggable'), ({dataset}) ->
       dataset.id
     onReorder order
 
