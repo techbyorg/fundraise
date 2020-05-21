@@ -16,7 +16,7 @@ if window?
   require './index.styl'
 
 module.exports = Org = ({model, router, irsOrgStream}) ->
-  {irsOrg990StatsStream, metricValueStreams,
+  {irsOrg990StatsStream, metricValueStreams, contributionsStream,
     irsOrg990StatsAndMetricStream} = useMemo ->
 
     metricValueStreams = new RxReplaySubject 1
@@ -31,15 +31,18 @@ module.exports = Org = ({model, router, irsOrgStream}) ->
     {
       irsOrg990StatsStream
       metricValueStreams
+      contributionsStream: irsOrgStream.switchMap (irsOrg) ->
+        model.irsContribution.getAllByToId irsOrg.ein
       irsOrg990StatsAndMetricStream: RxObservable.combineLatest(
         irsOrg990StatsStream, metricValueStreams.switch(), (vals...) -> vals
       )
     }
   , []
 
-  {me, metric, irsOrg, irsPersons, graphData, irsOrg990Stats
+  {me, contributions, metric, irsOrg, irsPersons, graphData, irsOrg990Stats
     org} = useStream ->
     me: model.user.getMe()
+    contributions: contributionsStream
     metric: metricValueStreams.switch()
     graphData: irsOrg990StatsAndMetricStream.map ([stats, metric]) ->
       console.log stats, metric
@@ -66,6 +69,7 @@ module.exports = Org = ({model, router, irsOrgStream}) ->
   console.log 'ORGID', org?.id
   console.log 'USERID', me?.id
   console.log graphData
+  console.log 'contrib', contributions
 
   z '.z-org',
     z '.g-grid.overflow-visible',
@@ -147,7 +151,7 @@ module.exports = Org = ({model, router, irsOrgStream}) ->
                       isTruncated: irsOrg?.mission?.length > 50
                     }
                   },
-                    FormatService.fixAllCaps irsOrg?.mission
+                    irsOrg?.mission
                 z '.block',
                   z '.title',
                     model.l.get 'org.lastReport', {

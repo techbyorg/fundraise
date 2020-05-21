@@ -2,6 +2,8 @@
 
 $filterBar = require '../filter_bar'
 $irsSearch = require '../irs_search'
+$table = require '../table'
+FormatService = require '../../services/format'
 SearchFiltersService = require '../../services/search_filters'
 
 if window?
@@ -22,7 +24,7 @@ module.exports = OrgBox = ({model, router, org}) ->
       filtersStream
       searchResultsStream: esQueryFilterStream.switchMap (esQueryFilter) ->
         console.log 'query', esQueryFilter
-        model.irsOrg.search {
+        model.irsFund.search {
           query:
             bool:
               filter: esQueryFilter
@@ -37,7 +39,24 @@ module.exports = OrgBox = ({model, router, org}) ->
   console.log 'RESSSS', searchResults
 
   z '.z-search',
+    z '.search-box',
+      # TODO: own component?
+      z '.search-tags-input'
     z $filterBar, {model, filtersStream}
+
+    z '.results',
+      z $table,
+        data: searchResults?.nodes
+        columns: [
+          {key: 'name', name: 'Name', width: 240, isFlex: true}
+          {
+            key: 'assets', name: 'Assets'
+            content: ({row}) ->
+              FormatService.number row.assets
+          }
+        ]
+
+
     z '.title', 'Search foundations'
     z '.input',
       z $irsSearch, {

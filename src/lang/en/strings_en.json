@@ -141,6 +141,8 @@
   "editProfile.currentPassword": "Current password...",
   "editProfile.verifyEmail": "Your email is unverified. Tap here to resend verification email",
   "editProfile.verifyEmailSent": "Verification email sent",
+  "fund.tabOverview": "Fund overview",
+  "fund.tabGrants": "Grants",
   "getAppDialog.title": "Native apps",
   "getAppDialog.text": "Get the app on Android or iOS!",
   "rolePermissions.selectRole": "Select a role",
@@ -261,7 +263,7 @@
   "nteeMajor.W": "Public & Societal Benefit",
   "nteeMajor.X": "Religion-Related",
   "nteeMajor.Y": "Mutual & Membership Benefit",
-  "nteeMajor.Y": "Unknown",
+  "nteeMajor.Z": "Unknown",
 
   "status.newVersion": "Refresh to get the latest app update",
   "status.offline": "You are offline, some features may not work",

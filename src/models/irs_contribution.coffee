@@ -5,16 +5,30 @@ module.exports = class IrsContribution
 
   constructor: ({@auth}) -> null
 
-  getAllByFromEin: (fromEin) =>
+  getAllByFromEin: (fromEin, {limit} = {}) =>
     @auth.stream
       query: '''
-        query IrsContributionGetAllByFromEin($fromEin: String!) {
-          irsContributions(fromEin: $fromEin) {
-            nodes { fromEin, amount }
+        query IrsContributionGetAllByFromEin($fromEin: String!, $limit: Int) {
+          irsContributions(fromEin: $fromEin, limit: $limit) {
+            nodes { year, toId, toName, toCity, toState, amount, nteeMajor, relationship, purpose }
           }
         }
       '''
-      variables: {fromEin}
+      variables: {fromEin, limit}
+      pull: 'irsContributions'
+    , {ignoreCache: true}
+
+
+  getAllByToId: (toId, {limit} = {}) =>
+    @auth.stream
+      query: '''
+        query IrsContributionGetAllByFromEin($toId: String!, $limit: Int) {
+          irsContributions(toId: $toId, limit: $limit) {
+            nodes { year, fromEin, toName, toCity, toState, amount, nteeMajor, relationship, purpose }
+          }
+        }
+      '''
+      variables: {toId, limit}
       pull: 'irsContributions'
     , {ignoreCache: true}
 

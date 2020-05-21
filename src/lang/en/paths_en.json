@@ -9,8 +9,8 @@
   "404": "/:entitySlug/*",
 
   "home": "/",
-  "fundByEin": "/fund/ein/:ein",
-  "orgByEin": "/org/ein/:ein",
+  "fundByEin": "/fund/:slug/:ein",
+  "orgByEin": "/org/:slug/:ein",
   "policies": "/policies",
   "privacy": "/privacy",
   "search": "/search",

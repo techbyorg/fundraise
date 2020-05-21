@@ -48,9 +48,6 @@ class FormatService
     else
       '...'
 
-  fixAllCaps: (str) ->
-    str?.toLowerCase().replace(/\w+/g, _capitalize)
-
   percentage: (value) ->
     "#{Math.round(value * 100)}%"
 

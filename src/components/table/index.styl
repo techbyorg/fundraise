@@ -1,0 +1,37 @@
+@require '../../vars'
+
+.z-table
+  flex1()
+  display: flex
+  flex-direction: column
+  background: getColor('$bgColor')
+  border-radius: 6px
+  overflow-y: auto
+  -webkit-overflow-scrolling: touch
+
+  > .thead
+    shadow-1()
+    background: getColor('$bgColor')
+    position: sticky
+    top: 0
+    display: flex
+
+    > .th
+      font-body1(false, medium)
+      flex-shrink: 0
+      padding: 20px
+      box-sizing: border-box
+
+  > .tbody
+    flex1()
+
+
+    > .tr
+      display: flex
+      border-bottom: 1px solid getColor('$bgText12')
+
+      > .td
+        font-body1()
+        flex-shrink: 0
+        padding: 20px
+        box-sizing: border-box

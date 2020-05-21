@@ -35,7 +35,7 @@ module.exports = FilterContent = ({model, filter, isGrouped}) ->
 
         {custom: {operatorStream, valueStream}}
 
-      when 'iconListBooleanAnd', 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
+      when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
         list = filter.items
         items = _map list, ({key, label}) =>
           valueStream = new RxBehaviorSubject(
@@ -43,8 +43,6 @@ module.exports = FilterContent = ({model, filter, isGrouped}) ->
           )
           {
             valueStream, label, key
-            $icon: if filter.type is 'iconListBooleanAnd'
-              new Icon()
           }
 
         filter.valueStreams.next RxObservable.combineLatest(
@@ -110,7 +108,7 @@ module.exports = FilterContent = ({model, filter, isGrouped}) ->
                 height: '30px'
               }
               filter.inputPostfix
-    when 'iconListBooleanAnd', 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
+    when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
       $content =
         z '.content',
           if isGrouped
@@ -124,21 +122,10 @@ module.exports = FilterContent = ({model, filter, isGrouped}) ->
               z '.tap-item', {
                 className: classKebab {
                   isSelected
-                  hasIcon: filter.type is 'iconListBooleanAnd'
                 }
                 onclick: ->
                   valueStream.next not isSelected
               },
-                if filter.type is 'iconListBooleanAnd'
-                  z '.icon',
-                    z $icon,
-                      icon: config.FEATURES_ICONS[key] or _kebabCase key
-                      isTouchTarget: false
-                      size: '20px'
-                      color: if isSelected \
-                             then colors.$secondary700 \
-                             else colors.$bgText38
-
                 label or 'fixme'
     when 'list', 'fieldList'
       # $title = filter?.name

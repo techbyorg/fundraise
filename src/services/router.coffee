@@ -59,11 +59,15 @@ class RouterService
     console.log 'gott', path, routeKey
     @goPath path, options
 
-  getPlace: (place) =>
-    @get place?.sourceType or place?.type, {slug: place?.slug}
+  getFund: (fund) =>
+    @get 'fundByEin', {slug: _kebabCase(fund?.name), ein: fund?.ein}
+  goFund: (fund) =>
+    @goPath @getFund fund
 
-  goPlace: (place) =>
-    @goPath @getPlace place
+  getOrg: (org) =>
+    @get 'orgByEin', {slug: _kebabCase(org?.name), ein: org?.ein}
+  goOrg: (org) =>
+    @goPath @getOrg org
 
   get: (routeKey, replacements, options) =>
     replacements ?= {}

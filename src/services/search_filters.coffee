@@ -12,9 +12,23 @@ _reduce = require 'lodash/reduce'
 _some = require 'lodash/some'
 _zipWith = require 'lodash/zipWith'
 
+nteeMajors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
+'nN', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
 class SearchFiltersService
   getFundFilters: (model) ->
     [
+      {
+        field: 'fundedNteeMajor'
+        type: 'listBooleanOr'
+        name: 'focus'
+        items: _map nteeMajors, (nteeMajor) ->
+          {key: nteeMajor, label: model.l.get "nteeMajor.#{nteeMajor}"}
+        queryFn: (value, key) ->
+          {
+            range: {"fundedNteeMajors.#{key}.percent": {gte: 2}}
+          }
+      }
       {
         field: 'assets'
         type: 'gtlt'
@@ -122,7 +136,7 @@ class SearchFiltersService
                 if value
                   match: "#{key}": value
           }
-        when 'listBooleanAnd', 'iconListBooleanAnd'
+        when 'listBooleanAnd'
           {
             bool:
               must: _filter _map filter.value, (value, key) ->
@@ -133,8 +147,10 @@ class SearchFiltersService
           {
             bool:
               should: _filter _map filter.value, (value, key) ->
-                if value
-                  match: "#{field}.#{key}": true
+                if value and filter.queryFn
+                  filter.queryFn value, key
+                else if value
+                  match: "#{field}.#{key}": value
           }
         when 'fieldList'
           {

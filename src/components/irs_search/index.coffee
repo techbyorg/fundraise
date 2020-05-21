@@ -54,7 +54,7 @@ module.exports = IrsSearch = ({model, router, irsType = 'irsFund', hintText}) ->
     z '.input',
       if selectedEntity
         z '.selected',
-          z '.name', FormatService.fixAllCaps selectedEntity.name
+          z '.name', selectedEntity.name
           z '.cancel',
             z $icon,
               icon: 'close'
@@ -69,16 +69,16 @@ module.exports = IrsSearch = ({model, router, irsType = 'irsFund', hintText}) ->
         router.link z 'a.entity', {
           href:
             if irsType is 'irsFund'
-              router.get 'fundByEin', {ein: entity.ein}
+              router.getFund entity
             else
-              router.get 'orgByEin', {ein: entity.ein}
+              router.getOrg entity
           className: classKebab {
             isSelected: selectedEntity?.id is entity.id
           }
         },
           z '.info',
             z '.name',
-              FormatService.fixAllCaps entity.name
+              entity.name
             if irsType is 'irsPerson'
               z '.sub',
                 entity.irsName

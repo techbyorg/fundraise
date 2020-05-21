@@ -29,3 +29,6 @@ module.exports = class IrsOrg
       variables: {query}
       pull: 'irsOrgs'
     , {ignoreCache: true}
+
+  isEin: (str) ->
+    !isNaN parseInt(str)

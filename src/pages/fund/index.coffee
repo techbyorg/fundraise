@@ -21,6 +21,9 @@ module.exports = FundPage = ({model, requests, router}) ->
   {irsFund} = useStream ->
     irsFund: irsFundStream
 
+  # FIXME: canonical to correct/current slug (also do for orgs)
+  # /fund/slug/ein
+
   z '.p-fund',
     z $appBar, {
       model
