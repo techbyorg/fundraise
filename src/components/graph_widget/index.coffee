@@ -7,7 +7,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = Graph = ({labels = [], series = [], options = {}})->
+module.exports = $graphWidget = ({labels = [], series = [], options = {}})->
   $$ref = useRef()
 
   chart = null

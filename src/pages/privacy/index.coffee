@@ -8,7 +8,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = PrivacyPage = ({model, router}) ->
+module.exports = $privacyPage = ({model, router}) ->
   z '.p-privacy',
     z $appBar, {
       model

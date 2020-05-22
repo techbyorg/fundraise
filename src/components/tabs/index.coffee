@@ -11,7 +11,7 @@ if window?
 TRANSITION_TIME_MS = 500 # 0.5s
 
 # FIXME: i don't think this will actually unsub mountDisposable?
-module.exports = Tabs = (props) ->
+module.exports = $tabs = (props) ->
   {model, selectedIndexStream, hideTabBarStream,
     disableDeceleration, deferTabLoads, tabs, barColor, barBgColor,
     barInactiveColor, isBarFixed, isBarFlat, isBarArrow, barTabWidth,

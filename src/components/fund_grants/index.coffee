@@ -7,7 +7,7 @@ FormatService = require '../../services/format'
 if window?
   require './index.styl'
 
-module.exports = FundGrants = ({model, router, irsFund, irsFundStream}) ->
+module.exports = $fundGrants = ({model, router, irsFund, irsFundStream}) ->
   {contributionsStream} = useMemo ->
     {
       contributionsStream: irsFundStream.switchMap (irsFund) ->

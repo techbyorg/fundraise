@@ -22,7 +22,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = FilterContent = ({model, filter, resetValue, isGrouped}) ->
+module.exports = $filterContent = ({model, filter, resetValue, isGrouped}) ->
   {custom} = useMemo ->
     switch filter.type
       when 'gtlt'

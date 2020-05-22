@@ -9,7 +9,7 @@ if window?
 $button = require '../button'
 colors = require '../../colors'
 
-module.exports = Dialog = (props) ->
+module.exports = $dialog = (props) ->
   {onClose, $content = '', $title, cancelButton, resetButton, submitButton, isVanilla,
     isWide} = props
 

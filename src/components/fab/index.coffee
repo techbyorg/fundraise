@@ -8,7 +8,7 @@ allColors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = Fab = (props) ->
+module.exports = $fab = (props) ->
   {icon, colors, isPrimary, isSecondary, onclick, isImmediate,
     sizePx = 56} = props
 

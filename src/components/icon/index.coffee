@@ -6,7 +6,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = Icon = (props) ->
+module.exports = $icon = (props) ->
   {icon, size, isAlignedTop, isAlignedLeft, isAlignedRight,
     isAlignedBottom, isTouchTarget, color, onclick, onmousedown,
     viewBox, heightRatio, hasRipple,

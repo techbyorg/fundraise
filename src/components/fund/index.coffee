@@ -8,7 +8,7 @@ $tapTabs = require '../tap_tabs'
 if window?
   require './index.styl'
 
-module.exports = Fund = ({model, router, irsFundStream}) ->
+module.exports = $fund = ({model, router, irsFundStream}) ->
   {irsFund} = useStream ->
     irsFund: irsFundStream
 

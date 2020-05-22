@@ -6,7 +6,7 @@ _range = require 'lodash/range'
 if window?
   require './index.styl'
 
-module.exports = StepBar = (props) ->
+module.exports = $stepBar = (props) ->
   {model, stepStream, cancel, save, steps, isStepCompleted, isLoading} = props
 
   {step} = useStream ->

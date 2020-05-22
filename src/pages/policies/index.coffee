@@ -5,7 +5,7 @@ $policies = require '../../components/policies'
 if window?
   require './index.styl'
 
-module.exports = PoliciesPage = ({model, requests, router}) ->
+module.exports = $policiesPage = ({model, requests, router}) ->
   z '.p-policies',
     z $policies, {
       model, router

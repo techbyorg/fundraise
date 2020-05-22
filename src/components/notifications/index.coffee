@@ -11,7 +11,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = Notifications = ({model, router}) ->
+module.exports = $notifications = ({model, router}) ->
   useEffect ->
     return beforeUnmount
   , []

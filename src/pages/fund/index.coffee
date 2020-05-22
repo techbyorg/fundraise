@@ -10,7 +10,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = FundPage = ({model, requests, router}) ->
+module.exports = $fundPage = ({model, requests, router}) ->
   {irsFundStream} = useMemo ->
     {
       irsFundStream: requests.switchMap ({route}) =>

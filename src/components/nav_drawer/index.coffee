@@ -25,7 +25,7 @@ if window?
   IScroll = require 'iscroll/build/iscroll-lite-snap-zoom.js'
   require './index.styl'
 
-module.exports = NavDrawer = ({model, router, entityStream, currentPath}) ->
+module.exports = $navDrawer = ({model, router, entityStream, currentPath}) ->
 
   {meStream, isRateLoadingStream, expandedItemsStream, myEntitiesStream,
     menuItemsInfoStream, entityAndMyEntities} = useMemo ->

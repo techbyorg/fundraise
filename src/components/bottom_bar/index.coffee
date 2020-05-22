@@ -12,7 +12,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = BottomBar = ({model, router, requests, isAbsolute}) ->
+module.exports = $bottomBar = ({model, router, requests, isAbsolute}) ->
   # don't need to slow down server-side rendering for this
   {hasUnreadMessagesStream} = useMemo ->
     {

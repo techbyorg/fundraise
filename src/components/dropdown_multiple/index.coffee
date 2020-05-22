@@ -15,7 +15,7 @@ $checkbox = require '../checkbox'
 if window?
   require './index.styl'
 
-module.exports = DropdownMultiple = (props) ->
+module.exports = $dropdownMultiple = (props) ->
   {model, valueStreams, errorStream, optionsStream, isDisabled = false,
     currentText} = props
 

@@ -10,7 +10,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = OrgPage = ({model, requests, router}) ->
+module.exports = $orgPage = ({model, requests, router}) ->
   {irsOrgStream} = useMemo ->
     {
       irsOrgStream: requests.switchMap ({route}) =>

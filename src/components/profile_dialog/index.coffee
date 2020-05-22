@@ -17,7 +17,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = ProfileDialog = (props) ->
+module.exports = $profileDialog = (props) ->
   {model, router, userStreamy, entityUserStream, entityStream} = options
 
   {isVisibleStream, loadingItemsStream, meStream, userStream, entityAndMeStream,

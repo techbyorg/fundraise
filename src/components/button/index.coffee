@@ -8,7 +8,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = Button = (props) ->
+module.exports = $button = (props) ->
   {isPrimary, isSecondary, isFancy, isInverted, isDisabled, text,
     isFullWidth = true, isOutline, onclick = (-> null), type = 'button', icon,
     heightPx = 36, hasRipple = true} = props or {}

@@ -6,7 +6,7 @@ require 'rxjs/add/observable/of'
 if window?
   require './index.styl'
 
-module.exports = Toggle (props) ->
+module.exports = $togle = (props) ->
   {isSelectedStreams, isSelectedStreams, model, onToggle, withText} = props
 
   {isSelectedStreams} = useMemo ->

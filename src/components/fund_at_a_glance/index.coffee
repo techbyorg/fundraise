@@ -5,7 +5,7 @@ FormatService = require '../../services/format'
 if window?
   require './index.styl'
 
-module.exports = FundAtAGlance = ({model, router, irsFund}) ->
+module.exports = $fundAtAGlance = ({model, router, irsFund}) ->
   console.log 'fund', irsFund
   z '.z-fund-at-a-glance',
     z '.name', irsFund?.name

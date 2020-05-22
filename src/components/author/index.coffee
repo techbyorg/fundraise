@@ -7,7 +7,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = Author = (props) ->
+module.exports = $author = (props) ->
   {model, router, user, entityUser, time, isTimeAlignedLeft,
     onclick, isFullDate} = props
 

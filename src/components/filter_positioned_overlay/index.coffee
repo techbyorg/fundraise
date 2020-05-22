@@ -12,7 +12,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = FilterPositionedOverlay = (props) ->
+module.exports = $filterPositionedOverlay = (props) ->
   {model, filter, onClose, $$targetRef} = props
 
   $$ref = useRef()

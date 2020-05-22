@@ -8,7 +8,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = RequestRatingDialog = ({model, onClose}) ->
+module.exports = $requestRatingDialog = ({model, onClose}) ->
   {isLoadingStream} = useMemo ->
     {
       isLoadingStream: new RxBehaviorSubject false

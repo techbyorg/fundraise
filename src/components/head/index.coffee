@@ -15,7 +15,7 @@ fontsCss = require './fonts'
 
 DEFAULT_IMAGE = 'https://fdn.uno/d/images/web_icon_256.png'
 
-module.exports = Head = (props) ->
+module.exports = $head = (props) ->
   {model, router, meta, requests, serverData, entity, isPlain} = props
 
   console.log 'props', props

@@ -10,7 +10,7 @@ allColors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = PrimaryInput = (props) ->
+module.exports = $primaryInput = (props) ->
   {isPasswordVisibleStream} = useMemo ->
     {
       isPasswordVisibleStream: new RxBehaviorSubject false

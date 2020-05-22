@@ -7,7 +7,7 @@ _filter = require 'lodash/filter'
 if window?
   require './index.styl'
 
-module.exports = MasonryGrid = ({model, $elements, columnCounts}) ->
+module.exports = $masonryGrid = ({model, $elements, columnCounts}) ->
   {breakpoint} = useStream ->
     breakpoint: model.window.getBreakpoint()
 

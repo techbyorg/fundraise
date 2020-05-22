@@ -12,7 +12,7 @@ if window?
 # FIXME: passing stream to child component causes 2 renders of child
 # since state updates in 2 places
 
-module.exports = SignIn = ({model, router, modeStream}) ->
+module.exports = $signIn = ({model, router, modeStream}) ->
   console.log 'render sign in'
   {nameValueStream, nameErrorStream, passwordValueStream, passwordErrorStream,
     emailValueStream, emailErrorStream, modeStream,

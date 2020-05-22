@@ -12,7 +12,7 @@ if window?
   require './index.styl'
 
 # set isInteractive to true if tapping on a star should fill up to that star
-module.exports = Rating = (props) ->
+module.exports = $rating = (props) ->
   {valueStream, valueStreams, isInteractive, onRate,
     size = '20px', color = colors.$amber500} = props
 

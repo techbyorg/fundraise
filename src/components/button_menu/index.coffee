@@ -6,7 +6,7 @@ $icon = require '../icon'
 if window?
   require './index.styl'
 
-module.exports = ButtonMenu = ({model, color, onclick, isAlignedLeft = true}) ->
+module.exports = $buttonMenu = ({model, color, onclick, isAlignedLeft = true}) ->
   z '.z-button-menu',
     z $icon,
       isAlignedLeft: isAlignedLeft

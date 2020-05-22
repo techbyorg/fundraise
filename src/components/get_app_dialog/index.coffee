@@ -7,7 +7,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = GetAppDialog = ({model, onClose}) ->
+module.exports = $getAppDialog = ({model, onClose}) ->
   $dialog = new
 
   iosAppUrl = config.IOS_APP_URL

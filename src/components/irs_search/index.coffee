@@ -15,7 +15,7 @@ if window?
 
 SEARCH_DEBOUNCE = 300
 
-module.exports = IrsSearch = ({model, router, irsType = 'irsFund', hintText}) ->
+module.exports = $irsSearch = ({model, router, irsType = 'irsFund', hintText}) ->
   {nameValueStream, debouncedNameValueStream, isEntitiesVisibleStream,
     selectedEntityStream} = useMemo ->
 

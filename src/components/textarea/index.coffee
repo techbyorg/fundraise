@@ -11,7 +11,7 @@ if window?
 
 DEFAULT_TEXTAREA_HEIGHT = 59
 
-module.exports = Textarea = (props) ->
+module.exports = $textarea = (props) ->
   {valueStream, valueStreams, errorStream, isFocusedStream, defaultHeight,
     colors, hintText = '', type = 'text', isFloating, isDisabled, isFull,
     isDark, isCentered} = props

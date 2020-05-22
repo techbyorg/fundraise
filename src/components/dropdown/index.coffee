@@ -12,7 +12,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = Dropdown = (props) ->
+module.exports = $dropdown = (props) ->
   {model, valueStreams, valueStream, errorStream, options,
     isDisabled = false} = props
 

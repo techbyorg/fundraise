@@ -6,7 +6,7 @@ $buttonMenu = require '../../components/button_menu'
 $button = require '../../components/button'
 colors = require '../../colors'
 
-module.exports = FourOhFourPage = (props) ->
+module.exports = $404Page = (props) ->
   {model, router, requests, serverData, entity} = props
 
   z '.p-404',

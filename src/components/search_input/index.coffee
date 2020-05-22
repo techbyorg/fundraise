@@ -11,7 +11,7 @@ if window?
 $buttonMenu = require '../button_menu'
 $icon = require '../icon'
 
-module.exports = SearchInput = (props) ->
+module.exports = $searchInput = (props) ->
   {model, searchValueStream, searchValueStreams, router,
     isFocusedStream, onFocus, $topLeftButton, $topRightButton, placeholder, onBack,
     height, bgColor, clearOnBack, isAppBar, alwaysShowBack

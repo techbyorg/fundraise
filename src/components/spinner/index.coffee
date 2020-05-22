@@ -9,7 +9,7 @@ if window?
 
 DEFAULT_SIZE = 50
 
-module.exports = Spinner = ({size = DEFAULT_SIZE}) ->
+module.exports = $spinner = ({size = DEFAULT_SIZE}) ->
   z '.z-spinner', {
     style:
       width: "#{size}px"

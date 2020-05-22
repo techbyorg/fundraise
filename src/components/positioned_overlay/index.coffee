@@ -5,7 +5,7 @@ RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 if window?
   require './index.styl'
 
-module.exports = PositionedOverlay = (props) ->
+module.exports = $positionedOverlay = (props) ->
   {model, $$targetRef, hasBackdrop, onClose, anchor, offset,
     zIndex, $content, repositionOnChangeStr} = props
 
@@ -26,7 +26,10 @@ module.exports = PositionedOverlay = (props) ->
     targetBoundingRect = $$targetRef.current?.getBoundingClientRect() or {}
     refRect = $$ref.current.getBoundingClientRect()
     windowSize = model.window.getSize().getValue()
-    position = {x: targetBoundingRect.left, y: targetBoundingRect.top}
+    position = {
+      x: targetBoundingRect.left + window.pageXOffset
+      y: targetBoundingRect.top + window.pageYOffset
+    }
     size = {width: refRect.width, height: refRect.height}
     targetSize = {width: targetBoundingRect.width, height: targetBoundingRect.height}
     anchor = anchor or getAnchor position, windowSize, size

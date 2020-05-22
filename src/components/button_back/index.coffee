@@ -3,7 +3,7 @@ colors = require '../../colors'
 
 $icon = require '../icon'
 
-module.exports = ButtonBack = (props) ->
+module.exports = $buttonBack = (props) ->
   {router, color, onclick, fallbackPath, isAlignedLeft = true} = props
 
   z '.z-button-back',

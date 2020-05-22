@@ -14,7 +14,7 @@ if window?
   require './index.styl'
 
 
-module.exports = FilterBar = ({model, filtersStream}) ->
+module.exports = $filterBar = ({model, filtersStream}) ->
   {filterRefsCache, visibleFilterContentsStream} = useMemo ->
     {
       filterRefsCache: {}

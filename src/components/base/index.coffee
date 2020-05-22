@@ -24,16 +24,6 @@ isBefore = (el1, el2) ->
   false
 
 module.exports = class Base
-  getCached$: (id, component, args...) ->
-    cachedComponents or= []
-
-    if cachedComponents[id]
-      return cachedComponents[id]
-    else
-      $component = new component args...
-      cachedComponents[id] = $component
-      return $component
-
   getImageLoadHashByUrl: (url) ->
     unless window?
       return 'is-image-loaded'
@@ -70,12 +60,3 @@ module.exports = class Base
 
   afterMount: ($$el) ->
     isImageLoaded = false
-    clearTimeout clearCacheTimeout
-
-  beforeUnmount: (cachedElStoreTimeMs) ->
-    if cachedElStoreTimeMs
-      clearCacheTimeout = setTimeout ->
-        cachedComponents = []
-      , cachedElStoreTimeMs
-    else
-      cachedComponents = []

@@ -8,7 +8,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = ActionBar = (props) ->
+module.exports = $actionBar = (props) ->
   {model, title, cancel, save, isSaving, isPrimary, isSecondary} = props
 
   cancel = _defaults cancel, {

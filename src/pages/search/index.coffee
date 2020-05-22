@@ -9,7 +9,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = SearchPage = ({model, router, entityStream}) ->
+module.exports = $searchPage = ({model, router, entityStream}) ->
   z '.p-search',
     z $appBar, {
       model

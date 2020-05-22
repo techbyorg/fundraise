@@ -10,7 +10,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = VerifyEmailPage = ({model, requests, router}) ->
+module.exports = $verifyEmailPage = ({model, requests, router}) ->
   useEffect ->
     if window?
       disposable = requests.switchMap ({req, route}) ->

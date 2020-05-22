@@ -26,7 +26,7 @@ TOOLTIPS =
   itemGuides:
     prereqs: null
 
-module.exports = TooltipPositioner = (props) ->
+module.exports = $tooltipPositioner = (props) ->
   unless window? # could also return right away if cookie exists for perf
     return
   {model, isVisibleStream, offset, key, anchor, $title, $content,

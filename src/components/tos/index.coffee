@@ -3,7 +3,7 @@
 if window?
   require './index.styl'
 
-module.exports = Tos = ->
+module.exports = $tos = ->
   z '.z-tos',
     z 'p',
       '''

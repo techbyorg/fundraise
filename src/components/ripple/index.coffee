@@ -14,7 +14,7 @@ if window?
 
 ANIMATION_TIME_MS = 350
 
-module.exports = Ripple = ({color, isCircle, isCenter, onComplete, fadeIn}) ->
+module.exports = $ripple = ({color, isCircle, isCenter, onComplete, fadeIn}) ->
   $$ref = useRef()
 
   ripple = ({$$ref, color, isCenter, mouseX, mouseY, onComplete, fadeIn} = {}) ->

@@ -6,7 +6,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = TabsBar = (props) ->
+module.exports = $tabsBar = (props) ->
   {selectedIndexStream, items, bgColor, color, isPrimary, inactiveColor,
     underlineColor, isFixed, isFlat, isArrow, tabWidth, tabHeight} = props
 

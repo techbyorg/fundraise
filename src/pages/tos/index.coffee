@@ -8,7 +8,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = TosPage = ({model, router}) ->
+module.exports = $tosPage = ({model, router}) ->
   z '.p-tos',
     z $appBar, {
       model

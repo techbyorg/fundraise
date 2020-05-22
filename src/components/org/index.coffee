@@ -15,7 +15,7 @@ FormatService = require '../../services/format'
 if window?
   require './index.styl'
 
-module.exports = Org = ({model, router, irsOrgStream}) ->
+module.exports = $org = ({model, router, irsOrgStream}) ->
   {irsOrg990StatsStream, metricValueStreams, contributionsStream,
     irsOrg990StatsAndMetricStream} = useMemo ->
 

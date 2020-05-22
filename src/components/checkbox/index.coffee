@@ -10,7 +10,7 @@ allColors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = Checkbox = (props) ->
+module.exports = $checkbox = (props) ->
   {valueStream, valueStreams, isDisabled, colors, onChange} = props
 
   {valueStream, errorStream} = useMemo ->

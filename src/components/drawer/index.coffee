@@ -11,7 +11,7 @@ MAX_OVERLAY_OPACITY = 0.5
 
 # FIXME: store iScrollContainer in state??
 
-module.exports = Drawer = (props) ->
+module.exports = $drawer = (props) ->
   {model, isOpenStream, onOpen, onClose, side = 'left', key = 'nav', isStaticStream,
     $content, hasAppBar} = props
 

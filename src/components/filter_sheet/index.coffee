@@ -12,7 +12,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = FilterSheet = ({model, filter, id}) ->
+module.exports = $filterSheet = ({model, filter, id}) ->
   {resetStream} = useMemo ->
     {resetStream: new RxBehaviorSubject null}
   , []

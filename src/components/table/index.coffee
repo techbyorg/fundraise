@@ -8,7 +8,7 @@ if window?
 # if it's lightweight enough, for long tables we could use
 # https://github.com/mckervinc/react-fluid-table
 # so i'm using same api to make for easy replacement
-module.exports = Table = ({data, columns, onRowClick}) ->
+module.exports = $table = ({data, columns, onRowClick}) ->
   getStyle = ({width, isFlex}) ->
     if isFlex
       {minWidth: "#{width}px", flex: 1}

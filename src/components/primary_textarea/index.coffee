@@ -4,7 +4,7 @@ _defaults = require 'lodash/defaults'
 $textaea = require '../textarea'
 colors = require '../../colors'
 
-module.exports = PrimaryTextarea = (opts) ->
+module.exports = $primaryTextarea = (opts) ->
   z '.z-primary-textarea',
     z $textarea, _defaults opts, {
       isFullWidth: true

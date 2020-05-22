@@ -10,7 +10,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = NotificationsPage = ({model, router}) ->
+module.exports = $notificationsPage = ({model, router}) ->
   z '.p-notifications',
     z $appBar, {
       model

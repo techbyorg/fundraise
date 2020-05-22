@@ -3,6 +3,6 @@
 if window?
   require './index.styl'
 
-module.exports = FundOverview = ({model, router, irsFund}) ->
+module.exports = $fundOverview = ({model, router, irsFund}) ->
   z '.z-fund-overview',
     'overview'

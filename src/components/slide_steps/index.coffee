@@ -10,7 +10,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = SlideSteps = ({model, onSkip, onDone, steps, doneText}) ->
+module.exports = $slideSteps = ({model, onSkip, onDone, steps, doneText}) ->
   {selectedIndexStream} = useMemo ->
     {
       selectedIndexStream: new RxBehaviorSubject 0

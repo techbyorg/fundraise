@@ -8,7 +8,7 @@ _range = require 'lodash/range'
 if window?
   require './index.styl'
 
-module.exports = InputRange = (props) ->
+module.exports = $inputRange = (props) ->
   {model, valueStream, valueStreams, minValue, maxValue, onChange,
     hideInfo, step} = props
 

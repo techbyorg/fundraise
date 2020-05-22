@@ -9,7 +9,7 @@ if window?
   require './index.styl'
 
 # FIXME: use $positionedOverlay
-module.exports = Tooltip = (props) ->
+module.exports = $tooltip = (props) ->
   {model, $$target, key, anchor, offset, isVisibleStream, zIndex
     $title, $content} = props
 

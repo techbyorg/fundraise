@@ -23,7 +23,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = FormattedText = (props) ->
+module.exports = $formattedText = (props) ->
     {textStreamy, imageWidth, model, router, skipImages, mentionedUsers,
       isFullWidth, embedVideos, truncate
       useThumbnails} = options

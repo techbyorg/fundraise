@@ -3,7 +3,7 @@
 if window?
   require './index.styl'
 
-module.exports = Privacy = ->
+module.exports = $privacy = ->
   # coffeelint: disable=max_line_length
   z '.z-privacy',
     z 'h5', 'App Visitors'

@@ -12,7 +12,7 @@ CLOSE_DELAY_MS = 450 # 0.45s for animation
 if window?
   require './index.styl'
 
-module.exports = Sheet = (props) ->
+module.exports = $sheet = (props) ->
   {model, router, id, icon, message, submitButton, onClose, $content} = props
 
   $$ref = useRef()

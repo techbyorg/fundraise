@@ -14,7 +14,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = Policies = ({model, router, isIabStream, $dropdowns}) ->
+module.exports = $policies = ({model, router, isIabStream, $dropdowns}) ->
   $dropdowns = [
     {
       $title: 'Privacy Policy'

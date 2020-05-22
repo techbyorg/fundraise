@@ -2,6 +2,7 @@
 
 $filterBar = require '../filter_bar'
 $irsSearch = require '../irs_search'
+$fundSearchResults = require '../fund_search_results'
 $searchTags = require '../search_tags'
 $table = require '../table'
 FormatService = require '../../services/format'
@@ -10,7 +11,7 @@ SearchFiltersService = require '../../services/search_filters'
 if window?
   require './index.styl'
 
-module.exports = OrgBox = ({model, router, org}) ->
+module.exports = $search = ({model, router, org}) ->
   {searchResultsStream, filtersStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {
       model, filters: SearchFiltersService.getFundFilters(model)
@@ -57,31 +58,8 @@ module.exports = OrgBox = ({model, router, org}) ->
         }
       z '.filter-bar',
         z $filterBar, {model, filtersStream}
-      z $table,
-        data: searchResults?.nodes
-        onRowClick: (e, i) ->
-          router.goFund searchResults.nodes[i]
-        columns: [
-          {key: 'name', name: 'Name', width: 240, isFlex: true}
-          {
-            key: 'assets', name: model.l.get('org.assets')
-            width: 150
-            content: ({row}) ->
-              FormatService.abbreviateDollar row.assets
-          }
-          {
-            key: 'grantMedian', name: model.l.get('fund.medianGrant')
-            width: 170
-            content: ({row}) ->
-              FormatService.abbreviateDollar row.lastYearStats?.grantMedian
-          }
-          {
-            key: 'grantSum', name: model.l.get('fund.grantsPerYear')
-            width: 150
-            content: ({row}) ->
-              FormatService.abbreviateDollar row.lastYearStats?.grantSum
-          }
-        ]
+
+      z $fundSearchResults, {model, rows: searchResults?.nodes}
 
 
     z '.title', 'Search foundations'

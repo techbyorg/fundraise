@@ -10,7 +10,7 @@ allColors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = Input = (props) ->
+module.exports = $input = (props) ->
   {valueStream, valueStreams, errorStream, isFocusedStream
     colors, hintText = '', type = 'text', isFloating = false,
     isDisabled = false, isFullWidth,  autoCapitalize = true
