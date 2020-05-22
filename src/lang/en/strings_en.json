@@ -175,6 +175,8 @@
   "pushNotificationsSheet.message": "Turn on notifications so you don't miss any events or messages",
   "pushNotificationsSheet.submitButtonText": "Turn on",
   "fundSearch.resultsTitle": "{count} Foundations",
+  "fundSearch.focusAreasPlaceholder": "Which focus areas?",
+  "fundSearch.locationPlaceholder": "Which locations?",
   "signIn.search.fund": "Search for your foundation",
   "signIn.search.org": "Search for your organization",
   "signIn.alreadyLoggedIn": "You're already logged in",

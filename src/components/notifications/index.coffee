@@ -38,29 +38,28 @@ module.exports = Notifications = ({model, router}) ->
         z '.message',
           'You\'re all caught up!'
     else if notifications
-      z '.g-grid',
-        _map notifications, ({notification}) ->
-          isUnread = not notification.isRead
+      _map notifications, ({notification}) ->
+        isUnread = not notification.isRead
 
-          z '.notification', {
-            className: classKebab {isUnread}
-            onclick: ->
-              if notification.data?.path
-                router.go(
-                  notification.data.path.key, notification.data.path.params
-                  {qs: notification.data.path.qs}
-                )
-          },
-            z '.icon',
-              z $icon,
-                icon: model.notification.ICON_MAP[notification.data.type] or
-                        'off-topic'
-                color: if isUnread \
-                       then colors.$secondaryMain \
-                       else colors.$bgText54
-                isTouchTarget: false
-            z '.right',
-              z '.title', "#{notification.title}: #{notification.text}"
-              z '.time', DateService.fromNow notification.time
+        z '.notification', {
+          className: classKebab {isUnread}
+          onclick: ->
+            if notification.data?.path
+              router.go(
+                notification.data.path.key, notification.data.path.params
+                {qs: notification.data.path.qs}
+              )
+        },
+          z '.icon',
+            z $icon,
+              icon: model.notification.ICON_MAP[notification.data.type] or
+                      'off-topic'
+              color: if isUnread \
+                     then colors.$secondaryMain \
+                     else colors.$bgText54
+              isTouchTarget: false
+          z '.right',
+            z '.title', "#{notification.title}: #{notification.text}"
+            z '.time', DateService.fromNow notification.time
     else
       z $spinner, {model}

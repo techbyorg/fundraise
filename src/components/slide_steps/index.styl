@@ -17,36 +17,33 @@
     padding: 6px 16px
     box-sizing: border-box
     // background: getColor('$bgColor')
+    container()
 
-    > .g-grid
+    > .icon
+      width: 48px
+      cursor: pointer
+
+    > .text
+      font-button()
+      cursor: pointer
+      color: getColor('$primaryMain')
+      // text-transform: lowercase
+      text-align: center
+      padding: 8px
+
+    > .step-counter
       flex1()
       display: flex
+      justify-content: center
+      width: 100%
+      margin: 16px 0
 
-      > .icon
-        width: 48px
-        cursor: pointer
+      > .step-dot
+        width: 6px
+        height: 6px
+        border-radius: 50%
+        margin-right: 4px
+        background: getColor('$bgText26')
 
-      > .text
-        font-button()
-        cursor: pointer
-        color: getColor('$primaryMain')
-        // text-transform: lowercase
-        text-align: center
-        padding: 8px
-
-      > .step-counter
-        flex1()
-        display: flex
-        justify-content: center
-        width: 100%
-        margin: 16px 0
-
-        > .step-dot
-          width: 6px
-          height: 6px
-          border-radius: 50%
-          margin-right: 4px
-          background: getColor('$bgText26')
-
-          &.is-active
-            background: getColor('$primaryMain')
+        &.is-active
+          background: getColor('$primaryMain')

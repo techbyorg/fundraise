@@ -44,8 +44,10 @@ module.exports = OrgBox = ({model, router, org}) ->
       z '.search-box',
         z $searchTags,
           title: model.l.get 'fund.focusAreas'
+          placeholder: model.l.get 'fundSearch.focusAreasPlaceholder'
         z $searchTags,
           title: model.l.get 'general.location'
+          placeholder: model.l.get 'fundSearch.locationPlaceholder'
 
     z '.results',
       z '.title',

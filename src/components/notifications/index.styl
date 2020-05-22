@@ -5,30 +5,30 @@
   overflow-y: auto
   -webkit-overflow-scrolling: touch
   width: 100%
+  container()
 
-  > .g-grid
-    > .notification
-      display: flex
-      padding-top: 16px
+  > .notification
+    display: flex
+    padding-top: 16px
 
-      &.is-unread
-        background: getColor('$bgColor')
+    &.is-unread
+      background: getColor('$bgColor')
 
-      > .icon
-        margin-right: 16px
-        padding-left: 16px
+    > .icon
+      margin-right: 16px
+      padding-left: 16px
 
-      > .right
-        flex1()
-        padding: 0 16px 20px 16px
-        border-bottom: 1px solid getColor('$black12')
+    > .right
+      flex1()
+      padding: 0 16px 20px 16px
+      border-bottom: 1px solid getColor('$black12')
 
-        > .title
-          font-body1()
-          margin-bottom: 4px
+      > .title
+        font-body1()
+        margin-bottom: 4px
 
-        > .time
-          font-caption(true, disabled)
+      > .time
+        font-caption(true, disabled)
 
 
   > .no-notifications

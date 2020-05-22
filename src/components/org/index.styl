@@ -7,111 +7,110 @@
   -webkit-overflow-scrolling: touch
   background: getColor('$bgColorAlt1')
 
-  > .g-grid > .g-cols > .g-col
-    > .box
-      box()
+  > .box
+    box()
 
-      &.analytics, &.at-a-glance
-        height: 530px
-
-        > .content
-          padding: 24px
-
-      > .header
-        display: flex
-
-        > .metric-dropdown
-          text-transform: none
-          margin-left: auto
-          margin-top: -10px
-          min-width: 160px
+    &.analytics, &.at-a-glance
+      height: 530px
 
       > .content
-        > .chart-header
-          font-subtitle1()
-          text-align: center
-          margin-bottom: 24px
+        padding: 24px
 
-        > .chart
+    > .header
+      display: flex
+
+      > .metric-dropdown
+        text-transform: none
+        margin-left: auto
+        margin-top: -10px
+        min-width: 160px
+
+    > .content
+      > .chart-header
+        font-subtitle1()
+        text-align: center
+        margin-bottom: 24px
+
+      > .chart
+        flex1()
+
+      > .empty
+        padding: 0 16px
+
+      > .person
+        display: flex
+        padding: 16px
+
+        > .info
+          margin-left: 24px
+
+          > .name
+            font-subtitle2()
+            margin-bottom: 2px
+
+          > .title
+            font-caption(medium)
+
+        > .right
+          margin-left: auto
+          font-body2()
+          color: getColor('$secondaryMain')
+
+      > .top-metrics
+        display: flex
+
+        > .metric
           flex1()
+          text-align: center
 
-        > .empty
-          padding: 0 16px
+          &:first-child
+            border-right: 1px solid getColor('$bgText6')
 
-        > .person
-          display: flex
-          padding: 16px
-
-          > .info
-            margin-left: 24px
-
-            > .name
-              font-subtitle2()
-              margin-bottom: 2px
-
-            > .title
-              font-caption(medium)
-
-          > .right
-            margin-left: auto
-            font-body2()
+          > .value
+            font-h5()
             color: getColor('$secondaryMain')
+            margin-bottom: 2px
 
-        > .top-metrics
+          > .name
+            font-subtitle1()
+
+      > .block
+        margin-top: 20px
+
+        > .title
+          font-subtitle2()
+          margin-bottom: 4px
+
+        > .text
+          font-body1()
+
+        > .metrics
           display: flex
 
           > .metric
             flex1()
+            background: getColor('$secondary50')
             text-align: center
-
-            &:first-child
-              border-right: 1px solid getColor('$bgText6')
+            padding: 10px 0
+            border-radius: 4px
 
             > .value
-              font-h5()
-              color: getColor('$secondaryMain')
-              margin-bottom: 2px
+              font-h6()
 
-            > .name
-              font-subtitle1()
+            &:first-child
+              margin-right: 16px
 
-        > .block
-          margin-top: 20px
+        > .mission
+            &.is-truncated
+              max-height: 70px // FIXME
+              overflow: hidden
+              position: relative
 
-          > .title
-            font-subtitle2()
-            margin-bottom: 4px
-
-          > .text
-            font-body1()
-
-          > .metrics
-            display: flex
-
-            > .metric
-              flex1()
-              background: getColor('$secondary50')
-              text-align: center
-              padding: 10px 0
-              border-radius: 4px
-
-              > .value
-                font-h6()
-
-              &:first-child
-                margin-right: 16px
-
-          > .mission
-              &.is-truncated
-                max-height: 70px // FIXME
-                overflow: hidden
-                position: relative
-
-                &::after
-                  content: ''
-                  position: absolute
-                  top: 0
-                  left: 0
-                  width: 100%
-                  height: 100%
-                  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), getColor('$bgColor'))
+              &::after
+                content: ''
+                position: absolute
+                top: 0
+                left: 0
+                width: 100%
+                height: 100%
+                background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), getColor('$bgColor'))

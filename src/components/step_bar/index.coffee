@@ -28,30 +28,29 @@ module.exports = StepBar = (props) ->
   }
 
   z '.z-step-bar',
-    z '.g-grid',
-      z '.previous', {
-        onclick: ->
-          if step > 0
-            step.next step - 1
+    z '.previous', {
+      onclick: ->
+        if step > 0
+          step.next step - 1
+        else
+          cancel.onclick()
+    },
+      cancel.text
+
+    z '.step-counter',
+      _map _range(steps), (i) ->
+        z '.step-dot',
+          className: classKebab {isActive: step is i}
+
+    z '.next', {
+      className: classKebab {canContinue: isStepCompleted}
+      onclick: ->
+        if isStepCompleted
+          if step is steps - 1
+            save.onclick()
           else
-            cancel.onclick()
-      },
-        cancel.text
-
-      z '.step-counter',
-        _map _range(steps), (i) ->
-          z '.step-dot',
-            className: classKebab {isActive: step is i}
-
-      z '.next', {
-        className: classKebab {canContinue: isStepCompleted}
-        onclick: ->
-          if isStepCompleted
-            if step is steps - 1
-              save.onclick()
-            else
-              step.next step + 1
-      },
-        if isLoading
-        then model.l.get 'general.loading'
-        else save.text
+            step.next step + 1
+    },
+      if isLoading
+      then model.l.get 'general.loading'
+      else save.text

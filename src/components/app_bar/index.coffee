@@ -26,7 +26,7 @@ module.exports = AppBar = (props) ->
       style:
         backgroundColor: bgColor
     },
-      z '.top.g-grid.overflow-visible',
+      z '.top',
         if $topLeftButton
           z '.top-left-button', {
             style:
@@ -39,7 +39,7 @@ module.exports = AppBar = (props) ->
         },
           if hasLogo
             [
-              z '.icon'
+              # z '.icon'
               'breezy'
             ]
           else
