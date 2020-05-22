@@ -2,8 +2,7 @@
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 _every = require 'lodash/every'
 
-Base = require '../base'
-Tooltip = require '../tooltip'
+$tooltip = require '../tooltip'
 
 if window?
   require './index.styl'
@@ -33,7 +32,7 @@ module.exports = TooltipPositioner = (props) ->
   {model, isVisibleStream, offset, key, anchor, $title, $content,
     zIndex} = props
 
-  $$el = useRef()
+  $$ref = useRef()
 
   {isVisibleStream, shouldBeShownStream} = useMemo ->
     {
@@ -58,8 +57,8 @@ module.exports = TooltipPositioner = (props) ->
         disposable?.unsubscribe()
         setTimeout ->
           checkIsReady = ->
-            if $$el and $$el.current.clientWidth
-              _show $$el
+            if $$ref and $$ref.current.clientWidth
+              _show $$ref
             else
               setTimeout checkIsReady, 100
           checkIsReady()
@@ -75,21 +74,17 @@ module.exports = TooltipPositioner = (props) ->
   close = ->
     $tooltip?.close()
 
-  _show = ($$el) ->
-    rect = $$el.current.getBoundingClientRect()
-    initialPosition = {x: rect.left, y: rect.top}
-
-    $tooltip = new Tooltip {
+  _show = ($$ref) ->
+    model.tooltip.set$ $z $tooltip, {
+      $$target: $$ref
       model
       key
       anchor
       offset
       isVisible
       zIndex
-      initialPosition
       $title: $title
       $content: $content
     }
-    model.tooltip.set$ $tooltip
 
-  z '.z-tooltip-positioner', {ref: $$el, key: "tooltip-#{key}"}
+  z '.z-tooltip-positioner', {ref: $$ref, key: "tooltip-#{key}"}

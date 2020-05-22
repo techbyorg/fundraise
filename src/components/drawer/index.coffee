@@ -15,7 +15,7 @@ module.exports = Drawer = (props) ->
   {model, isOpenStream, onOpen, onClose, side = 'left', key = 'nav', isStaticStream,
     $content, hasAppBar} = props
 
-  $$el = useRef()
+  $$ref = useRef()
 
   {transformProperty, isStaticStream} = useMemo ->
     {
@@ -43,7 +43,7 @@ module.exports = Drawer = (props) ->
       setTimeout ->
         if not iScrollContainer and not isStatic
           checkIsReady = ->
-            $$container = $$el
+            $$container = $$ref
             if $$container and $$container.clientWidth
               initIScroll $$container
             else
@@ -96,13 +96,13 @@ module.exports = Drawer = (props) ->
 
     disposable = isOpenStream.subscribe (isOpen) ->
       if isOpen then open() else close()
-      $$overlay = $$el.current.querySelector '.overlay-tab'
+      $$overlay = $$ref.current.querySelector '.overlay-tab'
       updateOpacity()
 
     isScrolling = false
     iScrollContainer.on 'scrollStart', ->
       isScrolling = true
-      $$overlay = $$el.current.querySelector '.overlay-tab'
+      $$overlay = $$ref.current.querySelector '.overlay-tab'
       update = ->
         updateOpacity()
         if isScrolling
@@ -159,7 +159,7 @@ module.exports = Drawer = (props) ->
       z '.grip'
 
   z '.z-drawer', {
-    rel: $$el
+    rel: $$ref
     className: classKebab {isOpen, isStatic, isRight: side is 'right'}
     key: "drawer-#{key}"
     style:

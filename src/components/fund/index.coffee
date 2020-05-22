@@ -25,7 +25,7 @@ module.exports = Fund = ({model, router, irsFundStream}) ->
 
   z '.z-fund',
     z '.quick-info',
-      z $fundAtAGlance, {model, irsFund}
+      z $fundAtAGlance, {model, router, irsFund}
 
     z '.content',
       z $tapTabs, {tabs, tabProps: {model, router, irsFund, irsFundStream}}

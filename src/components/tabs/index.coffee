@@ -17,7 +17,7 @@ module.exports = Tabs = (props) ->
     barInactiveColor, isBarFixed, isBarFlat, isBarArrow, barTabWidth,
     barTabHeight, windowSize, vDomKey, isPrimary} = props
 
-  $$el = useRef()
+  $$ref = useRef()
 
   {selectedIndexStream, isPausedStream} = useMemo ->
     {
@@ -30,13 +30,13 @@ module.exports = Tabs = (props) ->
   transitionTime = TRANSITION_TIME_MS
 
 
-  useEffect ($$el) ->
+  useEffect ($$ref) ->
     mountDisposable = null
     iScrollContainer = null
     loadedIndices = []
 
     checkIsReady = ->
-      $$container = $$el?.querySelector('.z-tabs > .content > .tabs-scroller')
+      $$container = $$ref?.querySelector('.z-tabs > .content > .tabs-scroller')
       if $$container and $$container.clientWidth
         initIScroll $$container, {
           mountDisposable, iScrollContainer, loadedIndices
@@ -132,7 +132,7 @@ module.exports = Tabs = (props) ->
   isBarFlat ?= true
 
   z '.z-tabs', {
-    rel: $$el
+    rel: $$ref
     className: classKebab {isBarFixed}
     key: vDomKey
     style:

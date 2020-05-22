@@ -100,7 +100,6 @@ module.exports = ProfileDialog = (props) ->
             router.go 'profile', {username: user?.username}
           else
             router.go 'profileById', {id: user?.id}
-          model.overlay.close()
       }
     ]
 
@@ -156,7 +155,7 @@ module.exports = ProfileDialog = (props) ->
   },
     z $dialog,
       onClose: ->
-        model.overlay.close(
+        null
       $content:
         z '.z-profile-dialog_dialog', {
           style:
@@ -190,7 +189,7 @@ module.exports = ProfileDialog = (props) ->
                   isAlignedTop: true
                   isAlignedRight: true
                   onclick: ->
-                    model.overlay.close()
+                    null # TODO: close
 
           z 'ul.menu',
             _map userOptions, renderItem

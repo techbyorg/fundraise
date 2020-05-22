@@ -1,8 +1,26 @@
 @require '../../vars'
 
 .z-search
-  padding: 0 24px 24px 24px
 
-  > .title
-    font-subtitle1()
-    margin-top: 24px
+  > .search
+    shadow-1()
+    padding: 32px
+
+    > .search-box
+      shadow-1()
+      background: getColor('$bgColor')
+      max-width: 1200px
+      margin: 0 auto
+      padding: 20px 20px 12px 20px
+      border-radius: 12px
+      display: flex
+
+  > .results
+    padding: 48px 32px
+
+    > .title
+      font-h5()
+      margin-bottom: 20px
+
+    > .filter-bar
+      margin-bottom: 16px

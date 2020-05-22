@@ -20,7 +20,7 @@ module.exports = Checkbox = (props) ->
     }
   , []
 
-  # $$el = useRef (props) ->
+  # $$ref = useRef (props) ->
   #   props.ref.current = {isChecked: -> ref.current.checked}
 
   {value} = useStream ->
@@ -34,7 +34,7 @@ module.exports = Checkbox = (props) ->
   }
 
   z '.z-checkbox', {
-    # ref: $$el
+    # ref: $$ref
   },
     z 'input.checkbox', {
       type: 'checkbox'

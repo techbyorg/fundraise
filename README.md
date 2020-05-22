@@ -16,7 +16,8 @@ More to come soonish
 - all BehaviorSubject / Observable named ____Stream (eg valueStream)
   - if it's something that can be either stream or String/Bool/Number (useStream doesn't care), call it ____Streamy
 - all ReplaySubjects named ____Streams (eg valueStreams)
-- $$ for dom refs (typically $$el)
+- $$ and `ref` in name for dom refs (typically $$ref)
+  - $$ without ref in name refers to an actual dom element (not {current: $$el})
 - order
   - props
   - useRef

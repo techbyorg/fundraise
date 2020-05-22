@@ -12,30 +12,32 @@ class FormatService
       Math.round(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     else
       '...'
-  # https://stackoverflow.com/a/10601315
-  abbreviateNumber: (value) ->
-    newValue = value
-    if value >= 1000
-      suffixes = [
-        ''
-        'k'
-        'm'
-        'b'
-        't'
-      ]
-      suffixNum = Math.floor(('' + value).length / 3)
-      shortValue = ''
-      precision = 2
-      while precision >= 1
-        shortValue = parseFloat((if suffixNum != 0 then value / 1000 ** suffixNum else value).toPrecision(precision))
-        dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g, '')
-        if dotLessShortValue.length <= 2
-          break
-        precision--
-      if shortValue % 1 != 0
-        shortValue = shortValue.toFixed(1)
-      newValue = shortValue + suffixes[suffixNum]
-    newValue
+  # https://stackoverflow.com/a/32638472
+  abbreviateNumber: (value, fixed) ->
+    unless value?
+      return null
+    # terminate early
+    if value is 0
+      return '0'
+    # terminate early
+    fixed = if not fixed or fixed < 0 then 0 else fixed
+    # valueber of decimal places to show
+    b = value.toPrecision(2).split('e')
+    k = if b.length == 1 then 0 else Math.floor(Math.min(b[1].slice(1), 14) / 3)
+    c = if k < 1 then value.toFixed(0 + fixed) else (value / 10 ** (k * 3)).toFixed(1 + fixed)
+    d = if c < 0 then c else Math.abs(c)
+    e = d + [
+      ''
+      'K'
+      'M'
+      'B'
+      'T'
+    ][k]
+    # append power
+    e
+
+  abbreviateDollar: (value) =>
+    "$ #{@abbreviateNumber value}"
 
   location: (obj) ->
     {city, state} = obj or {}
@@ -75,28 +77,5 @@ class FormatService
 
     return prettyTimer
 
-  # https://stackoverflow.com/a/32638472
-  shortNumber: (num, fixed) ->
-    if num is null
-      return null
-    # terminate early
-    if num is 0
-      return '0'
-    # terminate early
-    fixed = if not fixed or fixed < 0 then 0 else fixed
-    # number of decimal places to show
-    b = num.toPrecision(2).split('e')
-    k = if b.length == 1 then 0 else Math.floor(Math.min(b[1].slice(1), 14) / 3)
-    c = if k < 1 then num.toFixed(0 + fixed) else (num / 10 ** (k * 3)).toFixed(1 + fixed)
-    d = if c < 0 then c else Math.abs(c)
-    e = d + [
-      ''
-      'K'
-      'M'
-      'B'
-      'T'
-    ][k]
-    # append power
-    e
 
 module.exports = new FormatService()

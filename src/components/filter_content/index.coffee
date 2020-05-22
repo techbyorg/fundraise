@@ -12,6 +12,7 @@ _startCase = require 'lodash/startCase'
 _zipObject = require 'lodash/zipObject'
 
 $checkbox = require '../checkbox'
+$dropdown = require '../dropdown'
 $icon = require '../icon'
 $input = require '../input'
 $inputRange = require '../input_range'
@@ -21,12 +22,12 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = FilterContent = ({model, filter, isGrouped}) ->
+module.exports = FilterContent = ({model, filter, resetValue, isGrouped}) ->
   {custom} = useMemo ->
     switch filter.type
       when 'gtlt'
-        operatorStream = new RxBehaviorSubject filterValue?.operator
-        valueStream = new RxBehaviorSubject filterValue?.value or ''
+        operatorStream = new RxBehaviorSubject filter.value?.operator
+        valueStream = new RxBehaviorSubject filter.value?.value or ''
         filter.valueStreams.next RxObservable.combineLatest(
           operatorStream, valueStream, (vals...) -> vals
         ).map ([operator, value]) ->
@@ -35,11 +36,22 @@ module.exports = FilterContent = ({model, filter, isGrouped}) ->
 
         {custom: {operatorStream, valueStream}}
 
+      when 'minMax'
+        minStream = new RxBehaviorSubject filter.value?.min
+        maxStream = new RxBehaviorSubject filter.max?.value or ''
+        filter.valueStreams.next RxObservable.combineLatest(
+          minStream, maxStream, (vals...) -> vals
+        ).map ([min, max]) ->
+          if min? or max?
+            {min, max}
+
+        {custom: {minStream, maxStream}}
+
       when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
         list = filter.items
         items = _map list, ({key, label}) =>
           valueStream = new RxBehaviorSubject(
-            filterValue?[key]
+            filter.value?[key]
           )
           {
             valueStream, label, key
@@ -61,7 +73,7 @@ module.exports = FilterContent = ({model, filter, isGrouped}) ->
 
         checkboxes =  _map list, ({key, label}) =>
           valueStream = new RxBehaviorSubject(
-            filterValue?[key]
+            filter.value?[key]
           )
           {valueStream, label}
 
@@ -75,11 +87,7 @@ module.exports = FilterContent = ({model, filter, isGrouped}) ->
         {
           custom: {checkboxes}
         }
-
-  , []
-
-  {filterValue} = useStream ->
-    filterValue: filter.valueStreams.switch()
+  , [resetValue]
 
   switch filter.type
     when 'maxInt', 'minInt'
@@ -136,12 +144,24 @@ module.exports = FilterContent = ({model, filter, isGrouped}) ->
               z '.text', label or 'fixme'
               z '.input',
                 z $checkbox, {valueStream}
+    when 'minMax'
+      $content =
+        z '.content',
+          z '.metric.checkbox-label',
+            z '.text', 'minmax' # FIXME
+          z $dropdown, {
+            valueStream: custom.minStream
+            options: [
+              {value: 'a', text: 'a'}
+              {value: 'b', text: 'b'}
+            ]
+          }
     when 'gtlt'
       operator = filterValue?.operator
       $content =
         z '.content',
           z '.metric.checkbox-label',
-            z '.text', model.l.get "filterSheet.elevation"
+            z '.text', 'gtlt' # FIXME
             z '.operators',
               z '.operator', {
                 className: classKebab {

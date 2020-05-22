@@ -10,8 +10,10 @@ module.exports = class IrsFund
       query: '''
         query IrsFundGetByEin($ein: String!) {
           irsFund(ein: $ein) {
-            ein, name, assets, mission, website,
-            lastYearStats {grants, grantMedian},
+            ein, name, city, state, assets, mission, website,
+            lastYearStats {
+              grants, grantMedian, grantSum, revenue, expenses
+              },
             fundedNteeMajors
           }
         }
@@ -24,7 +26,13 @@ module.exports = class IrsFund
       query: '''
         query IrsFundSearch($query: JSON!, $limit: Int) {
           irsFunds(query: $query, limit: $limit) {
-            nodes { name, assets, ein }
+            totalCount,
+            nodes {
+              ein, name, assets,
+              lastYearStats {
+                grants, grantMedian, grantSum
+              }
+            }
           }
         }
       '''

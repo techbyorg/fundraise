@@ -7,6 +7,8 @@ _map = require 'lodash/map'
 
 Environment = require '../services/environment'
 
+# NOTE: in general, don't use this. use portals.
+
 module.exports = class Overlay
   constructor: ->
     @overlays = new RxBehaviorSubject null

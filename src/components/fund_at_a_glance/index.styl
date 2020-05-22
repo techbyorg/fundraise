@@ -7,17 +7,18 @@
 
   > .top-metrics
     display: flex
+    margin-bottom: 42px
 
     > .metric
       flex1()
       text-align: center
 
       &:first-child
-        border-right: 1px solid getColor('$bgText6')
+        border-right: 2px solid getColor('$bgText6')
 
       > .value
         font-h5()
-        color: getColor('$secondaryMain')
+        color: getColor('$primaryMain')
         margin-bottom: 2px
 
       > .name
@@ -33,12 +34,15 @@
     > .text
       font-body1()
 
+    > .link
+      color: getColor('$primary500')
+
     > .metrics
       display: flex
 
       > .metric
         flex1()
-        background: getColor('$secondary50')
+        background: getColor('$primary100')
         text-align: center
         padding: 10px 0
         border-radius: 4px

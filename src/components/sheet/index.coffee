@@ -15,25 +15,21 @@ if window?
 module.exports = Sheet = (props) ->
   {model, router, id, icon, message, submitButton, onClose, $content} = props
 
-  $$el = useRef()
+  $$ref = useRef()
 
   useEffect ->
-    $$el.current.classList.add 'is-visible'
+    $$ref.current.classList.add 'is-visible'
 
     return null
   , []
 
   z '.z-sheet', {
-    ref: $$el
+    ref: $$ref
     key: id
   },
-    z '.backdrop', {
-      onclick: onClose
-    }
-
-    z '.overlay',
+    z '.backdrop',
       onclick: ->
-        $$el.current.classList.remove 'is-visible'
+        $$ref.current.classList.remove 'is-visible'
         setTimeout ->
           model.overlay.close {id}
         , CLOSE_DELAY_MS

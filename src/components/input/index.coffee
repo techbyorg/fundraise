@@ -11,7 +11,6 @@ if window?
   require './index.styl'
 
 module.exports = Input = (props) ->
-  console.log 'render input'
   {valueStream, valueStreams, errorStream, isFocusedStream
     colors, hintText = '', type = 'text', isFloating = false,
     isDisabled = false, isFullWidth,  autoCapitalize = true

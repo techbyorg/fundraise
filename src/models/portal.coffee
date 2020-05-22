@@ -177,7 +177,11 @@ module.exports = class Portal
         target: '_system'
 
     else
-      @overlay.open new GetAppDialog {model: {@l, @overlay, portal: this}}
+      @overlay.open new GetAppDialog {
+        model: {@l, @overlay, portal: this}
+        onClose: =>
+          @overlay.close()
+      }
 
   permissionsCheck: ({permissions}) ->
     console.log 'webcheck'

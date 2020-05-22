@@ -2,6 +2,7 @@
 
 $filterBar = require '../filter_bar'
 $irsSearch = require '../irs_search'
+$searchTags = require '../search_tags'
 $table = require '../table'
 FormatService = require '../../services/format'
 SearchFiltersService = require '../../services/search_filters'
@@ -23,7 +24,6 @@ module.exports = OrgBox = ({model, router, org}) ->
     {
       filtersStream
       searchResultsStream: esQueryFilterStream.switchMap (esQueryFilter) ->
-        console.log 'query', esQueryFilter
         model.irsFund.search {
           query:
             bool:
@@ -36,23 +36,45 @@ module.exports = OrgBox = ({model, router, org}) ->
   {searchResults} = useStream ->
     searchResults: searchResultsStream
 
-  console.log 'RESSSS', searchResults
-
   z '.z-search',
-    z '.search-box',
-      # TODO: own component?
-      z '.search-tags-input'
-    z $filterBar, {model, filtersStream}
+    z '.search',
+      z '.search-box',
+        z $searchTags,
+          title: model.l.get 'fund.focusAreas'
+        z $searchTags,
+          title: model.l.get 'general.location'
 
     z '.results',
+      z '.title',
+        model.l.get 'fundSearch.resultsTitle', {
+          replacements:
+            count: FormatService.number searchResults?.totalCount
+        }
+      z '.filter-bar',
+        z $filterBar, {model, filtersStream}
       z $table,
         data: searchResults?.nodes
+        onRowClick: (e, i) ->
+          router.goFund searchResults.nodes[i]
         columns: [
           {key: 'name', name: 'Name', width: 240, isFlex: true}
           {
-            key: 'assets', name: 'Assets'
+            key: 'assets', name: model.l.get('org.assets')
+            width: 150
             content: ({row}) ->
-              FormatService.number row.assets
+              FormatService.abbreviateDollar row.assets
+          }
+          {
+            key: 'grantMedian', name: model.l.get('fund.medianGrant')
+            width: 170
+            content: ({row}) ->
+              FormatService.abbreviateDollar row.lastYearStats?.grantMedian
+          }
+          {
+            key: 'grantSum', name: model.l.get('fund.grantsPerYear')
+            width: 150
+            content: ({row}) ->
+              FormatService.abbreviateDollar row.lastYearStats?.grantSum
           }
         ]
 

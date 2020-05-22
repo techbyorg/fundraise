@@ -17,7 +17,7 @@ module.exports = SearchInput = (props) ->
     height, bgColor, clearOnBack, isAppBar, alwaysShowBack
     isSearchOnSubmit, onclick, onsubmit, onfocus, onblur, ontouchstart} = props
 
-  $$el = useRef()
+  $$ref = useRef()
 
   {isFocusedStream} = useMemo ->
     {
@@ -84,7 +84,7 @@ module.exports = SearchInput = (props) ->
                 if clearOnBack
                   clear()
                 close()
-                $$el?.querySelector('.input').blur()
+                $$ref?.querySelector('.input').blur()
       z '.right-icon',
         if $icon
           $topRightButton

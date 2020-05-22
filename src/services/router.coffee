@@ -30,13 +30,9 @@ class RouterService
     @entitySlug = null
 
   goPath: (path, options = {}) =>
-    {ignoreHistory, reset, keepPreserved, keepOverlay, skipBlur} = options
+    {ignoreHistory, reset, keepPreserved, skipBlur} = options
     if @preservedRequest and not keepPreserved
-      @model.overlay.close()
       @removeOverlay()
-
-    unless keepOverlay
-      @model.overlay.close() # if any are open...
 
     if Environment.isIos() and not skipBlur
       document.activeElement.blur()
@@ -108,7 +104,7 @@ class RouterService
     @requests.take(1).subscribe (request) =>
       @preservedRequest = request
       @go routeKey, replacements, _defaults(
-        {keepPreserved: true, keepOverlay: true}, options
+        {keepPreserved: true}, options
       )
 
   setEntitySlug: (@entitySlug) => null

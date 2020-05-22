@@ -16,7 +16,7 @@ module.exports = Textarea = (props) ->
     colors, hintText = '', type = 'text', isFloating, isDisabled, isFull,
     isDark, isCentered} = props
 
-  $$el = useRef()
+  $$ref = useRef()
 
   {valueStream, errorStream, isFocusedStream, textareaHeightStream} = useMemo ->
     {
@@ -35,7 +35,7 @@ module.exports = Textarea = (props) ->
     error: errorStream
 
   useEffect ->
-    $$textarea = $$el.current.querySelector('#textarea')
+    $$textarea = $$ref.current.querySelector('#textarea')
     valueStreams.take(1).subscribe ->
       setTimeout ->
         resizeTextarea {target: $$textarea}
@@ -79,7 +79,7 @@ module.exports = Textarea = (props) ->
   }
 
   z '.z-textarea',
-    ref: $$el
+    ref: $$ref
     className: classKebab {
       isDark
       isFloating
@@ -104,15 +104,15 @@ module.exports = Textarea = (props) ->
       disabled: if isDisabled then true else undefined
       type: type
       value: value
-      oninput: z.ev (e, $$el) ->
+      oninput: z.ev (e, $$ref) ->
         resizeTextarea e
         if valueStreams
-          valueStreams.next RxObservable.of $$el.current.value
+          valueStreams.next RxObservable.of $$ref.current.value
         else
-          value.next $$el.current.value
-      onfocus: z.ev (e, $$el) ->
+          value.next $$ref.current.value
+      onfocus: z.ev (e, $$ref) ->
         isFocused.next true
-      onblur: z.ev (e, $$el) ->
+      onblur: z.ev (e, $$ref) ->
         isFocused.next false
 
       # onkeyup: setValueFromEvent

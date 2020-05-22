@@ -8,7 +8,7 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = RequestRating = ({model}) ->
+module.exports = RequestRatingDialog = ({model, onClose}) ->
   {isLoadingStream} = useMemo ->
     {
       isLoadingStream: new RxBehaviorSubject false
@@ -18,11 +18,11 @@ module.exports = RequestRating = ({model}) ->
   {isLoading} = useStream ->
     isLoading: isLoadingStream
 
-  z '.z-request-rating',
+  z '.z-request-rating-dialog',
       z $dialog,
         onClose: ->
           localStorage.hasSeenRequestRating = '1'
-          model.overlay.close()
+          onClose?()
         isVanilla: true
         isWide: true
         $title: model.l.get 'requestRating.title'
@@ -33,7 +33,7 @@ module.exports = RequestRating = ({model}) ->
             cText: colors.$bgText54
           onclick: ->
             localStorage.hasSeenRequestRating = '1'
-            model.overlay.close()
+            onClose?()
         submitButton:
           text: model.l.get 'requestRating.rate'
           colors:

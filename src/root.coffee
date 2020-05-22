@@ -162,7 +162,6 @@ init = ->
   # render after a few ms
   # root = document.getElementById('zorium-root').cloneNode(true)
   requests = router.getStream().publishReplay(1).refCount()
-  console.log 'render'
   render (z $app, {
     requests
     model

@@ -13,7 +13,7 @@ require 'rxjs/add/observable/of'
 require 'rxjs/add/operator/publishReplay'
 
 $head = require './components/head'
-$navDrawer = require './components/nav_drawer'
+# $navDrawer = require './components/nav_drawer'
 $bottomBar = require './components/bottom_bar'
 Environment = require './services/environment'
 
@@ -159,12 +159,12 @@ module.exports = App = (props) ->
     $overlays: model.overlay.get$()
     $tooltip: model.tooltip.get$()
     windowSize: model.window.getSize()
-    hideDrawer: requests.switchMap (request) ->
-      $page = router.preservedRequest?.$page or request.$page
-      hideDrawer = $page?.hideDrawer
-      if hideDrawer?.map
-      then hideDrawer
-      else RxObservable.of (hideDrawer or false)
+    # hideDrawer: requests.switchMap (request) ->
+    #   $page = router.preservedRequest?.$page or request.$page
+    #   hideDrawer = $page?.hideDrawer
+    #   if hideDrawer?.map
+    #   then hideDrawer
+    #   else RxObservable.of (hideDrawer or false)
     request: requests.do ({$page, req}) ->
       # FIXME
       # if $page instanceof Pages['$404Page']
@@ -238,10 +238,10 @@ module.exports = App = (props) ->
             z $page, pageProps
       else
         z '.z-root',
-          unless hideDrawer
-            z $navDrawer, {
-              model, router, entityStream, currentPath: request?.req.path
-            }
+          # unless hideDrawer
+          #   z $navDrawer, {
+          #     model, router, entityStream, currentPath: request?.req.path
+          #   }
 
           z '.content', {
             style:
@@ -258,10 +258,10 @@ module.exports = App = (props) ->
             },
               z $overlayPage, pageProps
 
-          _map $overlays, ($overlay) ->
-            # could use React.Portal for dialogs/overlays
-            # instead of @model.overlay.open? need to weight pros/cons
-            $overlay
+          z '#overlays-portal',
+            # legacy overlays
+            _map $overlays, ($overlay) ->
+              $overlay
 
           # z $tooltip
 

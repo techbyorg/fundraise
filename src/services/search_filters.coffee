@@ -19,6 +19,7 @@ class SearchFiltersService
   getFundFilters: (model) ->
     [
       {
+        id: 'fundedNteeMajor' # used as ref/key
         field: 'fundedNteeMajor'
         type: 'listBooleanOr'
         name: 'focus'
@@ -30,9 +31,22 @@ class SearchFiltersService
           }
       }
       {
+        id: 'assets' # used as ref/key
         field: 'assets'
-        type: 'gtlt'
+        type: 'minMax'
         name: model.l.get 'filter.assets'
+      }
+      {
+        id: 'lastYearStats.grantSum' # used as ref/key
+        field: 'lastYearStats.grantSum'
+        type: 'gtlt'
+        name: model.l.get 'filter.grantSum'
+      }
+      {
+        id: 'lastYearStats.grantMedian' # used as ref/key
+        field: 'lastYearStats.grantMedian'
+        type: 'gtlt'
+        name: model.l.get 'filter.grantMedian'
       }
   ]
 

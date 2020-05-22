@@ -9,6 +9,13 @@
   overflow-y: auto
   -webkit-overflow-scrolling: touch
 
+  &.has-row-click
+    > .tbody > .tr
+      cursor: pointer
+
+      &:hover
+        background: getColor('$bgColorAlt1')
+
   > .thead
     shadow-1()
     background: getColor('$bgColor')
@@ -19,7 +26,7 @@
     > .th
       font-body1(false, medium)
       flex-shrink: 0
-      padding: 20px
+      padding: 20px 20px 12px 20px
       box-sizing: border-box
 
   > .tbody

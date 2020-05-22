@@ -13,14 +13,14 @@ module.exports = Dialog = (props) ->
   {onClose, $content = '', $title, cancelButton, resetButton, submitButton, isVanilla,
     isWide} = props
 
-  $$el = useRef()
+  $$ref = useRef()
 
   useEffect ->
-    $$el.current.classList.add 'is-mounted'
+    $$ref.current.classList.add 'is-mounted'
     window.addEventListener 'keydown', keyListener
 
     return ->
-      $$el.current.classList.remove 'is-mounted'
+      $$ref.current.classList.remove 'is-mounted'
       window.removeEventListener 'keydown', keyListener
   , []
 
@@ -30,7 +30,7 @@ module.exports = Dialog = (props) ->
       onClose()
 
   z '.z-dialog', {
-    ref: $$el
+    ref: $$ref
     className: classKebab {isVanilla, isWide}
   },
     z '.backdrop', {

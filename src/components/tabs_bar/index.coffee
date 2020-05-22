@@ -10,13 +10,13 @@ module.exports = TabsBar = (props) ->
   {selectedIndexStream, items, bgColor, color, isPrimary, inactiveColor,
     underlineColor, isFixed, isFlat, isArrow, tabWidth, tabHeight} = props
 
-  $$el = useRef()
+  $$ref = useRef()
 
   useEffect ->
-    $$el.current.addEventListener 'touchmove', onTouchMove
+    $$ref.current.addEventListener 'touchmove', onTouchMove
 
     return ->
-      $$el?.current.removeEventListener 'touchmove', onTouchMove
+      $$ref?.current.removeEventListener 'touchmove', onTouchMove
   , []
 
   {selectedIndex} = useStream ->
@@ -39,7 +39,7 @@ module.exports = TabsBar = (props) ->
   isFullWidth = not tabWidth
 
   z '.z-tabs-bar', {
-    ref: $$el
+    ref: $$ref
     className: classKebab {isFixed, isArrow, isFlat, isFullWidth}
     style:
       background: bgColor

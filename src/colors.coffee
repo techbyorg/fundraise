@@ -10,20 +10,20 @@ colors = _defaults {
     '--header-500-text-54': materialColors.$black54
     '--header-500-icon': '#757575'
 
-    '--primary-50': '#E4E4E8'
-    '--primary-100': '#BABCC5'
-    '--primary-200': '#8D909F'
-    '--primary-300': '#5F6379'
-    '--primary-400': '#3C415C'
-    '--primary-500': '#1A203F'
-    '--primary-600': '#171C39'
-    '--primary-700': '#131831'
-    '--primary-800': '#0F1329'
-    '--primary-900': '#080B1B'
+    '--primary-50': 'rgba(63, 113, 222, 0.04)'
+    '--primary-100': '#C5D4F5'
+    '--primary-200': '#9FB8EF'
+    '--primary-300': '#799CE8'
+    '--primary-400': '#5C86E3'
+    '--primary-500': '#3F71DE'
+    '--primary-600': '#3969DA'
+    '--primary-700': '#315ED5'
+    '--primary-800': '#2954D1'
+    '--primary-900': '#1B42C8'
     '--primary-100-text': materialColors.$black87
     '--primary-200-text': materialColors.$black87
-    '--primary-300-text': materialColors.$black87
-    '--primary-400-text': materialColors.$black87
+    '--primary-300-text': '#FAFAFA'
+    '--primary-400-text': '#FAFAFA'
     '--primary-500-text': '#FAFAFA'
     '--primary-600-text': '#FAFAFA'
     '--primary-700-text': '#FAFAFA'

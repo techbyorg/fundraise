@@ -8,7 +8,7 @@ if window?
   require './index.styl'
 
 module.exports = Graph = ({labels = [], series = [], options = {}})->
-  $$el = useRef()
+  $$ref = useRef()
 
   chart = null
 
@@ -18,7 +18,7 @@ module.exports = Graph = ({labels = [], series = [], options = {}})->
     console.log '=================================='
     console.log '=================================='
     console.log '=================================='
-    chart = new Chartist.Line $$el, {labels, series}, options
+    chart = new Chartist.Line $$ref, {labels, series}, options
     # allow for gradient
     chart.on 'created', (ctx) ->
       document.getElementsByClassName('ct-chart-line')?[0]?.setAttribute('style', 'overflow: visible !important;')
@@ -49,4 +49,4 @@ module.exports = Graph = ({labels = [], series = [], options = {}})->
 
   console.log 'update', {labels, series}, options
   chart?.update {labels, series}, options
-  z '.z-graph-widget', {ref: $$el, key: 'graph-widget'}
+  z '.z-graph-widget', {ref: $$ref, key: 'graph-widget'}

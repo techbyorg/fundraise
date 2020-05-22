@@ -1,4 +1,5 @@
-{z, useStream} = require 'zorium'
+{z, useMemo, useStream} = require 'zorium'
+RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
@@ -12,8 +13,15 @@ if window?
   require './index.styl'
 
 module.exports = FilterSheet = ({model, filter, id}) ->
-  {value} = useStream ->
-    value: filter.valueStreams.switch()
+  {resetStream} = useMemo ->
+    {resetStream: new RxBehaviorSubject null}
+  , []
+
+  {value, resetValue} = useStream ->
+    # HACK: do to keep filter value up-to-date when resetting
+    value: filter.valueStreams.switch().do (updatedValue) ->
+      filter.value = updatedValue
+    resetValue: resetStream
 
   z '.z-filter-sheet',
     z $sheet,
@@ -28,5 +36,9 @@ module.exports = FilterSheet = ({model, filter, id}) ->
                 text: model.l.get 'general.reset'
                 onclick: =>
                   filter.valueStreams.next RxObservable.of null
-                  $content.setup()
-          z $filterContent, {model, filter}
+                  setTimeout ->
+                    resetStream.next Math.random()
+                  , 0
+          z $filterContent, {
+            model, filter, resetValue
+          }

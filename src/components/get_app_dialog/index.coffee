@@ -7,7 +7,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = GetAppDialog = ({model}) ->
+module.exports = GetAppDialog = ({model, onClose}) ->
   $dialog = new
 
   iosAppUrl = config.IOS_APP_URL
@@ -15,8 +15,7 @@ module.exports = GetAppDialog = ({model}) ->
 
   z '.z-get-app-dialog',
     z $dialog,
-      onClose: ->
-        model.overlay.close()
+      onClose: onClose
       isVanilla: true
       $title: model.l.get 'getAppDialog.title'
       $content:
@@ -37,5 +36,4 @@ module.exports = GetAppDialog = ({model}) ->
             model.l.get 'getAppDialog.text'
       cancelButton:
         text: model.l.get 'general.cancel'
-        onclick: ->
-          model.overlay.close()
+        onclick: onClose

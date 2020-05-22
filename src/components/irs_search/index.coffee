@@ -45,7 +45,6 @@ module.exports = IrsSearch = ({model, router, irsType = 'irsFund', hintText}) ->
             fields: ['name', 'name._2gram']
       }
 
-  console.log 'render', entities
   isEntitiesVisible = not selectedEntity and not _isEmpty entities
 
   z '.z-irs-search', {

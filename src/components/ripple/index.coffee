@@ -15,15 +15,15 @@ if window?
 ANIMATION_TIME_MS = 350
 
 module.exports = Ripple = ({color, isCircle, isCenter, onComplete, fadeIn}) ->
-  $$el = useRef()
+  $$ref = useRef()
 
-  ripple = ({$$el, color, isCenter, mouseX, mouseY, onComplete, fadeIn} = {}) ->
-    $$wave = $$el.current.querySelector '.wave'
+  ripple = ({$$ref, color, isCenter, mouseX, mouseY, onComplete, fadeIn} = {}) ->
+    $$wave = $$ref.querySelector '.wave'
 
     unless $$wave
       return
 
-    {width, height, top, left} = $$el.current.getBoundingClientRect()
+    {width, height, top, left} = $$ref.getBoundingClientRect()
 
     if isCenter
       x = width / 2
@@ -49,9 +49,9 @@ module.exports = Ripple = ({color, isCircle, isCenter, onComplete, fadeIn}) ->
       , ANIMATION_TIME_MS
 
   onTouch = (e) ->
-    $$el = e.target
+    $$ref = e.target
     ripple {
-      $$el
+      $$ref
       color
       isCenter
       onComplete
@@ -61,7 +61,7 @@ module.exports = Ripple = ({color, isCircle, isCenter, onComplete, fadeIn}) ->
     }
 
   z '.z-ripple', {
-    ref: $$el
+    ref: $$ref
     className: classKebab {isCircle}
     ontouchstart: onTouch
     onmousedown: if Environment.isAndroid() then null else onTouch
