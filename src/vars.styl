@@ -19,24 +19,10 @@ $inputMaxWidth = 600px
 
 $cdnUrl = getCdnUrl()
 
-clearfix()
-  zoom: 1
-
-  &:before, &:after
-    content: ''
-    display: table
-
-  &:after
-    clear: both
-
 flex1()
   flex: 1
   min-height: 0
   // TODO: figure out if can do min-width: 0 here too
-
-force-height-when-empty()
-  &:before
-    content: "\200B"
 
 shadow-1()
   transition: box-shadow 0.25s
@@ -62,7 +48,7 @@ shadow-5()
   transition: box-shadow 0.25s
   box-shadow: 0 17px 17px 0 rgba(0, 0, 0, 0.15), 0 27px 55px 0 rgba(0, 0, 0, 0.3)
 
-font-h4(scale = yes)
+font-h4()
   font-family: Raleway
   font-size: 36.9px
   font-weight: normal
@@ -76,7 +62,7 @@ font-h4(scale = yes)
   //   @media (min-width: $breakPointLarge)
   //     font-size: 28px
 
-font-h5(scale = yes, state = high)
+font-h5(state = high)
   font-family: Raleway
   color: getColor('$bgText87')
   font-size: 26px
@@ -93,7 +79,7 @@ font-h5(scale = yes, state = high)
   //   @media (min-width: $breakPointLarge)
   //     font-size: 24px
 
-font-h6(scale = yes)
+font-h6()
   font-family: Raleway
   color: getColor('$bgText87')
   font-size: 21.7px
@@ -107,7 +93,7 @@ font-h6(scale = yes)
   //   @media (min-width: $breakPointLarge)
   //     font-size: 20px
 
-font-button(scale = yes)
+font-button()
   font-family: Raleway
   color: getColor('$bgText87')
   font-size: 15.2px
@@ -121,7 +107,7 @@ font-button(scale = yes)
     @media (min-width: $breakPointLarge)
       font-size: 17.4px
 
-font-body1(scale = yes, state = high)
+font-body1(state = high)
   font-family: Raleway
   color: getColor('$bgText87')
   font-size: 17.4px
@@ -137,7 +123,7 @@ font-body1(scale = yes, state = high)
   //   @media (min-width: $breakPointLarge)
   //     font-size: 17.4px
 
-font-body2(scale = yes, state = high)
+font-body2(state = high)
   font-family: Raleway
   color: getColor('$bgText87')
   font-size: 15.2px
@@ -162,7 +148,7 @@ font-tbd-name() // FIXME name
   text-transform: uppercase
 
 
-font-caption(scale = yes, state = disabled) // primary, disabled, italic
+font-caption(state = disabled) // primary, disabled, italic
   font-family: Raleway
   color: getColor('$bgText60')
   font-size: 13px
@@ -181,11 +167,7 @@ font-caption(scale = yes, state = disabled) // primary, disabled, italic
   if state is high
     color: getColor('$bgText87')
 
-  // if scale is yes
-  //   @media (min-width: $breakPointLarge)
-  //     font-size: 15.2px
-
-font-subtitle1(scale = yes, state = high)
+font-subtitle1(state = high)
   font-family: Raleway
   color: getColor('$bgText87')
   font-size: 17.4px
@@ -198,7 +180,7 @@ font-subtitle1(scale = yes, state = high)
   if state is medium
     color: getColor('$bgText60')
 
-font-subtitle2(scale = yes)
+font-subtitle2()
   font-family: Raleway
   color: getColor('$bgText87')
   font-size: 15.2px
@@ -208,7 +190,7 @@ font-subtitle2(scale = yes)
   line-height: 1.32
   letter-spacing: 0.1px
 
-font-overline(scale = yes)
+font-overline()
   font-family: Raleway
   color: getColor('$bgText87')
   font-size: 13px
@@ -218,7 +200,7 @@ font-overline(scale = yes)
   line-height: 1.23
   letter-spacing: 2px
 
-font-micro(scale = yes)
+font-micro()
   font-family: Raleway
   color: getColor('$bgText87')
   font-size: 11px
@@ -227,23 +209,6 @@ font-micro(scale = yes)
   font-style: normal
   line-height: 1.45
   letter-spacing: 0.34px
-
-  if scale is yes
-    @media (min-width: $breakPointLarge)
-      font-size: 13px
-
-// TODO
-font-old-micro(scale = yes)
-  font-family: Raleway
-  font-size: 8px
-  color: getColor('$bgText54')
-  text-transform: uppercase
-  font-weight: 400
-  line-height: 1.25
-
-  if scale is yes
-    @media (min-width: $breakPointLarge)
-      font-size: 10px
 
 cssVariableFallbacks(property, args)
   string = join(' ', args)
