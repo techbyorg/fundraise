@@ -20,6 +20,9 @@ module.exports = PositionedOverlay = (props) ->
   , []
 
   useEffect ->
+    setTimeout ->
+      $$ref.current.classList.add 'is-mounted'
+    , 0
     targetBoundingRect = $$targetRef.current?.getBoundingClientRect() or {}
     refRect = $$ref.current.getBoundingClientRect()
     windowSize = model.window.getSize().getValue()

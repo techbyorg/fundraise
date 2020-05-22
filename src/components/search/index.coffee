@@ -24,6 +24,7 @@ module.exports = OrgBox = ({model, router, org}) ->
     {
       filtersStream
       searchResultsStream: esQueryFilterStream.switchMap (esQueryFilter) ->
+        console.log 'es', esQueryFilter
         model.irsFund.search {
           query:
             bool:
@@ -35,6 +36,8 @@ module.exports = OrgBox = ({model, router, org}) ->
 
   {searchResults} = useStream ->
     searchResults: searchResultsStream
+
+  console.log searchResults
 
   z '.z-search',
     z '.search',

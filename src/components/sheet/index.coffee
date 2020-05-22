@@ -18,9 +18,7 @@ module.exports = Sheet = (props) ->
   $$ref = useRef()
 
   useEffect ->
-    $$ref.current.classList.add 'is-visible'
-
-    return null
+    $$ref.current.classList.add 'is-mounted'
   , []
 
   z '.z-sheet', {
@@ -29,7 +27,7 @@ module.exports = Sheet = (props) ->
   },
     z '.backdrop',
       onclick: ->
-        $$ref.current.classList.remove 'is-visible'
+        $$ref.current.classList.remove 'is-mounted'
         setTimeout ->
           model.overlay.close {id}
         , CLOSE_DELAY_MS

@@ -234,8 +234,11 @@
   "daysAbbr.6": "Sat",
 
   "filter.assets": "Assets",
+  "filter.assetsTitle": "Amount foundation has in assets",
   "filter.grantSum": "Yearly donation amt",
   "filter.grantMedian": "Median grant size",
+  "filter.noMin": "No min",
+  "filter.noMax": "No max",
 
   "metric.revenue": "Revenue",
   "metric.expenses": "Expenses",

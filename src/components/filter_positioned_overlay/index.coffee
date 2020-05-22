@@ -1,4 +1,4 @@
-{z, useMemo, useStream} = require 'zorium'
+{z, useMemo, useEffect, useRef, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -15,8 +15,14 @@ if window?
 module.exports = FilterPositionedOverlay = (props) ->
   {model, filter, onClose, $$targetRef} = props
 
+  $$ref = useRef()
+
   {resetStream} = useMemo ->
     {resetStream: new RxBehaviorSubject null}
+  , []
+
+  useEffect ->
+    $$ref.current.classList.add 'is-mounted'
   , []
 
   {value, resetValue} = useStream ->
@@ -36,7 +42,9 @@ module.exports = FilterPositionedOverlay = (props) ->
       offset:
         y: 8
       $content:
-        z '.z-filter-positioned-overlay_content',
+        z '.z-filter-positioned-overlay_content', {
+          ref: $$ref
+        },
           z '.content',
             z $filterContent, {
               model, filter, resetValue

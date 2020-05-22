@@ -1,5 +1,6 @@
 {z, classKebab, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
+_find = require 'lodash/find'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
@@ -12,22 +13,31 @@ if window?
   require './index.styl'
 
 module.exports = Dropdown = (props) ->
-  {model, valueStreams, errorStream, options, currentText,
+  {model, valueStreams, valueStream, errorStream, options,
     isDisabled = false} = props
 
-  {valueStreams, isOpenStream} = useMemo ->
+  {valueStream, selectedOptionStream, isOpenStream} = useMemo ->
     {
-      valueStreams: valueStreams or new RxReplaySubject 1
+      valueStream: valueStream or new RxReplaySubject 1
+      selectedOptionStream: valueStream
       isOpenStream: new RxBehaviorSubject false
     }
   , []
-  # valueStreams.next RxObservable.of null
 
-  {value, isOpen, options} = useStream ->
-    value: valueStreams?.switch()
+  {value, selectedOption, isOpen, options} = useStream ->
+    _valueStream = valueStreams?.switch() or valueStream
+    value: _valueStream
+    selectedOption: _valueStream.map (value) ->
+      _find options, {value}
     error: errorStream
     isOpen: isOpenStream
     options: options
+
+  setValue = (value) ->
+    if valueStreams
+      valueStreams.next RxObservable.of value
+    else
+      valueStream.next value
 
   toggle = ->
     isOpenStream.next not isOpen
@@ -49,7 +59,7 @@ module.exports = Dropdown = (props) ->
       onclick: toggle
     },
       z '.text',
-        currentText
+        selectedOption?.text
       z '.arrow',
         z $icon,
           icon: 'chevron-down'
@@ -60,7 +70,7 @@ module.exports = Dropdown = (props) ->
         z 'label.option', {
           className: classKebab {isSelected: value is option.value}
           onclick: ->
-            valueStreams.next RxObservable.of option.value
+            setValue option.value
             toggle()
         },
           z '.text',

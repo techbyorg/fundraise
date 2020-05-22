@@ -37,8 +37,8 @@ module.exports = FilterContent = ({model, filter, resetValue, isGrouped}) ->
         {custom: {operatorStream, valueStream}}
 
       when 'minMax'
-        minStream = new RxBehaviorSubject filter.value?.min
-        maxStream = new RxBehaviorSubject filter.max?.value or ''
+        minStream = new RxBehaviorSubject filter.value?.min or filter.minOptions[0].value
+        maxStream = new RxBehaviorSubject filter.value?.max or filter.maxOptions[0].value
         filter.valueStreams.next RxObservable.combineLatest(
           minStream, maxStream, (vals...) -> vals
         ).map ([min, max]) ->
@@ -147,15 +147,18 @@ module.exports = FilterContent = ({model, filter, resetValue, isGrouped}) ->
     when 'minMax'
       $content =
         z '.content',
-          z '.metric.checkbox-label',
-            z '.text', 'minmax' # FIXME
-          z $dropdown, {
-            valueStream: custom.minStream
-            options: [
-              {value: 'a', text: 'a'}
-              {value: 'b', text: 'b'}
-            ]
-          }
+          z '.flex',
+            z '.block',
+              z $dropdown, {
+                valueStream: custom.minStream
+                options: filter.minOptions
+              }
+            z '.dash', '-'
+            z '.block',
+              z $dropdown, {
+                valueStream: custom.maxStream
+                options: filter.maxOptions
+              }
     when 'gtlt'
       operator = filterValue?.operator
       $content =

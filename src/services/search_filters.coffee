@@ -12,6 +12,8 @@ _reduce = require 'lodash/reduce'
 _some = require 'lodash/some'
 _zipWith = require 'lodash/zipWith'
 
+FormatService = require './format'
+
 nteeMajors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
 'nN', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
@@ -35,18 +37,73 @@ class SearchFiltersService
         field: 'assets'
         type: 'minMax'
         name: model.l.get 'filter.assets'
+        title: model.l.get 'filter.assetsTitle'
+        minOptions: [
+          {value: '0', text: model.l.get 'filter.noMin'}
+          {value: '100000', text: FormatService.abbreviateDollar 100000}
+          {value: '1000000', text: FormatService.abbreviateDollar 1000000}
+          {value: '10000000', text: FormatService.abbreviateDollar 10000000}
+          {value: '100000000', text: FormatService.abbreviateDollar 100000000}
+          {value: '1000000000', text: FormatService.abbreviateDollar 1000000000}
+          {value: '10000000000', text: FormatService.abbreviateDollar 10000000000} # 10b
+        ]
+        maxOptions: [
+          {value: '0', text: model.l.get 'filter.noMax'}
+          {value: '100000', text: FormatService.abbreviateDollar 100000}
+          {value: '1000000', text: FormatService.abbreviateDollar 1000000}
+          {value: '10000000', text: FormatService.abbreviateDollar 10000000}
+          {value: '100000000', text: FormatService.abbreviateDollar 100000000}
+          {value: '1000000000', text: FormatService.abbreviateDollar 1000000000}
+          {value: '10000000000', text: FormatService.abbreviateDollar 10000000000} # 10b
+        ]
       }
       {
         id: 'lastYearStats.grantSum' # used as ref/key
         field: 'lastYearStats.grantSum'
-        type: 'gtlt'
+        type: 'minMax'
         name: model.l.get 'filter.grantSum'
+        minOptions: [
+          {value: '0', text: model.l.get 'filter.noMin'}
+          {value: '10000', text: FormatService.abbreviateDollar 10000}
+          {value: '100000', text: FormatService.abbreviateDollar 100000}
+          {value: '1000000', text: FormatService.abbreviateDollar 1000000}
+          {value: '10000000', text: FormatService.abbreviateDollar 10000000}
+          {value: '100000000', text: FormatService.abbreviateDollar 100000000}
+          {value: '1000000000', text: FormatService.abbreviateDollar 1000000000} # 1b
+        ]
+        maxOptions: [
+          {value: '0', text: model.l.get 'filter.noMax'}
+          {value: '10000', text: FormatService.abbreviateDollar 10000}
+          {value: '100000', text: FormatService.abbreviateDollar 100000}
+          {value: '1000000', text: FormatService.abbreviateDollar 1000000}
+          {value: '10000000', text: FormatService.abbreviateDollar 10000000}
+          {value: '100000000', text: FormatService.abbreviateDollar 100000000}
+          {value: '1000000000', text: FormatService.abbreviateDollar 1000000000} # 1b
+        ]
       }
       {
         id: 'lastYearStats.grantMedian' # used as ref/key
         field: 'lastYearStats.grantMedian'
-        type: 'gtlt'
+        type: 'minMax'
         name: model.l.get 'filter.grantMedian'
+        minOptions: [
+          {value: '0', text: model.l.get 'filter.noMin'}
+          {value: '1000', text: FormatService.abbreviateDollar 1000}
+          {value: '10000', text: FormatService.abbreviateDollar 10000}
+          {value: '100000', text: FormatService.abbreviateDollar 100000}
+          {value: '1000000', text: FormatService.abbreviateDollar 1000000}
+          {value: '10000000', text: FormatService.abbreviateDollar 10000000}
+          {value: '100000000', text: FormatService.abbreviateDollar 100000000} # 100m
+        ]
+        maxOptions: [
+          {value: '0', text: model.l.get 'filter.noMax'}
+          {value: '1000', text: FormatService.abbreviateDollar 1000}
+          {value: '10000', text: FormatService.abbreviateDollar 10000}
+          {value: '100000', text: FormatService.abbreviateDollar 100000}
+          {value: '1000000', text: FormatService.abbreviateDollar 1000000}
+          {value: '10000000', text: FormatService.abbreviateDollar 10000000}
+          {value: '100000000', text: FormatService.abbreviateDollar 100000000} # 100m
+        ]
       }
   ]
 
@@ -136,6 +193,19 @@ class SearchFiltersService
               range:
                 "#{field}":
                   "#{filter.value.operator}": filter.value.value
+            }
+        when 'minMax'
+          min =  filter.value.min
+          max =  filter.value.max
+          if min or max
+            range = {}
+            if min
+              range.gte = min
+            # if max
+            #   range.lte = max
+            {
+              range:
+                "#{field}": range
             }
         when 'gtZero'
           {

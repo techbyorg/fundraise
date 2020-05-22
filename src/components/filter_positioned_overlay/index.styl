@@ -4,6 +4,11 @@
   shadow-2()
   border-radius: 12px
   background: getColor('$bgColor')
+  opacity: 0
+
+  &.is-mounted
+    opacity: 1
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)
 
   > .content
     padding: 20px
