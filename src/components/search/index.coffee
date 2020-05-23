@@ -1,4 +1,5 @@
 {z, useMemo, useStream} = require 'zorium'
+_find = require 'lodash/find'
 
 $filterBar = require '../filter_bar'
 $irsSearch = require '../irs_search'
@@ -35,7 +36,9 @@ module.exports = $search = ({model, router, org}) ->
     }
   , []
 
-  {searchResults} = useStream ->
+  {focusAreasFilter, searchResults} = useStream ->
+    focusAreasFilter: filtersStream.map (filters) ->
+      _find filters, {id: 'fundedNteeMajor'}
     searchResults: searchResultsStream
 
   console.log searchResults
@@ -44,11 +47,13 @@ module.exports = $search = ({model, router, org}) ->
     z '.search',
       z '.search-box',
         z $searchTags,
+          model: model
+          filter: focusAreasFilter
           title: model.l.get 'fund.focusAreas'
           placeholder: model.l.get 'fundSearch.focusAreasPlaceholder'
-        z $searchTags,
-          title: model.l.get 'general.location'
-          placeholder: model.l.get 'fundSearch.locationPlaceholder'
+        # z $searchTags,
+        #   title: model.l.get 'general.location'
+        #   placeholder: model.l.get 'fundSearch.locationPlaceholder'
 
     z '.results',
       z '.title',
@@ -59,7 +64,7 @@ module.exports = $search = ({model, router, org}) ->
       z '.filter-bar',
         z $filterBar, {model, filtersStream}
 
-      z $fundSearchResults, {model, rows: searchResults?.nodes}
+      z $fundSearchResults, {model, router, rows: searchResults?.nodes}
 
 
     z '.title', 'Search foundations'

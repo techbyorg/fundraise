@@ -3,11 +3,14 @@ RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 _defaults = require 'lodash/defaults'
+_filter = require 'lodash/filter'
 _map = require 'lodash/map'
 _orderBy = require 'lodash/orderBy'
+_uniqBy = require 'lodash/uniqBy'
 
-$filterPositionedOverlay = require '../filter_positioned_overlay'
-$filterSheet = require '../filter_sheet'
+$filterContentPositionedOverlay = require '../filter_content_positioned_overlay'
+$filterContentSheet = require '../filter_content_sheet'
+Environment = require '../../services/environment'
 colors = require '../../colors'
 
 if window?
@@ -31,7 +34,16 @@ module.exports = $filterBar = ({model, filtersStream}) ->
       _orderBy filters, (({value}) -> value?), 'desc'
 
   showFilterContent = ({filter, $$filterRef}) =>
-    visibleFilterContentsStream.next [{filter, $$filterRef}]
+    visibleFilterContentsStream.next _uniqBy visibleFilterContents.concat([
+      {filter, $$filterRef}
+    ]), ({filter}) -> filter.id
+
+  isMobile = Environment.isMobile()
+  $filterContentEl = if isMobile \
+                     then $filterContentSheet \
+                     else $filterContentPositionedOverlay
+
+  console.log 'vis', visibleFilterContents
 
   z '.z-filter-bar',
     z '.filters',
@@ -58,8 +70,12 @@ module.exports = $filterBar = ({model, filtersStream}) ->
           }, filter.name
 
     _map visibleFilterContents, ({filter, $$filterRef}) ->
-      z $filterPositionedOverlay, {
+      id = filter.id
+      z $filterContentEl, {
         model, filter, $$targetRef: $$filterRef
         onClose: ->
-          visibleFilterContentsStream.next []
+          visibleFilterContents = visibleFilterContentsStream.getValue()
+          newFilterContents = _filter visibleFilterContents, ({filter}) ->
+            id isnt filter.id
+          visibleFilterContentsStream.next newFilterContents
       }

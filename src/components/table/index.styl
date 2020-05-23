@@ -9,12 +9,18 @@
   overflow-y: auto
   -webkit-overflow-scrolling: touch
 
+  &.is-mobile
+    fix-overflow-shadows()
+
   &.has-row-click
     > .tbody > .tr
       cursor: pointer
 
       &:hover
         background: getColor('$bgColorAlt1')
+
+    > .tbody > .tr-mobile
+      cursor: pointer
 
   > .thead
     shadow-1()
@@ -32,7 +38,6 @@
   > .tbody
     flex1()
 
-
     > .tr
       display: flex
       border-bottom: 1px solid getColor('$bgText12')
@@ -42,3 +47,8 @@
         flex-shrink: 0
         padding: 20px
         box-sizing: border-box
+
+    > .tr-mobile
+      shadow-1()
+      margin-bottom: 12px
+      padding: 16px

@@ -28,7 +28,7 @@ module.exports = class IrsFund
           irsFunds(query: $query, limit: $limit) {
             totalCount,
             nodes {
-              ein, name, assets,
+              ein, name, city, state, assets,
               lastYearStats {
                 grants, grantMedian, grantSum
               }

@@ -12,7 +12,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $filterPositionedOverlay = (props) ->
+module.exports = $filterContentPositionedOverlay = (props) ->
   {model, filter, onClose, $$targetRef} = props
 
   $$ref = useRef()
@@ -31,7 +31,7 @@ module.exports = $filterPositionedOverlay = (props) ->
       filter.value = updatedValue
     resetValue: resetStream
 
-  z '.z-filter-box-overlay',
+  z '.z-filter-content-positioned-overlay',
     z $positionedOverlay,
       model: model
       onClose: onClose
@@ -42,7 +42,7 @@ module.exports = $filterPositionedOverlay = (props) ->
       offset:
         y: 8
       $content:
-        z '.z-filter-positioned-overlay_content', {
+        z '.z-filter-content-positioned-overlay_content', {
           ref: $$ref
         },
           z '.content',

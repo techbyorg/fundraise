@@ -12,7 +12,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $filterSheet = ({model, filter, id}) ->
+module.exports = $filterContentSheet = ({model, id, filter, onClose}) ->
   {resetStream} = useMemo ->
     {resetStream: new RxBehaviorSubject null}
   , []
@@ -23,13 +23,15 @@ module.exports = $filterSheet = ({model, filter, id}) ->
       filter.value = updatedValue
     resetValue: resetStream
 
-  z '.z-filter-sheet',
+  z '.z-filter-content-sheet',
+    key: filter.id
     z $sheet,
       model: model
-      id: id
+      id: filter.id
+      onClose: onClose
       isVanilla: true
       $content:
-        z '.z-filter-sheet_sheet',
+        z '.z-filter-content-sheet_sheet',
           z '.reset',
             if value
               z $button,
