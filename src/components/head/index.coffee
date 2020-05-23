@@ -228,23 +228,25 @@ module.exports = $head = (props) ->
         # serialization
         z 'script#model.model',
           key: 'model'
-          innerHTML: modelSerialization or ''
+          dangerouslySetInnerHTML:
+            __html: modelSerialization or ''
 
 
         z 'script#ga1',
           key: 'ga1'
-          innerHTML: "
+          dangerouslySetInnerHTML:
+            __html: "
             window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};
-            ga.l=+new Date;
-            ga('create', '#{gaId}', 'auto', {
-              sampleRate: #{gaSampleRate}
-            });
-            window.addEventListener('error', function(e) {
-              ga(
-                'send', 'event', 'error', e.message, e.filename + ':  ' + e.lineno
-              );
-            });
-          "
+              ga.l=+new Date;
+              ga('create', '#{gaId}', 'auto', {
+                sampleRate: #{gaSampleRate}
+              });
+              window.addEventListener('error', function(e) {
+                ga(
+                  'send', 'event', 'error', e.message, e.filename + ':  ' + e.lineno
+                );
+              });
+            "
         z 'script#ga2',
           key: 'ga2'
           async: true
@@ -255,8 +257,9 @@ module.exports = $head = (props) ->
     # styles
     z 'style#css-variables',
       key: 'css-variables'
-      innerHTML:
-        ":root {#{cssVariables or model.cookie.get 'cachedCssVariables'}}"
+      dangerouslySetInnerHTML:
+        __html:
+          ":root {#{cssVariables or model.cookie.get 'cachedCssVariables'}}"
     if isInliningSource
       z 'link#bundle-css',
         rel: 'stylesheet'
@@ -283,14 +286,16 @@ module.exports = $head = (props) ->
       z 'script#structured-data', {
         key: 'structured-data'
         type: 'application/ld+json'
-        innerHTML: JSON.stringify {
-          'context': 'http://schema.org'
-          'type': meta.structuredData.type or 'LocalBusiness'
-          'name': meta.structuredData.name
-          'aggregateRating': {
-            'type': 'AggregateRating'
-            'ratingValue': meta.structuredData.ratingValue
-            'ratingCount': meta.structuredData.ratingCount
+        dangerouslySetInnerHTML:
+          __html:
+            JSON.stringify {
+              'context': 'http://schema.org'
+              'type': meta.structuredData.type or 'LocalBusiness'
+              'name': meta.structuredData.name
+              'aggregateRating': {
+                'type': 'AggregateRating'
+                'ratingValue': meta.structuredData.ratingValue
+                'ratingCount': meta.structuredData.ratingCount
+              }
+            }
           }
-        }
-      }

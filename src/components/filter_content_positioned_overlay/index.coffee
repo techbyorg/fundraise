@@ -22,7 +22,7 @@ module.exports = $filterContentPositionedOverlay = (props) ->
   , []
 
   useEffect ->
-    $$ref.current.classList.add 'is-mounted'
+    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0
   , []
 
   {value, resetValue} = useStream ->

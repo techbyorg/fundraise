@@ -17,3 +17,6 @@ don't include all of rxjs, lodash
 
 
 - hopefully deferred resolvers will become a think in apollo-server, then we can implement instead of manually doing multiple queries (though it's less of a perf gain, more about clean code)
+
+
+preact (with compat) is 8kb (ungzipped) > dyo. not a big deal

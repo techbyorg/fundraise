@@ -2,6 +2,7 @@ RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
+require 'rxjs/add/operator/distinctUntilChanged'
 _defaults = require 'lodash/defaults'
 _isEmpty = require 'lodash/isEmpty'
 _isEqual = require 'lodash/isEqual'

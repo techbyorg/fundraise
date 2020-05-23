@@ -245,7 +245,7 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
     # character-entities is 38kb and not really necessary. legacy is 1.64kb
     resolve:
       alias:
-       'character-entities': 'character-entities-legacy'
+        'character-entities': 'character-entities-legacy'
     output:
       # TODO: '[hash].bundle.js' if we have caching issues, or use appcache
       filename: 'bundle.js'

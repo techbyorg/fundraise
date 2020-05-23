@@ -1,4 +1,4 @@
-{z, Portal, useRef, useMemo, useEffect} = require 'zorium'
+{z, createPortal, useRef, useMemo, useEffect} = require 'zorium'
 _defaults = require 'lodash/defaults'
 
 $icon = require '../icon'
@@ -23,7 +23,7 @@ module.exports = $sheet = (props) ->
   , []
 
   useEffect ->
-    $$ref.current.classList.add 'is-mounted'
+    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0
   , []
 
   close = ->
@@ -32,7 +32,7 @@ module.exports = $sheet = (props) ->
       onClose()
     , CLOSE_DELAY_MS
 
-  z Portal, {target: $$overlays},
+  createPortal(
     z '.z-sheet', {
       ref: $$ref
     },
@@ -61,3 +61,5 @@ module.exports = $sheet = (props) ->
                   colors: {cText: colors.$primaryMain}
                 }
             ]
+  $$overlays
+  )

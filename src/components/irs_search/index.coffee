@@ -4,6 +4,7 @@ _map = require 'lodash/map'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
+require 'rxjs/add/operator/debounceTime'
 
 $icon = require '../icon'
 $primaryInput = require '../primary_input'

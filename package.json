@@ -90,8 +90,7 @@
     "uuid-by-string": "^0.5.2",
     "vdom-parser": "^1.4.1",
     "whatwg-fetch": "^0.10.1",
-    "xhr-request": "^1.1.0",
-    "zorium": "git://github.com/Zorium/zorium.git#dyo"
+    "xhr-request": "^1.1.0"
   },
   "directories": {
     "test": "test"

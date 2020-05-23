@@ -1,4 +1,4 @@
-{z, classKebab, Portal, useEffect, useMemo, useRef, useStream} = require 'zorium'
+{z, classKebab, createPortal, useEffect, useMemo, useRef, useStream} = require 'zorium'
 _uniq = require 'lodash/uniq'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
@@ -20,9 +20,7 @@ module.exports = $positionedOverlay = (props) ->
   , []
 
   useEffect ->
-    setTimeout ->
-      $$ref.current.classList.add 'is-mounted'
-    , 0
+    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0
     targetBoundingRect = $$targetRef.current?.getBoundingClientRect() or {}
     refRect = $$ref.current.getBoundingClientRect()
     windowSize = model.window.getSize().getValue()
@@ -94,7 +92,7 @@ module.exports = $positionedOverlay = (props) ->
   if zIndex
     style.zIndex = zIndex
 
-  z Portal, {target: $$overlays},
+  createPortal(
     z ".z-positioned-overlay.anchor-#{anchor}",
       if hasBackdrop
         z '.backdrop', {
@@ -105,3 +103,6 @@ module.exports = $positionedOverlay = (props) ->
         style: style
       },
         $content
+
+    $$overlays
+  )

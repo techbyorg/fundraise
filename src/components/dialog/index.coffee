@@ -1,7 +1,7 @@
-{z, classKebab, Portal, useEffect, useMemo, useRef} = require 'zorium'
-_isEmpty = require 'lodash/isEmpty'
+{z, classKebab, createPortal, useEffect, useMemo, useRef} = require 'zorium'
+# _isEmpty = require 'lodash/isEmpty'
 _map = require 'lodash/map'
-_defaults = require 'lodash/defaults'
+# _defaults = require 'lodash/defaults'
 
 if window?
   require './index.styl'
@@ -24,7 +24,7 @@ module.exports = $dialog = (props) ->
   , []
 
   useEffect ->
-    $$ref.current.classList.add 'is-mounted'
+    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0
     window.addEventListener 'keydown', keyListener
 
     return ->
@@ -42,7 +42,7 @@ module.exports = $dialog = (props) ->
       e.preventDefault()
       close()
 
-  z Portal, {target: $$overlays},
+  createPortal(
     z '.z-dialog', {
       ref: $$ref
       className: classKebab {isVanilla, isWide}
@@ -78,3 +78,5 @@ module.exports = $dialog = (props) ->
                 z $button, _defaults submitButton, {
                   colors: {cText: colors.$primaryMain}
                 }
+    $$overlays
+  )
