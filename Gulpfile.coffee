@@ -46,106 +46,6 @@ webpackBase =
     filename: 'bundle.js'
     publicPath: "#{config.SCRIPTS_CDN_URL}/"
 
-gulp.task 'dev', ['dev:webpack-server', 'watch:dev:server']
-
-gulp.task 'dist', gulpSequence(
-  'dist:clean'
-  ['dist:scripts', 'dist:static']
-  'dist:concat'
-  'dist:sw'
-  'dist:gc'
-  'dist:sizereport'
-)
-
-gulp.task 'dist:sw', gulpSequence(
-  'dist:sw:script'
-  'dist:sw:replace'
-)
-
-gulp.task 'watch', ->
-  gulp.watch paths.coffee, ['dev:server']
-
-gulp.task 'watch:dev:server', ['dev:server'], ->
-  gulp.watch paths.coffee, ['dev:server']
-
-gulp.task 'lint', ->
-  gulp.src paths.coffee
-    .pipe coffeelint()
-    .pipe coffeelint.reporter()
-
-gulp.task 'dev:server', ['build:static:dev'], do ->
-  devServer = null
-  process.on 'exit', -> devServer?.kill()
-  ->
-    devServer?.kill()
-    devServer = spawn 'coffee', ['bin/dev_server.coffee'], {stdio: 'inherit'}
-    devServer.on 'close', (code) ->
-      if code is 8
-        gulp.log 'Error detected, waiting for changes'
-
-gulp.task 'dev:webpack-server', ->
-  entries = [
-    "webpack-dev-server/client?#{config.WEBPACK_DEV_URL}"
-    'webpack/hot/dev-server'
-    paths.root
-  ]
-
-  handleLoader = new HandleCSSLoader {
-    minimize: false,
-    extract: false,
-    sourceMap: false,
-    cssModules: false
-    postcss: [
-      autoprefixer {
-        browsers: ['> 3% in US', 'last 2 firefox versions']
-      }
-    ]
-  }
-
-  compiler = webpack _defaultsDeep {
-    devtool: 'inline-source-map'
-    entry: entries
-    output:
-      path: __dirname
-      publicPath: "#{config.WEBPACK_DEV_URL}/"
-      pathinfo: false # seems to improve perf
-    module:
-      rules: [
-        {test: /\.coffee$/, loader: 'coffee-loader'}
-        handleLoader.css()
-        handleLoader.styl()
-      ]
-    plugins: [
-      new webpack.HotModuleReplacementPlugin()
-      # new webpack.IgnorePlugin /\.json$/, /lang/
-      # new HardSourceWebpackPlugin()
-      new webpack.DefinePlugin
-        'process.env': _mapValues process.env, (val) -> JSON.stringify val
-    ]
-  }, webpackBase
-
-  webpackOptions =
-    publicPath: "#{config.WEBPACK_DEV_URL}/"
-    hot: true
-    headers: 'Access-Control-Allow-Origin': '*'
-    noInfo: true
-    disableHostCheck: true
-
-  if config.DEV_USE_HTTPS
-    console.log 'using https'
-    webpackOptions.https = true
-    webpackOptions.key = fs.readFileSync './bin/fr-dev.key'
-    webpackOptions.cert = fs.readFileSync './bin/fr-dev.crt'
-
-  new WebpackDevServer compiler, webpackOptions
-  .listen config.WEBPACK_DEV_PORT, (err) ->
-    if err
-      console.log err
-    else
-      console.log
-        event: 'webpack_server_start'
-        message: "Webpack listening on port #{config.WEBPACK_DEV_PORT}"
-
 gulp.task 'build:static:dev', ->
   gulp.src paths.static
     .pipe gulp.dest paths.build
@@ -153,9 +53,10 @@ gulp.task 'build:static:dev', ->
 gulp.task 'dist:clean', (cb) ->
   del paths.dist + '/*', cb
 
-gulp.task 'dist:static', ['dist:clean'], ->
+gulp.task 'dist:static', gulp.series('dist:clean', ->
   gulp.src paths.static
     .pipe gulp.dest paths.dist
+)
 
 gulp.task 'dist:sw:script', ->
   gulp.src paths.sw
@@ -189,7 +90,7 @@ gulp.task 'dist:sw:replace', ->
   sw = sw.replace /\|HASH\|/g, stats.hash
   fs.writeFileSync("#{__dirname}/#{paths.dist}/service_worker.js", sw, 'utf-8')
 
-gulp.task 'dist:scripts', ['dist:clean'], ->
+gulp.task 'dist:scripts', gulp.series('dist:clean', ->
   handleLoader = new HandleCSSLoader {
     minimize: true,
     extract: true,
@@ -266,6 +167,7 @@ gulp.task 'dist:scripts', ['dist:clean'], ->
     statsJson = JSON.stringify {hash: stats.toJson().hash, time: Date.now()}
     fs.writeFileSync "#{__dirname}/#{paths.dist}/stats.json", statsJson
   .pipe gulp.dest paths.dist
+)
 
 gulp.task 'dist:concat', ->
   stats = JSON.parse fs.readFileSync "#{__dirname}/#{paths.dist}/stats.json"
@@ -305,7 +207,7 @@ gulp.task 'dist:gc', ->
       cacheControl: 'max-age=315360000, no-transform, public'
   }
 
-gulp.task 'dist:manifest', ['dist:static', 'dist:scripts'], ->
+gulp.task 'dist:manifest', gulp.series(gulp.parallel('dist:static', 'dist:scripts'), ->
   gulp.src paths.manifest
     .pipe manifest {
       hash: true
@@ -314,7 +216,110 @@ gulp.task 'dist:manifest', ['dist:static', 'dist:scripts'], ->
       fallback: ['/ /offline.html']
     }
     .pipe gulp.dest paths.dist
+)
 
 gulp.task 'dist:sizereport', ->
   gulp.src "#{__dirname}/#{paths.dist}/bundle*"
   .pipe sizereport()
+
+gulp.task 'dist:sw', gulp.series(
+  'dist:sw:script'
+  'dist:sw:replace'
+)
+
+gulp.task 'dist', gulp.series(
+  'dist:clean'
+  gulp.parallel('dist:scripts', 'dist:static')
+  'dist:concat'
+  'dist:sw'
+  'dist:gc'
+  'dist:sizereport'
+)
+
+gulp.task 'dev:server', gulp.series('build:static:dev', do ->
+  devServer = null
+  process.on 'exit', -> devServer?.kill()
+  ->
+    devServer?.kill()
+    devServer = spawn 'coffee', ['bin/dev_server.coffee'], {stdio: 'inherit'}
+    devServer.on 'close', (code) ->
+      if code is 8
+        gulp.log 'Error detected, waiting for changes'
+)
+
+gulp.task 'dev:webpack-server', ->
+  entries = [
+    "webpack-dev-server/client?#{config.WEBPACK_DEV_URL}"
+    'webpack/hot/dev-server'
+    paths.root
+  ]
+
+  handleLoader = new HandleCSSLoader {
+    minimize: false,
+    extract: false,
+    sourceMap: false,
+    cssModules: false
+    postcss: [
+      autoprefixer {
+        browsers: ['> 3% in US', 'last 2 firefox versions']
+      }
+    ]
+  }
+
+  compiler = webpack _defaultsDeep {
+    devtool: 'inline-source-map'
+    entry: entries
+    output:
+      path: __dirname
+      publicPath: "#{config.WEBPACK_DEV_URL}/"
+      pathinfo: false # seems to improve perf
+    module:
+      rules: [
+        {test: /\.coffee$/, loader: 'coffee-loader'}
+        handleLoader.css()
+        handleLoader.styl()
+      ]
+    plugins: [
+      new webpack.HotModuleReplacementPlugin()
+      # new webpack.IgnorePlugin /\.json$/, /lang/
+      # new HardSourceWebpackPlugin()
+      new webpack.DefinePlugin
+        'process.env': _mapValues process.env, (val) -> JSON.stringify val
+    ]
+  }, webpackBase
+
+  webpackOptions =
+    publicPath: "#{config.WEBPACK_DEV_URL}/"
+    hot: true
+    headers: 'Access-Control-Allow-Origin': '*'
+    noInfo: true
+    disableHostCheck: true
+
+  if config.DEV_USE_HTTPS
+    console.log 'using https'
+    webpackOptions.https = true
+    webpackOptions.key = fs.readFileSync './bin/fr-dev.key'
+    webpackOptions.cert = fs.readFileSync './bin/fr-dev.crt'
+
+  new WebpackDevServer compiler, webpackOptions
+  .listen config.WEBPACK_DEV_PORT, (err) ->
+    if err
+      console.log err
+    else
+      console.log
+        event: 'webpack_server_start'
+        message: "Webpack listening on port #{config.WEBPACK_DEV_PORT}"
+
+gulp.task 'watch', ->
+  gulp.watch paths.coffee, ['dev:server']
+
+gulp.task 'watch:dev:server', gulp.series('dev:server', ->
+  gulp.watch paths.coffee, ['dev:server']
+)
+
+gulp.task 'lint', ->
+  gulp.src paths.coffee
+    .pipe coffeelint()
+    .pipe coffeelint.reporter()
+
+gulp.task 'dev', gulp.parallel('dev:webpack-server', 'watch:dev:server')
