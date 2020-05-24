@@ -12,7 +12,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $bottomBar = ({model, router, requests, isAbsolute}) ->
+module.exports = $bottomBar = ({model, router, requestsStream, isAbsolute}) ->
   # don't need to slow down server-side rendering for this
   {hasUnreadMessagesStream} = useMemo ->
     {
@@ -27,7 +27,7 @@ module.exports = $bottomBar = ({model, router, requests, isAbsolute}) ->
   {me, hasUnreadMessagesStream, currentPath} = useStream ->
     me: model.user.getMe()
     hasUnreadMessages: hasUnreadMessagesStream
-    currentPath: requests.map ({req}) ->
+    currentPath: requestsStream.map ({req}) ->
       req.path
 
   userAgent = model.window.getUserAgent()

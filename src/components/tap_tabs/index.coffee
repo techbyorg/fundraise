@@ -5,10 +5,10 @@ _map = require 'lodash/map'
 if window?
   require './index.styl'
 
-module.exports = $tapTabs = ({tabs, tabProps}) ->
+module.exports = $tapTabs = ({selectedIndexStream, tabs, tabProps}) ->
   {selectedIndexStream} = useMemo ->
     {
-      selectedIndexStream: new RxBehaviorSubject 0
+      selectedIndexStream: selectedIndexStream or new RxBehaviorSubject 0
     }
   , []
 

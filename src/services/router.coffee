@@ -25,7 +25,7 @@ isSimpleClick = (e) ->
 class RouterService
   constructor: ({@router, @model, @host}) ->
     @history = if window? then [window.location.pathname] else []
-    @requests = null
+    @requestsStream = null
     @onBackFn = null
     @entitySlug = null
 
@@ -101,14 +101,14 @@ class RouterService
   goOverlay: (routeKey, replacements, options = {}) =>
     @overlayListener = window.addEventListener 'popstate', @overlayOnBack
 
-    @requests.take(1).subscribe (request) =>
+    @requestsStream.take(1).subscribe (request) =>
       @preservedRequest = request
       @go routeKey, replacements, _defaults(
         {keepPreserved: true}, options
       )
 
   setEntitySlug: (@entitySlug) => null
-  setRequests: (@requests) => null
+  setRequests: (@requestsStream) => null
 
   openLink: (url) =>
     isAbsoluteUrl = url?.match /^(?:[a-z-]+:)?\/\//i

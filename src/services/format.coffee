@@ -36,8 +36,8 @@ class FormatService
     # append power
     e
 
-  abbreviateDollar: (value) =>
-    "$ #{@abbreviateNumber value}"
+  abbreviateDollar: (value, fixed) =>
+    "$ #{@abbreviateNumber value, fixed}"
 
   location: (obj) ->
     {city, state} = obj or {}

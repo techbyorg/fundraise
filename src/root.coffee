@@ -161,9 +161,11 @@ init = ->
   # (flash with whatever obs data is on page going empty for 1 frame), then
   # render after a few ms
   # root = document.getElementById('zorium-root').cloneNode(true)
-  requests = router.getStream().publishReplay(1).refCount()
+  requestsStream = router.getStream().publishReplay(1).refCount()
+  console.log 'HMR RENDER'
   render (z $app, {
-    requests
+    key: Math.random() # for hmr to work properly
+    requestsStream
     model
     router
     isBackendUnavailable
@@ -270,7 +272,7 @@ init = ->
     else
       null
   .then ->
-    requests.do(({path}) ->
+    requestsStream.do(({path}) ->
       if window?
         ga? 'send', 'pageview', path
     ).subscribe()

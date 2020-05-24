@@ -8,10 +8,10 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $loginLinkPage = ({model, requests, router, serverData}) ->
+module.exports = $loginLinkPage = ({model, requestsStream, router, serverData}) ->
   useEffect ->
     if window?
-      disposable = requests.switchMap ({req, route}) ->
+      disposable = requestsStream.switchMap ({req, route}) ->
         model.loginLink.getByUserIdAndToken(
           route.params.userId
           route.params.tokenStr

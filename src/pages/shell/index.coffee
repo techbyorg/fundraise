@@ -10,7 +10,7 @@ if window?
   require './index.styl'
 
 # generic page that gets loaded from cache for any page w/o a specific shell
-module.exports = $shellPage = ({model, router, requests, entitySteam}) ->
+module.exports = $shellPage = ({model, router, requestsStream, entitySteam}) ->
   # subscribe so they're in exoid cache
   {} = useStream ->
     me: model.user.getMe()

@@ -7,7 +7,7 @@ $button = require '../../components/button'
 colors = require '../../colors'
 
 module.exports = $404Page = (props) ->
-  {model, router, requests, serverData, entity} = props
+  {model, router, requestsStream, serverData, entity} = props
 
   z '.p-404',
     z $appBar, {

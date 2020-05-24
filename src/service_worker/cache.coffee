@@ -116,7 +116,7 @@ module.exports = class Cache
         response or @fetchViaNetwork event.request
       .catch (err) -> # throws when offline
         console.log 'fetch err.....', err
-        return caches.open('recorded') # user-recorded requests for offline mode
+        return caches.open('recorded') # user-recorded requestsStream for offline mode
         .then (cache) ->
           cache.match event.request
           .then (recordedCache) ->

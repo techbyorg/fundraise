@@ -10,10 +10,10 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $verifyEmailPage = ({model, requests, router}) ->
+module.exports = $verifyEmailPage = ({model, requestsStream, router}) ->
   useEffect ->
     if window?
-      disposable = requests.switchMap ({req, route}) ->
+      disposable = requestsStream.switchMap ({req, route}) ->
         RxObservable.fromPromise model.user.verifyEmail({
           userId: route.params.userId
           tokenStr: route.params.tokenStr

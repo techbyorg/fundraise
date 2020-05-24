@@ -16,7 +16,7 @@ fontsCss = require './fonts'
 DEFAULT_IMAGE = 'https://fdn.uno/d/images/web_icon_256.png'
 
 module.exports = $head = (props) ->
-  {model, router, meta, requests, serverData, entity, isPlain} = props
+  {model, router, meta, requestsStream, serverData, entity, isPlain} = props
 
   console.log 'props', props
 
@@ -56,14 +56,14 @@ module.exports = $head = (props) ->
     #   cssVariables
 
 
-  route = requests.map ({route}) ->
+  route = requestsStream.map ({route}) ->
     route
-  path = requests.map ({req}) ->
+  path = requestsStream.map ({req}) ->
     req.path
-  requestsAndLanguage = RxObservable.combineLatest(
-    requests, model.l.getLanguage(), (vals...) -> vals
+  requestsStreamAndLanguage = RxObservable.combineLatest(
+    requestsStream, model.l.getLanguage(), (vals...) -> vals
   )
-  meta = requestsAndLanguage.switchMap ([{$page}, language]) ->
+  meta = requestsStreamAndLanguage.switchMap ([{$page}, language]) ->
     meta = $page?.getMeta?()
     if meta?.map
       meta

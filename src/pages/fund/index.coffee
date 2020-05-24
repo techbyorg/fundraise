@@ -10,10 +10,10 @@ colors = require '../../colors'
 if window?
   require './index.styl'
 
-module.exports = $fundPage = ({model, requests, router}) ->
+module.exports = $fundPage = ({model, requestsStream, router}) ->
   {irsFundStream} = useMemo ->
     {
-      irsFundStream: requests.switchMap ({route}) =>
+      irsFundStream: requestsStream.switchMap ({route}) =>
         model.irsFund.getByEin route.params.ein
     }
   , []
@@ -23,6 +23,8 @@ module.exports = $fundPage = ({model, requests, router}) ->
 
   # FIXME: canonical to correct/current slug (also do for orgs)
   # /fund/slug/ein
+
+  console.log 'abc'
 
   z '.p-fund',
     z $appBar, {

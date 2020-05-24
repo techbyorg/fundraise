@@ -10,7 +10,7 @@ if window?
 # than doing a full re-render. ideally zorium would just diff the relevant
 # components
 
-# note that ripples are slow if network requests are happening simultaneously
+# note that ripples are slow if network requestsStream are happening simultaneously
 
 ANIMATION_TIME_MS = 350
 

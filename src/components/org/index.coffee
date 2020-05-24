@@ -9,7 +9,7 @@ require 'rxjs/add/observable/of'
 
 $avatar = require '../avatar'
 $dropdown = require '../dropdown'
-$graph = require '../graph_widget'
+# $graph = require '../graph_widget'
 FormatService = require '../../services/format'
 
 if window?
@@ -95,28 +95,28 @@ module.exports = $org = ({model, router, irsOrgStream}) ->
           z '.chart-header',
             model.l.get("metric.#{metric}") or 'Custom metric' # FIXME
           z '.chart',
-            if window? and graphData and graphData.series
-              z $graph, {
-                labels: graphData.labels
-                series: [graphData.series]
-                options:
-                  fullWidth: true
-                  low: graphData.low
-                  showArea: true
-                  lineSmooth:
-                    $graph.getChartist().Interpolation.monotoneCubic {
-                      fillHoles: false
-                    }
-                  axisY:
-                    onlyInteger: true
-                    showGrid: true
-                    # type: $graph.getChartist().FixedScaleAxis
-                    labelInterpolationFnc: (value) ->
-                      FormatService.abbreviateNumber value
-                  axisX:
-                    showLabel: true
-                    showGrid: false
-              }
+            # if window? and graphData and graphData.series
+            #   z $graph, {
+            #     labels: graphData.labels
+            #     series: [graphData.series]
+            #     options:
+            #       fullWidth: true
+            #       low: graphData.low
+            #       showArea: true
+            #       lineSmooth:
+            #         $graph.getChartist().Interpolation.monotoneCubic {
+            #           fillHoles: false
+            #         }
+            #       axisY:
+            #         onlyInteger: true
+            #         showGrid: true
+            #         # type: $graph.getChartist().FixedScaleAxis
+            #         labelInterpolationFnc: (value) ->
+            #           FormatService.abbreviateNumber value
+            #       axisX:
+            #         showLabel: true
+            #         showGrid: false
+            #   }
         z '.box.at-a-glance',
           z '.header',
             model.l.get 'org.atAGlance'

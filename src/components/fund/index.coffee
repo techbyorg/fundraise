@@ -1,4 +1,5 @@
-{z, useStream} = require 'zorium'
+{z, classKebab, useMemo, useStream} = require 'zorium'
+RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 $fundAtAGlance = require '../fund_at_a_glance'
 $fundOverview = require '../fund_overview'
@@ -9,8 +10,13 @@ if window?
   require './index.styl'
 
 module.exports = $fund = ({model, router, irsFundStream}) ->
-  {irsFund} = useStream ->
+  {selectedIndexStream} = useMemo ->
+    {selectedIndexStream: new RxBehaviorSubject 0}
+  , []
+
+  {irsFund, selectedIndex} = useStream ->
     irsFund: irsFundStream
+    selectedIndex: selectedIndexStream
 
   tabs = [
     {
@@ -23,10 +29,16 @@ module.exports = $fund = ({model, router, irsFundStream}) ->
     }
   ]
 
-  z '.z-fund',
+  z '.z-fund', {
+    className: classKebab {scrollFitContent: selectedIndex isnt 1}
+  },
     z '.quick-info',
       z $fundAtAGlance, {model, router, irsFund}
 
     z '.content',
       z '.inner',
-        z $tapTabs, {tabs, tabProps: {model, router, irsFund, irsFundStream}}
+        z $tapTabs, {
+          selectedIndexStream, tabs, tabProps: {
+            model, router, irsFund, irsFundStream
+          }
+        }

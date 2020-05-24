@@ -108,7 +108,7 @@ app.use (req, res, next) ->
     model: model
     host: host
   }
-  requests = new RxBehaviorSubject(req)
+  requestsStream = new RxBehaviorSubject(req)
 
   # for client to access
   model.cookie.set(
@@ -152,7 +152,7 @@ app.use (req, res, next) ->
         next err
 
   try
-    html = await renderToString (z $app, {requests, model, serverData, router, isCrawler}), {
+    html = await renderToString (z $app, {requestsStream, model, serverData, router, isCrawler}), {
       timeout: if isCrawler \
                then BOT_RENDER_TO_STRING_TIMEOUT_MS \
                else RENDER_TO_STRING_TIMEOUT_MS

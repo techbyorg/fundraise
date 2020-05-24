@@ -10,10 +10,10 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $unsubscribeEmailPage = ({model, requests, router}) ->
+module.exports = $unsubscribeEmailPage = ({model, requestsStream, router}) ->
   useEffect ->
     if window?
-      disposable = requests.switchMap ({req, route}) ->
+      disposable = requestsStream.switchMap ({req, route}) ->
         RxObservable.fromPromise model.user.unsubscribeEmail({
           userId: route.params.userId
           tokenStr: route.params.tokenStr

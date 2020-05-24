@@ -146,6 +146,8 @@
   "fund.tabGrants": "Grants",
   "fund.medianGrant": "Median grant",
   "fund.grantsPerYear": "$ grant/year",
+  "fundOverview.fundedNtee": "Top funded categories",
+  "fundOverview.fundingMap": "Funding Map",
   "getAppDialog.title": "Native apps",
   "getAppDialog.text": "Get the app on Android or iOS!",
   "rolePermissions.selectRole": "Select a role",

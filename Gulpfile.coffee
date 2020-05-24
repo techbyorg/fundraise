@@ -17,7 +17,7 @@ WebpackDevServer = require 'webpack-dev-server'
 HandleCSSLoader = require 'webpack-handle-css-loader'
 TerserPlugin = require 'terser-webpack-plugin'
 MiniCssExtractPlugin = require 'mini-css-extract-plugin'
-Visualizer = require('webpack-visualizer-plugin')
+# Visualizer = require('webpack-visualizer-plugin')
 # BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 gcPub = require 'gulp-gcloud-publish'
 gzip = require 'gulp-gzip'
@@ -84,11 +84,12 @@ gulp.task 'dist:sw:script', ->
   }, webpackBase), require('webpack'))
   .pipe gulp.dest paths.dist
 
-gulp.task 'dist:sw:replace', ->
+gulp.task 'dist:sw:replace', (done) ->
   stats = JSON.parse fs.readFileSync "#{__dirname}/#{paths.dist}/stats.json"
   sw = fs.readFileSync "#{__dirname}/#{paths.dist}/service_worker.js", 'utf-8'
   sw = sw.replace /\|HASH\|/g, stats.hash
   fs.writeFileSync("#{__dirname}/#{paths.dist}/service_worker.js", sw, 'utf-8')
+  done()
 
 gulp.task 'dist:scripts', gulp.series('dist:clean', ->
   handleLoader = new HandleCSSLoader {
@@ -130,7 +131,7 @@ gulp.task 'dist:scripts', gulp.series('dist:clean', ->
       ]
     }
     plugins: [
-      new Visualizer()
+      # new Visualizer()
       # new BundleAnalyzerPlugin()
       new webpack.IgnorePlugin /\.json$/, /lang/
       new MiniCssExtractPlugin {
@@ -169,7 +170,7 @@ gulp.task 'dist:scripts', gulp.series('dist:clean', ->
   .pipe gulp.dest paths.dist
 )
 
-gulp.task 'dist:concat', ->
+gulp.task 'dist:concat', (done) ->
   stats = JSON.parse fs.readFileSync "#{__dirname}/#{paths.dist}/stats.json"
 
   fs.renameSync(
@@ -191,6 +192,7 @@ gulp.task 'dist:concat', ->
       "#{__dirname}/#{paths.dist}/bundle_#{stats.hash}_#{language}.js"
       lang + bundle
     , 'utf-8')
+  done()
 
 gulp.task 'dist:gc', ->
   gulp.src("#{__dirname}/#{paths.dist}/*bundle*")

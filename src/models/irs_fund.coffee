@@ -11,6 +11,7 @@ module.exports = class IrsFund
         query IrsFundGetByEin($ein: String!) {
           irsFund(ein: $ein) {
             ein, name, city, state, assets, mission, website,
+            contributionStats, yearlyStats,
             lastYearStats {
               grants, grantMedian, grantSum, revenue, expenses
               },

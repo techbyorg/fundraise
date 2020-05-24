@@ -1,4 +1,4 @@
-{z, classKebab, useStream} = require 'zorium'
+{z, classKebab, useMemo, useStream} = require 'zorium'
 HttpHash = require 'http-hash'
 _map = require 'lodash/map'
 _values = require 'lodash/values'
@@ -33,122 +33,134 @@ Pages =
   $verifyEmaiLPage: require './pages/verify_email'
   $404Page: require './pages/404'
 
+
+getRoutes = ({breakpoint, model}) ->
+  # can have breakpoint (mobile/desktop) specific routes
+  routes = new HttpHash()
+
+  route = (routeKeys, pageKey) ->
+    Page = Pages[pageKey]
+    if typeof routeKeys is 'string'
+      routeKeys = [routeKeys]
+
+    paths = _flatten _map routeKeys, (routeKey) ->
+      _values model.l.getAllPathsByRouteKey routeKey
+
+    _map paths, (path) ->
+      routes.set path, -> Page
+
+  route 'fundByEin', '$fundPage'
+  route 'loginLink', '$loginLinkPage'
+  route 'notifications', '$notificationsPage'
+  route 'orgByEin', '$orgPage'
+  route 'policies', '$policiesPage'
+  route 'privacy', '$privacyPage'
+  route 'settings', '$settingsPage'
+  route ['home', 'search'], '$searchPage'
+  route 'shell', '$shellPage'
+  route 'signIn', '$signInPage'
+  route 'termsOfService', '$tosPage'
+  route 'unsubscribeEmail', '$unsubscribeEmailPage'
+  route 'verifyEmail', '$verifyEmaiLPage'
+
+  route '404', '$404Page'
+  routes
+
+
 module.exports = App = (props) ->
-  {requests, serverData, model, router, isCrawler} = props
+  {requestsStream, serverData, model, router, isCrawler} = props
 
-  getRoutes = (breakpoint) ->
-    # can have breakpoint (mobile/desktop) specific routes
-    routes = new HttpHash()
+  {routesStream, requestsStream, entityStream} = useMemo ->
+    routesStream = model.window.getBreakpoint().map (breakpoint) ->
+      getRoutes {breakpoint, model}
+    .publishReplay(1).refCount()
 
-    route = (routeKeys, pageKey) ->
-      Page = Pages[pageKey]
-      if typeof routeKeys is 'string'
-        routeKeys = [routeKeys]
+    requestsStreamAndRoutesStream = RxObservable.combineLatest(
+      requestsStream, routesStream, (vals...) -> vals
+    )
 
-      paths = _flatten _map routeKeys, (routeKey) ->
-        _values model.l.getAllPathsByRouteKey routeKey
+    requestsStream = requestsStreamAndRoutesStream.map ([req, routes]) ->
+      console.log 'req', req
+      if window? and isFirstRequest and req.query.referrer
+        model.user.setReferrer req.query.referrer
 
-      _map paths, (path) ->
-        routes.set path, -> Page
+      if isFirstRequest and isNativeApp
+        path = model.cookie.get('routerLastPath') or req.path
+        if window?
+          req.path = path # doesn't work server-side
+        else
+          req = _defaults {path}, req
 
-    route 'fundByEin', '$fundPage'
-    route 'loginLink', '$loginLinkPage'
-    route 'notifications', '$notificationsPage'
-    route 'orgByEin', '$orgPage'
-    route 'policies', '$policiesPage'
-    route 'privacy', '$privacyPage'
-    route 'settings', '$settingsPage'
-    route ['home', 'search'], '$searchPage'
-    route 'shell', '$shellPage'
-    route 'signIn', '$signInPage'
-    route 'termsOfService', '$tosPage'
-    route 'unsubscribeEmail', '$unsubscribeEmailPage'
-    route 'verifyEmail', '$verifyEmaiLPage'
+      # subdomain = router.getSubdomain()
+      #
+      # if subdomain # equiv to /entitySlug/route
+      #   route = routes.get "/#{subdomain}#{req.path}"
+      #   if route.handler?() instanceof Pages['$404Page']
+      #     route = routes.get req.path
+      # else
+      route = routes.get req.path
 
-    route '404', '$404Page'
-    routes
+      $page = route.handler?()
+      isFirstRequest = false
+      {req, route, $page: $page}
+    .publishReplay(1).refCount()
 
-  routes = model.window.getBreakpoint().map getRoutes
-          .publishReplay(1).refCount()
+    {
+      routesStream: routesStream
+      requestsStream: requestsStream
+      entityStream: requestsStream.switchMap ({route}) ->
+        host = serverData?.req?.headers.host or window?.location?.host
+        entitySlug = route.params.entitySlug
+
+        if entitySlug
+          router.setEntitySlug entitySlug
+
+        # subdomain = router.getSubdomain()
+        # if subdomain and subdomain isnt 'staging' and not entitySlug
+        #   entitySlug = subdomain
+
+        entitySlug or= model.cookie.get 'lastEntitySlug'
+
+        # FIXME
+        # (if entitySlug and entitySlug isnt 'undefined' and entitySlug isnt 'null'
+        #   model.entity.getBySlug entitySlug, {autoJoin: false}
+        # else
+        console.log 'gogogogo'
+        (model.entity.getDefaultEntity()
+        ).map (entity) ->
+          entity or false
+      .publishReplay(1).refCount()
+
+    }
+  , []
 
   userAgent = model.window.getUserAgent()
   isNativeApp = Environment.isNativeApp {userAgent}
 
-  requestsAndRoutes = RxObservable.combineLatest(
-    requests, routes, (vals...) -> vals
-  )
-
   isFirstRequest = true
-  requests = requestsAndRoutes.map ([req, routes]) ->
-    if window? and isFirstRequest and req.query.referrer
-      model.user.setReferrer req.query.referrer
-
-    if isFirstRequest and isNativeApp
-      path = model.cookie.get('routerLastPath') or req.path
-      if window?
-        req.path = path # doesn't work server-side
-      else
-        req = _defaults {path}, req
-
-    # subdomain = router.getSubdomain()
-    #
-    # if subdomain # equiv to /entitySlug/route
-    #   route = routes.get "/#{subdomain}#{req.path}"
-    #   if route.handler?() instanceof Pages['$404Page']
-    #     route = routes.get req.path
-    # else
-    route = routes.get req.path
-
-    $page = route.handler?()
-    isFirstRequest = false
-    {req, route, $page: $page}
-  .publishReplay(1).refCount()
 
   # used for overlay pages
-  router.setRequests requests
+  router.setRequests requestsStream
 
-  # FIXME: memoize all this stuff
-  entityStream = requests.switchMap ({route}) ->
-    host = serverData?.req?.headers.host or window?.location?.host
-    entitySlug = route.params.entitySlug
-
-    if entitySlug
-      router.setEntitySlug entitySlug
-
-    # subdomain = router.getSubdomain()
-    # if subdomain and subdomain isnt 'staging' and not entitySlug
-    #   entitySlug = subdomain
-
-    entitySlug or= model.cookie.get 'lastEntitySlug'
-
-    # FIXME
-    # (if entitySlug and entitySlug isnt 'undefined' and entitySlug isnt 'null'
-    #   model.entity.getBySlug entitySlug, {autoJoin: false}
-    # else
-    console.log 'gogogogo'
-    (model.entity.getDefaultEntity()
-    ).map (entity) ->
-      entity or false
-  .publishReplay(1).refCount()
 
   isNativeApp = Environment.isNativeApp {userAgent}
 
-  me = model.user.getMe()
-
-  # requestsAndMe = RxObservable.combineLatest(
-  #   requests
+  # me = model.user.getMe()
+  # TODO if reimplementing, move to memo
+  # requestsStreamAndMe = RxObservable.combineLatest(
+  #   requestsStream
   #   me
   #   entity
   #   (vals...) -> vals
   # )
 
-  # used if state / requests fails to work
+  # used if state / requestsStream fails to work
   $backupPage = if serverData?
     if isNativeApp
       serverPath = model.cookie.get('routerLastPath') or serverData.req.path
     else
       serverPath = serverData.req.path
-    getRoutes().get(serverPath).handler?()
+    getRoutes({model}).get(serverPath).handler?()
   else
     Pages.$404Page
 
@@ -159,18 +171,17 @@ module.exports = App = (props) ->
     $overlays: model.overlay.get$()
     $tooltip: model.tooltip.get$()
     windowSize: model.window.getSize()
-    # hideDrawer: requests.switchMap (request) ->
+    # hideDrawer: requestsStream.switchMap (request) ->
     #   $page = router.preservedRequest?.$page or request.$page
     #   hideDrawer = $page?.hideDrawer
     #   if hideDrawer?.map
     #   then hideDrawer
     #   else RxObservable.of (hideDrawer or false)
-    request: requests.do ({$page, req}) ->
-      # FIXME
-      # if $page instanceof Pages['$404Page']
-      #   serverData?.res?.status? 404
+    request: requestsStream.do (request) ->
+      if request.$page is Pages.$404Page
+        serverData?.res?.status? 404
 
-    # authed: requestsAndMe.do ([{$page, req}, me, entity]) ->
+    # authed: requestsStreamAndMe.do ([{$page, req}, me, entity]) ->
     #   isMember = model.user.isMember me
     #   console.log 'redir', entity, $page, isMember
     #   if entity? and $page and not $page.allowGuests and (not isMember or not entity)
@@ -184,7 +195,7 @@ module.exports = App = (props) ->
     #       serverData?.res?.redirect 302, route
 
 
-  console.log 'overlays', $overlays
+  console.log 'overlay', request, $overlays
 
   userAgent = model.window.getUserAgent()
   isIos = Environment.isIos {userAgent}
@@ -210,16 +221,15 @@ module.exports = App = (props) ->
     entityStream
     # FIXME!
     # $bottomBar: if $page.hasBottomBar then z $bottomBar, {
-    #   model, router, requests, entityStream, serverData
+    #   model, router, requestsStream, entityStream, serverData
     # }
-    requests: requests
-    # .filter ({$page}) ->
-    #   # FIXME
-    #   $page instanceof Page
+    requestsStream: requestsStream.filter (request) ->
+      request.$page is $page
   }
 
   $body =
     z '#zorium-root', {
+      key: props.key
       className: classKebab {isIos, isAndroid, isFirefox, hasOverlayPage}
       onclick: if Environment.isIos()
         (e) ->
@@ -280,11 +290,10 @@ module.exports = App = (props) ->
       z $head, {
         model
         router
-        requests
+        requestsStream
         serverData
         entityStream
-        isPlain: $page?.isPlain
+        # FIXME
         meta: $page?.getMeta?()
       }
-      # FIXME: rm options
-      z 'body', {}, $body
+      z 'body', $body

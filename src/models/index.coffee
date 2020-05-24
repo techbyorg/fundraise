@@ -148,14 +148,14 @@ module.exports = class Model
     }
     @window = new Window {@cookie, @experiment, userAgent}
 
-  # after page has loaded, refetch all initial (cached) requests to verify they're still up-to-date
+  # after page has loaded, refetch all initial (cached) requestsStream to verify they're still up-to-date
   validateInitialCache: =>
     cache = @initialCache
     @initialCache = null
 
     # could listen for postMessage from service worker to see if this is from
     # cache, then validate data
-    requests = _map cache, (result, key) =>
+    requestsStream = _map cache, (result, key) =>
       req = try
         JSON.parse key
       catch
@@ -171,7 +171,7 @@ module.exports = class Model
     # cache and the actual get (when user doesn't exist from exoid, but cookie gets user)
 
     RxObservable.combineLatest(
-      requests, (vals...) -> vals
+      requestsStream, (vals...) -> vals
     )
     .take(1).subscribe (responses) =>
       responses = _zipWith responses, _keys(cache), (response, req) ->
