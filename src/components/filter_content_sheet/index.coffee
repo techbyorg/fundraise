@@ -42,5 +42,5 @@ module.exports = $filterContentSheet = ({model, id, filter, onClose}) ->
                     resetStream.next Math.random()
                   , 0
           z $filterContent, {
-            model, filter, resetValue
+            model, filter, resetValue, overlayAnchor: 'bottom-left'
           }

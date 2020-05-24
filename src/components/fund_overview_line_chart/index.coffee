@@ -17,7 +17,5 @@ module.exports = $fundOverviewlineChart = ({model, irsFund}) ->
       }
   }]
 
-  console.log 'data', data
-
   z '.z-fund-overview-line-chart',
     z $chartLine, {data}

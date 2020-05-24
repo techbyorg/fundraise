@@ -21,7 +21,6 @@ module.exports = $chartLine = ({data}) ->
       z Boundary, {fallback: z '.error', 'err'},
         z Suspense, {fallback: $spinner},
           z $line,
-            key: 'abc'
             data: data
             theme: {}
             xScale: {type: 'point'}
@@ -36,6 +35,7 @@ module.exports = $chartLine = ({data}) ->
               from: 'serieColor'
             colors: [colors.$primaryMain]
             useMesh: true
+            enableCrosshair: false
             margin:
               left: 60
               bottom: 40

@@ -8,6 +8,7 @@ if window?
   require './index.styl'
 
 module.exports = $fundOverview = ({model, router, irsFund}) ->
+  console.log 'render fund overview'
   z '.z-fund-overview',
     z '.analytics',
       z '.block',

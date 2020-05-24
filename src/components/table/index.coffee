@@ -2,6 +2,7 @@
 _map = require 'lodash/map'
 _sumBy = require 'lodash/sumBy'
 
+$spinner = require '../spinner'
 Environment = require '../../services/environment'
 
 if window?
@@ -33,6 +34,8 @@ module.exports = $table = ({model, data, columns, onRowClick, mobileRowRenderer}
           }, name
 
     z '.tbody',
+      unless data?
+        z $spinner
       _map data, (row, i) ->
         if isMobile and mobileRowRenderer
           z '.tr-mobile', {

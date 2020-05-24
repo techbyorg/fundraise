@@ -1,6 +1,7 @@
 {z, useMemo, useStream} = require 'zorium'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
+_startCase = require 'lodash/startCase'
 
 $appBar = require '../../components/app_bar'
 $buttonBack = require '../../components/button_back'
@@ -11,8 +12,11 @@ if window?
   require './index.styl'
 
 module.exports = $fundPage = ({model, requestsStream, router}) ->
-  {irsFundStream} = useMemo ->
+  {placeholderNameStream, irsFundStream} = useMemo ->
     {
+      # for smoother loading
+      placeholderNameStream: requestsStream.map ({route}) =>
+        _startCase route.params.slug
       irsFundStream: requestsStream.switchMap ({route}) =>
         model.irsFund.getByEin route.params.ein
     }
@@ -21,17 +25,12 @@ module.exports = $fundPage = ({model, requestsStream, router}) ->
   {irsFund} = useStream ->
     irsFund: irsFundStream
 
-  # FIXME: canonical to correct/current slug (also do for orgs)
-  # /fund/slug/ein
-
-  console.log 'abc'
-
   z '.p-fund',
     z $appBar, {
       model
-      title: irsFund?.name
+      # title: irsFund?.name
       $topLeftButton: z $buttonBack, {
         model, router, color: colors.$header500Icon
       }
     }
-    z $fund, {model, router, irsFundStream}
+    z $fund, {model, router, placeholderNameStream, irsFundStream}

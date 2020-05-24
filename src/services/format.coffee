@@ -15,7 +15,7 @@ class FormatService
   # https://stackoverflow.com/a/32638472
   abbreviateNumber: (value, fixed) ->
     unless value?
-      return null
+      return '...'
     # terminate early
     if value is 0
       return '0'

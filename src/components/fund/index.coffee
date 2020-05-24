@@ -9,7 +9,9 @@ $tapTabs = require '../tap_tabs'
 if window?
   require './index.styl'
 
-module.exports = $fund = ({model, router, irsFundStream}) ->
+module.exports = $fund = (props) ->
+  {model, router, placeholderNameStream, irsFundStream} = props
+
   {selectedIndexStream} = useMemo ->
     {selectedIndexStream: new RxBehaviorSubject 0}
   , []
@@ -33,7 +35,7 @@ module.exports = $fund = ({model, router, irsFundStream}) ->
     className: classKebab {scrollFitContent: selectedIndex isnt 1}
   },
     z '.quick-info',
-      z $fundAtAGlance, {model, router, irsFund}
+      z $fundAtAGlance, {model, router, placeholderNameStream, irsFund}
 
     z '.content',
       z '.inner',

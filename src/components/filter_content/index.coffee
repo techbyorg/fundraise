@@ -22,7 +22,9 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $filterContent = ({model, filter, resetValue, isGrouped}) ->
+module.exports = $filterContent = (props) ->
+  {model, filter, resetValue, isGrouped, overlayAnchor} = props
+
   {custom} = useMemo ->
     switch filter.type
       when 'gtlt'
@@ -150,14 +152,18 @@ module.exports = $filterContent = ({model, filter, resetValue, isGrouped}) ->
           z '.flex',
             z '.block',
               z $dropdown, {
+                model
                 valueStream: custom.minStream
                 options: filter.minOptions
+                anchor: overlayAnchor
               }
             z '.dash', '-'
             z '.block',
               z $dropdown, {
+                model
                 valueStream: custom.maxStream
                 options: filter.maxOptions
+                anchor: overlayAnchor
               }
     when 'gtlt'
       operator = filterValue?.operator

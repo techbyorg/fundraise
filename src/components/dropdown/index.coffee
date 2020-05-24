@@ -1,4 +1,4 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useMemo, useRef, useStream} = require 'zorium'
 _map = require 'lodash/map'
 _find = require 'lodash/find'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
@@ -7,14 +7,17 @@ RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
 $icon = require '../icon'
+$positionedOverlay = require '../positioned_overlay'
 colors = require '../../colors'
 
 if window?
   require './index.styl'
 
 module.exports = $dropdown = (props) ->
-  {model, valueStreams, valueStream, errorStream, options,
+  {model, valueStreams, valueStream, errorStream, options, anchor = 'top-left',
     isDisabled = false} = props
+
+  $$ref = useRef()
 
   {valueStream, selectedOptionStream, isOpenStream} = useMemo ->
     {
@@ -43,6 +46,7 @@ module.exports = $dropdown = (props) ->
     isOpenStream.next not isOpen
 
   z '.z-dropdown', {
+    ref: $$ref
     className: classKebab {
       hasValue: value isnt ''
       isDisabled
@@ -65,15 +69,27 @@ module.exports = $dropdown = (props) ->
           icon: 'chevron-down'
           isTouchTarget: false
           color: colors.$secondaryMainText
-    z '.options',
-      _map options, (option) ->
-        z 'label.option', {
-          className: classKebab {isSelected: value is option.value}
-          onclick: ->
-            setValue option.value
-            toggle()
-        },
-          z '.text',
-            option.text
+
+    if isOpen
+      z $positionedOverlay,
+        model: model
+        onClose: ->
+          isOpenStream.next false
+        hasBackdrop: true
+        $$targetRef: $$ref
+        fillTargetWidth: true
+        anchor: anchor
+        zIndex: 999
+        $content:
+          z '.z-dropdown_options',
+            _map options, (option) ->
+              z 'label.option', {
+                className: classKebab {isSelected: value is option.value}
+                onclick: ->
+                  setValue option.value
+                  toggle()
+              },
+                z '.text',
+                  option.text
     if error?
       z '.error', error

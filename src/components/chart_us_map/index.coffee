@@ -7,7 +7,9 @@ _max = require 'lodash/max'
 $choropleth = lazy ->
   Promise.all [
     `import(/* webpackChunkName: "nivo" */'@nivo/geo')
-    .then(({ResponsiveChoropleth}) => ResponsiveChoropleth)`
+    .then(({ChoroplethCanvas}) => ChoroplethCanvas)`
+    # canvas is more performant here. enough to matter on slow devices
+    # due to us geojson
 
     fetch(
       # https://github.com/hrbrmstr/albersusa
@@ -36,7 +38,7 @@ $choropleth = lazy ->
         projectionScale: width * 1.2
         projectionType: 'albersUsa'
         borderWidth: 1
-        borderColor: colors.$bgColor
+        borderColor: colors.getRawColor colors.$bgColor
 
 $spinner = require '../spinner'
 FormatService = require '../../services/format'

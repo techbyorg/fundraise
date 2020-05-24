@@ -1,14 +1,18 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useStream} = require 'zorium'
 
 FormatService = require '../../services/format'
 
 if window?
   require './index.styl'
 
-module.exports = $fundAtAGlance = ({model, router, irsFund}) ->
-  console.log 'fund', irsFund
+module.exports = $fundAtAGlance = (props) ->
+  {model, router, placeholderNameStream, irsFund} = props
+
+  {placeholderName} = useStream ->
+    placeholderName: placeholderNameStream
+
   z '.z-fund-at-a-glance',
-    z '.name', irsFund?.name
+    z '.name', irsFund?.name or placeholderName
     z '.top-metrics',
       z '.metric',
         z '.value',

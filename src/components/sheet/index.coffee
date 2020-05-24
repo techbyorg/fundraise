@@ -23,11 +23,11 @@ module.exports = $sheet = (props) ->
   , []
 
   useEffect ->
-    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0
+    setTimeout (-> $$ref.current?.classList.add 'is-mounted'), 0
   , []
 
   close = ->
-    $$ref.current.classList.remove 'is-mounted'
+    $$ref.current?.classList.remove 'is-mounted'
     setTimeout ->
       onClose()
     , CLOSE_DELAY_MS

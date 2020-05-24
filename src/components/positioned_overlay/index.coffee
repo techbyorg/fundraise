@@ -1,4 +1,4 @@
-{z, classKebab, createPortal, useEffect, useMemo, useRef, useStream} = require 'zorium'
+{z, classKebab, createPortal, useLayoutEffect, useMemo, useRef, useStream} = require 'zorium'
 _uniq = require 'lodash/uniq'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
@@ -6,21 +6,22 @@ if window?
   require './index.styl'
 
 module.exports = $positionedOverlay = (props) ->
-  {model, $$targetRef, hasBackdrop, onClose, anchor, offset,
+  {model, $$targetRef, hasBackdrop, onClose, anchor, offset, fillTargetWidth,
     zIndex, $content, repositionOnChangeStr} = props
 
   $$ref = useRef()
 
-  {$$overlays, anchorStream, transformStream} = useMemo ->
+  {$$overlays, anchorStream, transformStream, sizeStream} = useMemo ->
     {
       $$overlays: document?.getElementById 'overlays-portal'
       anchorStream: new RxBehaviorSubject anchor
       transformStream: new RxBehaviorSubject null
+      sizeStream: new RxBehaviorSubject null
     }
   , []
 
-  useEffect ->
-    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0
+  useLayoutEffect ->
+    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 100
     targetBoundingRect = $$targetRef.current?.getBoundingClientRect() or {}
     refRect = $$ref.current.getBoundingClientRect()
     windowSize = model.window.getSize().getValue()
@@ -33,13 +34,16 @@ module.exports = $positionedOverlay = (props) ->
     anchor = anchor or getAnchor position, windowSize, size
     anchorStream.next anchor
     transformStream.next getTransform position, targetSize, anchor
+    if fillTargetWidth
+      sizeStream.next targetSize
 
     return null
   , [repositionOnChangeStr]
 
-  {anchor, transform} = useStream ->
+  {anchor, transform, size} = useStream ->
     anchor: anchorStream
     transform: transformStream
+    size: sizeStream
 
 
   getAnchor = (position, windowSize, size) ->
@@ -74,11 +78,11 @@ module.exports = $positionedOverlay = (props) ->
                else if anchorParts[1] is 'center' \
                then targetSize.width / 2 \
                else targetSize.width
-    yOffset = if anchorParts[1] is 'top' \
-               then 0 \
+    yOffset = if anchorParts[0] is 'top' \
+               then targetSize.height \
                else if anchorParts[1] is 'center' \
                then targetSize.height / 2 \
-               else targetSize.height
+               else 0
     xPx = (position?.x or 8) + xOffset + (offset?.x or 0)
     yPx = position?.y + yOffset + (offset?.y or 0)
     "translate(#{xPercent}%, #{yPercent}%) translate(#{xPx}px, #{yPx}px)"
@@ -91,6 +95,9 @@ module.exports = $positionedOverlay = (props) ->
 
   if zIndex
     style.zIndex = zIndex
+
+  if size?.width && fillTargetWidth
+    style.minWidth = "#{size.width}px"
 
   createPortal(
     z ".z-positioned-overlay.anchor-#{anchor}",

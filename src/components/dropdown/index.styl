@@ -1,7 +1,7 @@
 @require '../../vars'
 
 .z-dropdown
-  min-height: 48px
+  // min-height: 48px
   display: block
   outline: none
   text-align: inherit
@@ -45,23 +45,26 @@
       padding: 0 8px
 
 
-  > .options
-    shadow-1()
-    position: absolute
-    margin-top: 8px
-    z-index: 2
-    background: getColor('$bgColor')
-    width: 100%
-    box-sizing: border-box
+.z-dropdown_options
+  shadow-1()
+  // position: absolute
+  margin-top: 8px
+  z-index: 2
+  background: getColor('$bgColor')
+  // width: 100%
+  box-sizing: border-box
+  cursor: pointer
+  // display: none
+  max-height: 200px
+  overflow: auto
+  -webkit-overflow-scrolling: touch
+
+  > .option
+    padding: 16px
+    display: flex
+    align-items: center
+    color: getColor('$bgText')
     cursor: pointer
-    display: none
 
-    > .option
-      padding: 16px
-      display: flex
-      align-items: center
-      color: getColor('$bgText')
-      cursor: pointer
-
-      &.is-selected
-        background: getColor('$bgColorAlt1')
+    &.is-selected
+      background: getColor('$bgColorAlt1')
