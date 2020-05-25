@@ -1,4 +1,4 @@
-{z, useRef, useStream} = require 'zorium'
+{z, useRef, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -15,7 +15,7 @@ module.exports = $checkbox = (props) ->
 
   {valueStream, errorStream} = useMemo ->
     {
-      valueStream: value or new RxBehaviorSubject null
+      valueStream: valueStream or new RxBehaviorSubject null
       errorStream: new RxBehaviorSubject null
     }
   , []
@@ -24,7 +24,7 @@ module.exports = $checkbox = (props) ->
   #   props.ref.current = {isChecked: -> ref.current.checked}
 
   {value} = useStream ->
-    value: valueStreams?.switch() or value
+    value: valueStreams?.switch() or valueStream
 
   colors = _defaults colors or {}, {
     checked: allColors.$primaryMain
@@ -49,7 +49,7 @@ module.exports = $checkbox = (props) ->
         if valueStreams
           valueStreams.next RxObservable.of e.target.checked
         else
-          value.next e.target.checked
+          valueStream.next e.target.checked
         onChange?()
         e.target.blur()
     }

@@ -16,7 +16,7 @@ _zipWith = require 'lodash/zipWith'
 FormatService = require './format'
 
 nteeMajors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
-'nN', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
 states = {
   AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming'
@@ -29,7 +29,8 @@ class SearchFiltersService
       {
         id: 'fundedNteeMajor' # used as ref/key
         field: 'fundedNteeMajor'
-        type: 'listBooleanOr'
+        title: model.l.get 'filter.fundedNteeMajor.title'
+        type: 'listOr'
         items: _map nteeMajors, (nteeMajor) ->
           {key: nteeMajor, label: model.l.get "nteeMajor.#{nteeMajor}"}
         queryFn: (value, key) ->
@@ -41,7 +42,7 @@ class SearchFiltersService
       {
         id: 'state' # used as ref/key
         field: 'state'
-        type: 'listBooleanOr'
+        type: 'listOr'
         items: _map states, (state, stateCode) ->
           {key: stateCode, label: state}
         queryFn: (value, key) ->
@@ -232,21 +233,16 @@ class SearchFiltersService
               "#{field}":
                 gt: 0
           }
-        when 'list'
+        when 'listAnd', 'listBooleanAnd'
           {
             bool:
               must: _filter _map filter.value, (value, key) ->
-                if value
-                  match: "#{key}": value
+                if value and filter.queryFn
+                  filter.queryFn value, key
+                else if value
+                  match: "#{field}.#{key}": value
           }
-        when 'listBooleanAnd'
-          {
-            bool:
-              must: _filter _map filter.value, (value, key) ->
-                if value
-                  match: "#{field}.#{key}": true
-          }
-        when 'listBooleanOr'
+        when 'listBooleanOr', 'listOr'
           {
             bool:
               should: _filter _map filter.value, (value, key) ->

@@ -42,7 +42,7 @@ module.exports = $icon = (props) ->
   },
     z 'svg', {
       namespace: 'http://www.w3.org/2000/svg'
-      viewbox: "0 0 #{viewBox} #{viewBox * heightRatio}"
+      viewBox: "0 0 #{viewBox} #{viewBox * heightRatio}"
       style:
         width: size
         height: if size?.indexOf?('%') isnt -1 \

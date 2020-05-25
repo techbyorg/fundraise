@@ -6,9 +6,6 @@ require 'rxjs/add/observable/of'
 _map = require 'lodash/map'
 _filter = require 'lodash/filter'
 _isEmpty = require 'lodash/isEmpty'
-_range = require 'lodash/range'
-_kebabCase = require 'lodash/kebabCase'
-_startCase = require 'lodash/startCase'
 _zipObject = require 'lodash/zipObject'
 
 $checkbox = require '../checkbox'
@@ -70,7 +67,7 @@ module.exports = $filterContent = (props) ->
           custom: {items}
         }
 
-      when 'list'
+      when 'listAnd', 'listOr'
         list = filter.items
 
         checkboxes =  _map list, ({key, label}) =>
@@ -108,7 +105,7 @@ module.exports = $filterContent = (props) ->
     when 'maxIntCustom', 'minIntCustom'
       $content =
         z '.content',
-          z '.checkbox-label',
+          z '.label',
             z '.text', model.l.get "filterSheet.#{filter.key}"
             z '.small-input',
               filter.inputPrefix
@@ -120,7 +117,7 @@ module.exports = $filterContent = (props) ->
               filter.inputPostfix
     when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
       $content =
-        z '.content',
+        z '.content.tappable',
           if isGrouped
             z '.title', filter.title or filter.name
 
@@ -136,19 +133,28 @@ module.exports = $filterContent = (props) ->
                 onclick: ->
                   valueStream.next not isSelected
               },
-                label or 'fixme'
-    when 'list', 'fieldList'
+                label or "FIXME: #{filter.id}"
+    when 'listAnd', 'listOr', 'fieldList'
       # $title = filter?.name
       $content =
         z '.content',
           _map custom.checkboxes, ({valueStream, label}) ->
-            z 'label.checkbox-label',
-              z '.text', label or 'fixme'
-              z '.input',
+            z 'label.label',
+              z '.checkbox',
                 z $checkbox, {valueStream}
-    when 'minMax'
+              z '.text', label or 'fixme'
+
+    when 'booleanArray'
       $content =
         z '.content',
+          z 'label.label',
+            z '.checkbox',
+              z $checkbox, {valueStreams: filter.valueStreams}
+            z '.text', filter.title or filter.name
+
+    when 'minMax'
+      $content =
+        z '.content.min-max',
           z '.flex',
             z '.block',
               z $dropdown, {
@@ -170,8 +176,8 @@ module.exports = $filterContent = (props) ->
     when 'gtlt'
       operator = filterValue?.operator
       $content =
-        z '.content',
-          z '.metric.checkbox-label',
+        z '.content.gtlt',
+          z '.metric.label',
             z '.text', 'gtlt' # FIXME
             z '.operators',
               z '.operator', {
@@ -209,22 +215,7 @@ module.exports = $filterContent = (props) ->
                 height: '24px'
               }
 
-    when 'booleanArray'
-      $content =
-        z '.content',
-          z 'label.checkbox-label',
-            z '.text', filter.title or filter.name
-            z '.input',
-              z $checkbox, {valueStreams: filter.valueStreams}
-
   z '.z-filter-content',
     unless isGrouped
       z '.title', filter.title or filter.name
-    z '.content',
-      if not isGrouped and filter.field in [
-        'maxLength', 'crowds', 'roadDifficulty'
-        'shade', 'safety', 'noise', 'features'
-      ]
-        z '.warning',
-          model.l.get 'filterSheet.userInputWarning'
-      $content
+    $content

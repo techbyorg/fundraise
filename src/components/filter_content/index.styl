@@ -6,121 +6,104 @@
     margin-bottom: 24px
 
   > .content
-    > .warning
-      font-caption()
-      background: getColor('$secondary50')
-      margin-top: 8px
-      margin-bottom: 24px
-      padding: 12px
-      border-radius: 4px
+    > .title
+      font-body1()
+      margin-top: 24px
 
-    > .content // FIXME: rename
-      > .title
-        font-body1()
-        margin-top: 24px
+    > .info
+      font-body2(true, medium)
+      margin-bottom: 16px
 
-      > .flex
-        display: flex
+    > .label
+      font-body2()
+      margin-top: 16px
+      display: flex
+      align-items: center
 
-        > .block
-          flex1()
+      &:first
+        margin-top: 0
 
-        > .dash
-          margin: 0 16px
+      // > .text
+      //   margin-left: 8px
 
-      > .info
-        font-body2(true, medium)
-        margin-bottom: 16px
-
-      > .rating
-        margin-bottom: 28px
-
-      > .tap-items
-        &.is-full-width
-          display: flex
-
-          > .tap-item
-            flex1()
-
-        > .tap-item
-          font-body2()
-          display: inline-block
-          margin-right: 12px
-          margin-bottom: 12px
-          padding: 6px 12px
-          border-radius: 4px
-          text-align: center
-          cursor: pointer
-          border: 1px solid getColor('$bgText38')
-
-          &:last-child
-            margin-right: 0
-
-          &.is-selected
-            background: getColor('$secondary50')
-            border: 1px solid getColor('$secondary700')
-            color: getColor('$secondary700')
-
-          &.has-icon
-            position: relative
-            padding-left: 40px
-
-            > .icon
-              position: absolute
-              left: 12px
-              top: 6px
-
-      > .tap-tabs
-        tapTabs()
-
-      > .carrier, > .amenity
-        margin-bottom: 16px
-
-      > .checkbox-label
-        font-body2()
-        margin-top: 16px
+      > .small-input
+        width: 50px
+        margin-left: auto
         display: flex
         align-items: center
 
-        &:first
-          margin-top: 0
+      > .checkbox
+        margin-right: 20px
 
-        // > .text
-        //   margin-left: 8px
+      > .text
+        font-subtitle1()
+        cursor: pointer
 
-        > .operators
-          margin-left: auto
-          display: flex
+  > .min-max
+    > .flex
+      display: flex
 
-          > .operator
-            border: 1px solid getColor('$bgText38')
-            border-radius: 50%
-            width: 24px
-            height: 24px
-            margin-right: 8px
+      > .block
+        flex1()
 
-            &.is-selected
-              border: 1px solid getColor('$secondaryMain')
-              background: getColor('$secondaryMain')
+      > .dash
+        margin: 0 16px
 
-        > .operator-input
-          width: 30px
 
-        > .operator-input-wide
-          width: 50px
-
-        > .small-input
-          width: 50px
-          margin-left: auto
-          display: flex
-          align-items: center
-
-        > .input
-          margin-left: auto
-
-      > .label
-        font-body2()
-        margin-bottom: 8px
-
-      > .fields
+  > .tappable
+    > .tap-items
+      &.is-full-width
         display: flex
+
+        > .tap-item
+          flex1()
+
+      > .tap-item
+        font-body2()
+        display: inline-block
+        margin-right: 12px
+        margin-bottom: 12px
+        padding: 6px 12px
+        border-radius: 4px
+        text-align: center
+        cursor: pointer
+        border: 1px solid getColor('$bgText38')
+
+        &:last-child
+          margin-right: 0
+
+        &.is-selected
+          background: getColor('$secondary50')
+          border: 1px solid getColor('$secondary700')
+          color: getColor('$secondary700')
+
+        &.has-icon
+          position: relative
+          padding-left: 40px
+
+          > .icon
+            position: absolute
+            left: 12px
+            top: 6px
+
+  > .gtlt
+    > .operators
+      margin-left: auto
+      display: flex
+
+      > .operator
+        border: 1px solid getColor('$bgText38')
+        border-radius: 50%
+        width: 24px
+        height: 24px
+        margin-right: 8px
+
+        &.is-selected
+          border: 1px solid getColor('$secondaryMain')
+          background: getColor('$secondaryMain')
+
+    > .operator-input
+      width: 30px
+
+    > .operator-input-wide
+      width: 50px

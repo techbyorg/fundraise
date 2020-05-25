@@ -255,6 +255,7 @@
   "filter.grantMedian": "Median grant size",
   "filter.noMin": "No min",
   "filter.noMax": "No max",
+  "filter.fundedNteeMajor.title": "Focus areas",
 
   "metric.revenue": "Revenue",
   "metric.expenses": "Expenses",
