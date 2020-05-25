@@ -28,7 +28,7 @@ $choropleth = lazy ->
         theme: {}
         colors: "nivo"
         domain: [ min, max ]
-        unknownColor: colors.$bgText12
+        unknownColor: colors.getRawColor colors.$bgText12
         colors: [
           '#91e0f4', '#81caef', '#6fafe6', '#5e9de7', '#4a7ed5', '#3d6edb'
         ]

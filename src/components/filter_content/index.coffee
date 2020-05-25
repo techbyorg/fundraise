@@ -23,7 +23,7 @@ if window?
   require './index.styl'
 
 module.exports = $filterContent = (props) ->
-  {model, filter, resetValue, isGrouped, overlayAnchor} = props
+  {model, filter, resetValue, isGrouped, overlayAnchor, $$parentRef} = props
 
   {custom} = useMemo ->
     switch filter.type
@@ -153,6 +153,7 @@ module.exports = $filterContent = (props) ->
             z '.block',
               z $dropdown, {
                 model
+                $$parentRef
                 valueStream: custom.minStream
                 options: filter.minOptions
                 anchor: overlayAnchor
@@ -161,6 +162,7 @@ module.exports = $filterContent = (props) ->
             z '.block',
               z $dropdown, {
                 model
+                $$parentRef
                 valueStream: custom.maxStream
                 options: filter.maxOptions
                 anchor: overlayAnchor

@@ -16,6 +16,7 @@ module.exports = $filterContentPositionedOverlay = (props) ->
   {model, filter, onClose, $$targetRef} = props
 
   $$ref = useRef()
+  $$overlayRef = useRef() # have all child positionedOverlays be inside me
 
   {resetStream} = useMemo ->
     {resetStream: new RxBehaviorSubject null}
@@ -35,8 +36,8 @@ module.exports = $filterContentPositionedOverlay = (props) ->
     z $positionedOverlay,
       model: model
       onClose: onClose
-      hasBackdrop: true
       $$targetRef: $$targetRef
+      $$ref: $$overlayRef
       repositionOnChangeStr: filter.value
       anchor: 'top-left'
       offset:
@@ -47,7 +48,7 @@ module.exports = $filterContentPositionedOverlay = (props) ->
         },
           z '.content',
             z $filterContent, {
-              model, filter, resetValue
+              model, filter, resetValue, $$parentRef: $$overlayRef
             }
           if value
             z '.actions',

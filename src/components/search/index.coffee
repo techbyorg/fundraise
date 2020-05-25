@@ -1,9 +1,12 @@
 {z, useMemo, useStream} = require 'zorium'
 _find = require 'lodash/find'
+RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
+$button = require '../button'
 $filterBar = require '../filter_bar'
 # $irsSearch = require '../irs_search'
 $fundSearchResults = require '../fund_search_results'
+$input = require '../input'
 $searchTags = require '../search_tags'
 $table = require '../table'
 FormatService = require '../../services/format'
@@ -13,7 +16,7 @@ if window?
   require './index.styl'
 
 module.exports = $search = ({model, router, org}) ->
-  {searchResultsStream, filtersStream} = useMemo ->
+  {filtersStream, modeStream, searchResultsStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {
       model, filters: SearchFiltersService.getFundFilters(model)
     }
@@ -25,6 +28,7 @@ module.exports = $search = ({model, router, org}) ->
 
     {
       filtersStream
+      modeStream: new RxBehaviorSubject 'tags'
       searchResultsStream: esQueryFilterStream.switchMap (esQueryFilter) ->
         console.log 'es', esQueryFilter
         model.irsFund.search {
@@ -36,7 +40,8 @@ module.exports = $search = ({model, router, org}) ->
     }
   , []
 
-  {focusAreasFilter, statesFilter, searchResults} = useStream ->
+  {mode, focusAreasFilter, statesFilter, searchResults} = useStream ->
+    mode: modeStream
     focusAreasFilter: filtersStream.map (filters) ->
       _find filters, {id: 'fundedNteeMajor'}
     statesFilter: filtersStream.map (filters) ->
@@ -48,16 +53,38 @@ module.exports = $search = ({model, router, org}) ->
   z '.z-search',
     z '.search',
       z '.search-box',
-        z $searchTags,
-          model: model
-          filter: focusAreasFilter
-          title: model.l.get 'fund.focusAreas'
-          placeholder: model.l.get 'fundSearch.focusAreasPlaceholder'
-        z $searchTags,
-          model: model
-          filter: statesFilter
-          title: model.l.get 'general.location'
-          placeholder: model.l.get 'fundSearch.locationPlaceholder'
+        if mode is 'specific'
+          z $input,
+            hintText: model.l.get 'fundSearch.byNameEinPlaceholder'
+        else
+          [
+            z $searchTags,
+              model: model
+              filter: focusAreasFilter
+              title: model.l.get 'fund.focusAreas'
+              placeholder: model.l.get 'fundSearch.focusAreasPlaceholder'
+            z '.divider'
+            z $searchTags,
+              model: model
+              filter: statesFilter
+              title: model.l.get 'general.location'
+              placeholder: model.l.get 'fundSearch.locationPlaceholder'
+            z '.button',
+              z $button,
+                isPrimary: true
+                icon: 'search'
+                text: model.l.get 'general.search'
+          ]
+
+      z '.alt', {
+        onclick: ->
+          if mode is 'specific'
+            modeStream.next 'tags'
+          else
+            modeStream.next 'specific'
+      },
+        z '.or', model.l.get 'general.or'
+        z '.text', model.l.get 'fundSearch.byNameEin'
 
     z '.results',
       z '.title',

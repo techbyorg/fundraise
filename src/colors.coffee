@@ -51,9 +51,10 @@ colors = _defaults {
     '--secondary-800-text': materialColors.$white
     '--secondary-900-text': materialColors.$white
 
-    '--bgColor': '#ffffff'
-    '--bgColor-alt-1': '#F8F8F8' # changed from f5f5f5
-    '--bgColor-alt-2': '#EEEEEE'
+    '--bg-color': '#ffffff'
+    '--bg-color-alt-1': '#F8F8F8' # changed from f5f5f5
+    '--bg-color-alt-2': '#EEEEEE'
+    '--bg-backdrop': 'rgba(250, 250, 250, 0.73)'
     '--bg-text': materialColors.$black70
     '--bg-text-6': 'rgba(0, 0, 0, 0.06)'
     '--bg-text-12': materialColors.$black12
@@ -124,9 +125,10 @@ colors = _defaults {
   '$secondary900Text': 'var(--secondary-900-text)'
   '$secondaryMainText': 'var(--secondary-700-text)'
 
-  '$bgColor': 'var(--bgColor)'
-  '$bgColorAlt1': 'var(--bgColor-alt-1)'
-  '$bgColorAlt2': 'var(--bgColor-alt-2)'
+  '$bgColor': 'var(--bg-color)'
+  '$bgColorAlt1': 'var(--bg-color-alt-1)'
+  '$bgColorAlt2': 'var(--bg-color-alt-2)'
+  '$bgBackdrop': 'var(--bg-backdrop)'
 
   # '$quaternary50': 'var(--quaternary-50)'
   # '$quaternary100': 'var(--quaternary-100)'

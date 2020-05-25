@@ -2,26 +2,33 @@
 _uniq = require 'lodash/uniq'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
+useOnClickOutside = require '../../services/use_on_click_outside'
+
 if window?
   require './index.styl'
 
 module.exports = $positionedOverlay = (props) ->
   {model, $$targetRef, hasBackdrop, onClose, anchor, offset, fillTargetWidth,
-    zIndex, $content, repositionOnChangeStr} = props
+    zIndex, $content, $$ref, $$parentRef, repositionOnChangeStr} = props
 
-  $$ref = useRef()
+  $$ref ?= useRef()
+
+  unless hasBackdrop
+    useOnClickOutside $$ref, onClose
 
   {$$overlays, anchorStream, transformStream, sizeStream} = useMemo ->
     {
-      $$overlays: document?.getElementById 'overlays-portal'
+      $$overlays: $$parentRef?.current or document?.getElementById 'overlays-portal'
       anchorStream: new RxBehaviorSubject anchor
       transformStream: new RxBehaviorSubject null
       sizeStream: new RxBehaviorSubject null
     }
-  , []
+  , [$$parentRef]
+
+  console.log 'ovvv', $$overlays
 
   useLayoutEffect ->
-    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 100
+    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0
     targetBoundingRect = $$targetRef.current?.getBoundingClientRect() or {}
     refRect = $$ref.current.getBoundingClientRect()
     windowSize = model.window.getSize().getValue()
@@ -100,13 +107,12 @@ module.exports = $positionedOverlay = (props) ->
     style.minWidth = "#{size.width}px"
 
   createPortal(
-    z ".z-positioned-overlay.anchor-#{anchor}",
+    z ".z-positioned-overlay.anchor-#{anchor}", {ref: $$ref},
       if hasBackdrop
         z '.backdrop', {
           onclick: onClose
         }
       z '.content', {
-        ref: $$ref
         style: style
       },
         $content

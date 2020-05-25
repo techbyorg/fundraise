@@ -14,8 +14,8 @@ if window?
   require './index.styl'
 
 module.exports = $dropdown = (props) ->
-  {model, valueStreams, valueStream, errorStream, options, anchor = 'top-left',
-    isDisabled = false} = props
+  {model, valueStreams, valueStream, errorStream, options, $$parentRef,
+    anchor = 'top-left', isDisabled = false} = props
 
   $$ref = useRef()
 
@@ -75,11 +75,11 @@ module.exports = $dropdown = (props) ->
         model: model
         onClose: ->
           isOpenStream.next false
-        hasBackdrop: true
         $$targetRef: $$ref
         fillTargetWidth: true
         anchor: anchor
         zIndex: 999
+        $$parentRef: $$parentRef
         $content:
           z '.z-dropdown_options',
             _map options, (option) ->

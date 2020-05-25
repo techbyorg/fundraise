@@ -8,12 +8,16 @@
   left: 0
   pointer-events: none
 
+  &.is-mounted
+    > .content
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+    > .backdrop
+      opacity: 1
+
   > .content
     position: absolute
     pointer-events: all
-
-    &.is-mounted
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)
 
   > .backdrop
     position: fixed
@@ -22,7 +26,7 @@
     left: 0
     width: 100%
     height: 100%
-    background: getColor('$bgText38')
+    background: getColor('$bgBackdrop')
     -webkit-tap-highlight-color: getColor('$transparent')
     opacity: 0
     transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)

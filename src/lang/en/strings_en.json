@@ -158,6 +158,8 @@
   "fund990s.latestFiling": "(latest filing year)",
   "fundOverview.fundedNtee": "Top funded categories",
   "fundOverview.fundingMap": "Funding Map",
+  "fundSearch.byNameEin": "search by foundation name/EIN",
+  "fundSearch.byNameEinPlaceholder": "Search foundation by name or EIN",
   "getAppDialog.title": "Native apps",
   "getAppDialog.text": "Get the app on Android or iOS!",
   "rolePermissions.selectRole": "Select a role",

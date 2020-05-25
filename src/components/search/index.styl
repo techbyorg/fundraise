@@ -13,6 +13,29 @@
       margin: 0 auto
       border-radius: 12px
       display: flex
+      align-items: center
+
+      > .divider
+        width: 1px
+        height: 56px
+        background: getColor('$bgText6')
+
+      > .button
+        margin: 0 20px
+
+    > .alt
+      max-width: 1200px
+      margin: 24px auto 0 auto
+      cursor: pointer
+
+      > .or
+        display: inline-block
+        margin-right: 4px
+
+      > .text
+        font-button()
+        text-decoration: underline
+        display: inline-block
 
   > .results
     padding: 48px 32px
