@@ -37,9 +37,11 @@
 
   > .tbody
     flex1()
+    min-height: 200px
 
     > .tr
       display: flex
+      align-items: center
       border-bottom: 1px solid getColor('$bgText12')
 
       > .td
@@ -47,6 +49,9 @@
         flex-shrink: 0
         padding: 20px
         box-sizing: border-box
+        white-space: nowrap
+        text-overflow: ellipsis
+        overflow: hidden
 
     > .tr-mobile
       shadow-1()

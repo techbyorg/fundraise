@@ -42,6 +42,7 @@ $choropleth = lazy ->
 
 $spinner = require '../spinner'
 FormatService = require '../../services/format'
+useRefSize = require '../../services/use_ref_size'
 colors = require '../../colors'
 config = require '../../config'
 
@@ -51,12 +52,6 @@ if window?
 module.exports = $chartUsMap = ({data}) ->
   $$ref = useRef()
 
-  {sizeStream} = useMemo ->
-    {
-      sizeStream: new RxBehaviorSubject null
-    }
-  , []
-
   {min, max} = useMemo ->
     values = _map data, 'value'
     {
@@ -65,15 +60,7 @@ module.exports = $chartUsMap = ({data}) ->
     }
   , [data]
 
-  useEffect ->
-    sizeStream.next {
-      width: $$ref.current.clientWidth
-      height: $$ref.current.clientHeight
-    }
-  , []
-
-  {size} = useStream ->
-    size: sizeStream
+  size = useRefSize $$ref
 
   z '.z-chart-us-map', {ref: $$ref},
     if window? and size

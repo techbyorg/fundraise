@@ -4,6 +4,9 @@ RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 $fundAtAGlance = require '../fund_at_a_glance'
 $fundOverview = require '../fund_overview'
 $fundGrants = require '../fund_grants'
+$fundPersons = require '../fund_persons'
+$fundApplicationInfo = require '../fund_application_info'
+$fund990s = require '../fund_990s'
 $tapTabs = require '../tap_tabs'
 
 if window?
@@ -29,10 +32,22 @@ module.exports = $fund = (props) ->
       name: model.l.get 'fund.tabGrants'
       $el: $fundGrants
     }
+    {
+      name: model.l.get 'fund.tabPersons'
+      $el: $fundPersons
+    }
+    {
+      name: model.l.get 'fund.tabApplicationInfo'
+      $el: $fundApplicationInfo
+    }
+    {
+      name: model.l.get 'fund.tab990s'
+      $el: $fund990s
+    }
   ]
 
   z '.z-fund', {
-    className: classKebab {scrollFitContent: selectedIndex isnt 1}
+    className: classKebab {scrollFitContent: not (selectedIndex in [1, 2])}
   },
     z '.quick-info',
       z $fundAtAGlance, {model, router, placeholderNameStream, irsFund}

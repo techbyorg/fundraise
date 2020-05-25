@@ -1,8 +1,6 @@
 config = require '../config'
 
 module.exports = class IrsPerson
-  namespace: 'irsPersons'
-
   constructor: ({@auth}) -> null
 
   getAllByEin: (ein) =>
@@ -10,7 +8,7 @@ module.exports = class IrsPerson
       query: '''
         query IrsPersonGetAllByEin($ein: String!) {
           irsPersons(ein: $ein) {
-            nodes { name, ein }
+            nodes { name, years { title, compensation, year } }
           }
         }
       '''
@@ -22,7 +20,13 @@ module.exports = class IrsPerson
   search: ({query, limit}) =>
     @auth.stream
       query: '''
-        query IrsPersonSearch($query: JSON!) { irsPersons(query: $query) { nodes { name, ein } } }
+        query IrsPersonSearch($query: JSON!) {
+          irsPersons(query: $query) {
+            nodes {
+              name
+            }
+          }
+        }
       '''
       variables: {query}
       pull: 'irsPersons'

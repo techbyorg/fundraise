@@ -36,6 +36,7 @@ module.exports = $chartLine = ({data}) ->
             colors: [colors.$primaryMain]
             useMesh: true
             enableCrosshair: false
+            gridYValues: 5
             margin:
               left: 60
               bottom: 40

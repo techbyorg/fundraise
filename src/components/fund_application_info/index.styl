@@ -1,0 +1,28 @@
+@require '../../vars'
+
+.z-fund-application-info
+  background: getColor('$bgColor')
+  border: 1px solid getColor('$bgText12')
+  width: 680px
+  max-width: 100%
+  margin: 0 auto
+  padding: 20px
+  box-sizing: border-box
+  border-radius: 6px
+  border: 1px solid getColor('$bgText12')
+
+  > .title
+    font-subtitle1()
+    margin: 16px 0 2px 0
+
+    &:first-child
+      margin-top: 0
+
+  > .warning
+    font-body2()
+    display: flex
+    align-items: center
+    margin-bottom: 24px
+
+    > .icon
+      margin-right: 16px

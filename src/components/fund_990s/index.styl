@@ -1,0 +1,31 @@
+@require '../../vars'
+
+.z-fund-990s
+  // TODO: combine w/ applicationInfo styling? maybe more?
+  background: getColor('$bgColor')
+  border: 1px solid getColor('$bgText12')
+  width: 680px
+  max-width: 100%
+  margin: 0 auto
+  box-sizing: border-box
+  border-radius: 6px
+  border: 1px solid getColor('$bgText12')
+
+  > .title
+    font-body1()
+    padding: 20px 20px 12px 20px
+    border-bottom: 1px solid getColor('$bgText12')
+
+  > .irs-990s
+    > .irs-990
+      font-subtitle1()
+      display: flex
+      align-items: center
+      padding: 20px
+      border-bottom: 1px solid getColor('$bgText12')
+
+      &:hover
+        background: getColor('$bgColorAlt1')
+
+      > .icon
+        margin-right: 48px

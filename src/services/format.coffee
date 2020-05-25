@@ -2,6 +2,8 @@ z = require 'zorium'
 _capitalize = require 'lodash/capitalize'
 _map = require 'lodash/map'
 _filter = require 'lodash/filter'
+_reduce = require 'lodash/reduce'
+_last = require 'lodash/last'
 
 config = require '../config'
 
@@ -77,5 +79,24 @@ class FormatService
 
     return prettyTimer
 
+  arrayToSentence: (arr) ->
+    arr.join(', ').replace(/, ((?:.(?!, ))+)$/, ' and $1')
+
+  # [2015, 2016, 2017, 2019] -> "2015-2017, 2019"
+  yearsArrayToEnglish: (years) ->
+    lastYear = 0
+    isConsecutive = false
+    str = ''
+    years.forEach (year, i) ->
+      if years[i + 1] is year + 1 and not isConsecutive
+        str += "#{year}-"
+        isConsecutive = true
+      else if not isConsecutive
+        str += "#{year}, "
+      else if years[i + 1] isnt year + 1
+        str += "#{year}, "
+        isConsecutive = false
+
+    str.slice 0, -2
 
 module.exports = new FormatService()

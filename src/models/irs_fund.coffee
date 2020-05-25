@@ -1,8 +1,6 @@
 config = require '../config'
 
 module.exports = class IrsFund
-  namespace: 'irsFunds'
-
   constructor: ({@auth}) -> null
 
   getByEin: (ein) =>
@@ -14,7 +12,14 @@ module.exports = class IrsFund
             contributionStats, yearlyStats,
             lastYearStats {
               grants, grantMedian, grantSum, revenue, expenses
-              },
+            },
+            applicantInfo {
+              acceptsUnsolicitedRequests, recipientName,
+              requirements, deadlines, restrictions,
+              address {
+                street1, street2, postalCode, city, state, countryCode
+              }
+            }
             fundedNteeMajors
           }
         }
@@ -33,6 +38,7 @@ module.exports = class IrsFund
               lastYearStats {
                 grants, grantMedian, grantSum
               }
+              fundedNteeMajors
             }
           }
         }

@@ -14,7 +14,5 @@ module.exports = $fundOverviewNteePie = ({model, irsFund}) ->
       value: sum
     }
 
-  console.log data
-
   z '.z-fund-overview-ntee-pie',
     z $chartUsMap, {data}

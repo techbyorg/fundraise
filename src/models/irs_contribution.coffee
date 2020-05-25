@@ -1,8 +1,6 @@
 config = require '../config'
 
 module.exports = class IrsContribution
-  namespace: 'irsContributions'
-
   constructor: ({@auth}) -> null
 
   getAllByFromEin: (fromEin, {limit} = {}) =>

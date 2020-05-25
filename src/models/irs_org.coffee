@@ -1,8 +1,6 @@
 config = require '../config'
 
 module.exports = class IrsOrg
-  namespace: 'irsOrgs'
-
   constructor: ({@auth}) -> null
 
   getByEin: (ein) =>

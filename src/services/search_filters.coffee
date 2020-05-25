@@ -18,14 +18,18 @@ FormatService = require './format'
 nteeMajors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
 'nN', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
+states = {
+  AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming'
+}
+
 class SearchFiltersService
   getFundFilters: (model) ->
     [
+      # search-tags. not in filter bar
       {
         id: 'fundedNteeMajor' # used as ref/key
         field: 'fundedNteeMajor'
         type: 'listBooleanOr'
-        name: 'focus'
         items: _map nteeMajors, (nteeMajor) ->
           {key: nteeMajor, label: model.l.get "nteeMajor.#{nteeMajor}"}
         queryFn: (value, key) ->
@@ -33,6 +37,20 @@ class SearchFiltersService
             range: {"fundedNteeMajors.#{key}.percent": {gte: 2}}
           }
       }
+      # search-tags, not in filter bar
+      {
+        id: 'state' # used as ref/key
+        field: 'state'
+        type: 'listBooleanOr'
+        items: _map states, (state, stateCode) ->
+          {key: stateCode, label: state}
+        queryFn: (value, key) ->
+          {
+            # FIXME: implement this
+            range: {"fundedStates.#{stateCode}.percent": {gte: 2}}
+          }
+      }
+
       {
         id: 'assets' # used as ref/key
         field: 'assets'

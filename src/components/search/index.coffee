@@ -2,7 +2,7 @@
 _find = require 'lodash/find'
 
 $filterBar = require '../filter_bar'
-$irsSearch = require '../irs_search'
+# $irsSearch = require '../irs_search'
 $fundSearchResults = require '../fund_search_results'
 $searchTags = require '../search_tags'
 $table = require '../table'
@@ -36,9 +36,11 @@ module.exports = $search = ({model, router, org}) ->
     }
   , []
 
-  {focusAreasFilter, searchResults} = useStream ->
+  {focusAreasFilter, statesFilter, searchResults} = useStream ->
     focusAreasFilter: filtersStream.map (filters) ->
       _find filters, {id: 'fundedNteeMajor'}
+    statesFilter: filtersStream.map (filters) ->
+      _find filters, {id: 'state'}
     searchResults: searchResultsStream
 
   console.log searchResults
@@ -51,9 +53,11 @@ module.exports = $search = ({model, router, org}) ->
           filter: focusAreasFilter
           title: model.l.get 'fund.focusAreas'
           placeholder: model.l.get 'fundSearch.focusAreasPlaceholder'
-        # z $searchTags,
-        #   title: model.l.get 'general.location'
-        #   placeholder: model.l.get 'fundSearch.locationPlaceholder'
+        z $searchTags,
+          model: model
+          filter: statesFilter
+          title: model.l.get 'general.location'
+          placeholder: model.l.get 'fundSearch.locationPlaceholder'
 
     z '.results',
       z '.title',
@@ -67,18 +71,18 @@ module.exports = $search = ({model, router, org}) ->
       z $fundSearchResults, {model, router, rows: searchResults?.nodes}
 
 
-    z '.title', 'Search foundations'
-    z '.input',
-      z $irsSearch, {
-        model, router, irsType: 'irsFund', hintText: 'Foundation name'
-      }
-    z '.title', 'Search organizations'
-    z '.input',
-      z $irsSearch, {
-        model, router, irsType: 'irsOrg', hintText: 'Organization name'
-      }
-    z '.title', 'Search people'
-    z '.input',
-      z $irsSearch, {
-        model, router, irsType: 'irsPerson', hintText: 'Person name'
-      }
+    # z '.title', 'Search foundations'
+    # z '.input',
+    #   z $irsSearch, {
+    #     model, router, irsType: 'irsFund', hintText: 'Foundation name'
+    #   }
+    # z '.title', 'Search organizations'
+    # z '.input',
+    #   z $irsSearch, {
+    #     model, router, irsType: 'irsOrg', hintText: 'Organization name'
+    #   }
+    # z '.title', 'Search people'
+    # z '.input',
+    #   z $irsSearch, {
+    #     model, router, irsType: 'irsPerson', hintText: 'Person name'
+    #   }

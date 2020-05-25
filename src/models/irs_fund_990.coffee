@@ -1,9 +1,16 @@
 config = require '../config'
 
 module.exports = class IrsFund990
-  namespace: 'irsFund990s'
-
   constructor: ({@auth}) -> null
 
-  getStatsByEin: (ein) =>
-    @auth.stream "#{@namespace}.getStatsByEin", {ein}
+  getAllByEin: (ein) ->
+    @auth.stream
+      query: '''
+        query IrsFund990GetAllByEin($ein: String!) {
+          irsFund990s(ein: $ein) {
+            nodes { ein, year, taxPeriod }
+          }
+        }
+      '''
+      variables: {ein}
+      pull: 'irsFund990s'

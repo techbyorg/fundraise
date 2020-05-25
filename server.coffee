@@ -161,7 +161,7 @@ app.use (req, res, next) ->
     io.disconnect()
     model.dispose()
     disposable = null
-    console.log html
+    # console.log html
     if html.indexOf('<HEAD') is -1
       console.log 'redir'
       res.redirect 302, '/'
