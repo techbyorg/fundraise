@@ -3,7 +3,7 @@ config = require '../config'
 module.exports = class User
   namespace: 'users'
 
-  constructor: ({@auth, @proxy, @exoid, @cookie, @l, @overlay, @portal}) -> null
+  constructor: ({@auth, @proxy, @exoid, @cookie, @lang, @overlay, @portal}) -> null
 
   getMe: ({embed} = {}) =>
     @auth.stream
@@ -95,7 +95,7 @@ module.exports = class User
       , {invalidateAll: true}
 
   getDisplayName: (user) =>
-    user?.name or @l.get 'general.anonymous'
+    user?.name or @lang.get 'general.anonymous'
 
   isMember: (user) ->
     Boolean user?.email
@@ -106,7 +106,7 @@ module.exports = class User
   #       resolve true
   #     else
   #       @overlay.open new SignInOverlay({
-  #         model: {@l, @auth, @overlay, @portal, user: this}
+  #         model: {@lang, @auth, @overlay, @portal, user: this}
   #       }), {
   #         data: 'join'
   #         onComplete: resolve

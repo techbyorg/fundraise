@@ -1,12 +1,14 @@
-{z, classKebab, useStream} = require 'zorium'
+{z, classKebab, useContext, useStream} = require 'zorium'
 
 FormatService = require '../../services/format'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
 module.exports = $fundAtAGlance = (props) ->
-  {model, router, placeholderNameStream, irsFund} = props
+  {placeholderNameStream, irsFund} = props
+  {lang, router} = useContext context
 
   {placeholderName} = useStream ->
     placeholderName: placeholderNameStream
@@ -18,26 +20,26 @@ module.exports = $fundAtAGlance = (props) ->
         z '.value',
           FormatService.abbreviateDollar irsFund?.lastYearStats?.grantSum
         z '.name',
-          model.l.get 'fund.grantsPerYear'
+          lang.get 'fund.grantsPerYear'
       z '.metric',
         z '.value',
           FormatService.abbreviateDollar irsFund?.assets
         z '.name',
-          model.l.get 'org.assets'
+          lang.get 'org.assets'
 
     z '.block',
-      z '.title', model.l.get 'general.location'
+      z '.title', lang.get 'general.location'
       z '.text', FormatService.location irsFund
 
     z '.block',
-      z '.title', model.l.get 'fund.focusAreas'
+      z '.title', lang.get 'fund.focusAreas'
       z '.text',
         # FIXME
-        model.l.get "nteeMajor.#{irsFund?.nteecc?.substr(0, 1)}"
+        lang.get "nteeMajor.#{irsFund?.nteecc?.substr(0, 1)}"
 
     if irsFund?.website
       z '.block',
-        z '.title', model.l.get 'general.web'
+        z '.title', lang.get 'general.web'
         router.link z 'a.text.link', {
           href: irsFund?.website
         },
@@ -46,7 +48,7 @@ module.exports = $fundAtAGlance = (props) ->
     if irsFund?.lastYearStats
       z '.block',
         z '.title',
-          model.l.get 'org.lastReport', {
+          lang.get 'org.lastReport', {
             replacements: {year: irsFund.lastYearStats.year}
           }
         z '.metrics',
@@ -54,9 +56,9 @@ module.exports = $fundAtAGlance = (props) ->
             z '.value',
               FormatService.abbreviateDollar irsFund.lastYearStats.expenses
             z '.name',
-              model.l.get 'metric.expenses'
+              lang.get 'metric.expenses'
           z '.metric',
             z '.value',
               FormatService.abbreviateDollar irsFund.lastYearStats.revenue
             z '.name',
-              model.l.get 'metric.revenue'
+              lang.get 'metric.revenue'

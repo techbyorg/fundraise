@@ -181,5 +181,5 @@ module.exports = $formattedText = (props) ->
     if truncate
       z '.read-more',
         z $button,
-          text: model.l.get 'general.readMore'
+          text: lang.get 'general.readMore'
           isFullWidth: true

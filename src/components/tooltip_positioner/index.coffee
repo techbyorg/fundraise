@@ -1,8 +1,9 @@
-{z, useEffect, useRef, useMemo, useStream} = require 'zorium'
+{z, useContext, useEffect, useRef, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 _every = require 'lodash/every'
 
 $tooltip = require '../tooltip'
+context = require '../../context'
 
 if window?
   require './index.styl'
@@ -31,13 +32,14 @@ module.exports = $tooltipPositioner = (props) ->
     return
   {model, isVisibleStream, offset, key, anchor, $title, $content,
     zIndex} = props
+  {cookie, model} = useContext context
 
   $$ref = useRef()
 
   {isVisibleStream, shouldBeShownStream} = useMemo ->
     {
       isVisibleStream: isVisibleStream or new RxBehaviorSubject false
-      shouldBeShownStream: model.cookie.getStream().map (cookies) ->
+      shouldBeShownStream: cookie.getStream().map (cookies) ->
         completed = cookies.completedTooltips?.split(',') or []
         isCompleted = completed.indexOf(key) isnt -1
         prereqs = TOOLTIPS[key]?.prereqs
@@ -77,7 +79,6 @@ module.exports = $tooltipPositioner = (props) ->
   _show = ($$ref) ->
     model.tooltip.set$ $z $tooltip, {
       $$target: $$ref
-      model
       key
       anchor
       offset

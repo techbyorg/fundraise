@@ -17,7 +17,6 @@ require 'rxjs/add/operator/take'
 
 Auth = require './auth'
 AdditionalScript = require './additional_script'
-Cookie = require './cookie'
 Entity = require './entity'
 EntityUser = require './entity_user'
 Experiment = require './experiment'
@@ -28,7 +27,6 @@ IrsFund990 = require './irs_fund_990'
 IrsOrg = require './irs_org'
 IrsOrg990 = require './irs_org_990'
 IrsPerson = require './irs_person'
-Language = require './language'
 LoginLink = require './login_link'
 Notification = require './notification'
 OfflineData = require './offline_data'
@@ -41,7 +39,6 @@ UserSettings = require './user_settings'
 Drawer = require './drawer'
 Overlay = require './overlay'
 Tooltip = require './tooltip'
-Window = require './window'
 request = require '../services/request'
 
 config = require '../config'
@@ -51,8 +48,7 @@ SERIALIZATION_KEY = 'MODEL'
 
 module.exports = class Model
   constructor: (options) ->
-    {serverHeaders, io, @portal, language,
-      initialCookies, setCookie, host} = options
+    {serverHeaders, io, @cookie, @portal, lang, userAgent} = options
     serverHeaders ?= {}
 
     cache = window?[SERIALIZATION_KEY] or {}
@@ -68,8 +64,6 @@ module.exports = class Model
     #   true
     # cache = if isExpired then {} else serialization
     @isFromCache = not _isEmpty cache
-
-    userAgent = serverHeaders['user-agent'] or navigator?.userAgent
 
     ioEmit = (event, opts) =>
       accessToken = @cookie.get 'accessToken'
@@ -113,13 +107,11 @@ module.exports = class Model
 
     pushToken = new RxBehaviorSubject null
 
-    @cookie = new Cookie {initialCookies, setCookie, host}
-    @l = new Language {language, @cookie}
     @overlay = new Overlay()
 
-    @auth = new Auth {@exoid, @cookie, pushToken, @l, userAgent, @portal}
+    @auth = new Auth {@exoid, @cookie, pushToken, lang, userAgent, @portal}
 
-    @offlineData = new OfflineData {@exoid, @portal, @statusBar, @l}
+    @offlineData = new OfflineData {@exoid, @portal, @statusBar, lang}
 
     @additionalScript = new AdditionalScript()
     @entity = new Entity {@auth}
@@ -137,7 +129,7 @@ module.exports = class Model
     @pushToken = new PushToken {@auth, pushToken}
     @subscription = new Subscription {@auth}
     @time = new Time {@auth}
-    @user = new User {@auth, proxy, @exoid, @cookie, @l, @overlay, @portal, @router}
+    @user = new User {@auth, proxy, @exoid, @cookie, lang, @overlay, @portal, @router}
     @userData = new UserData {@auth}
     @userSettings = new UserSettings {@auth}
 
@@ -146,7 +138,6 @@ module.exports = class Model
     @portal?.setModels {
       @user, @pushToken, @l, @installOverlay, @overlay
     }
-    @window = new Window {@cookie, @experiment, userAgent}
 
   # after page has loaded, refetch all initial (cached) requestsStream to verify they're still up-to-date
   validateInitialCache: =>

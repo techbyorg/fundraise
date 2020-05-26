@@ -16,6 +16,7 @@ $head = require './components/head'
 # $navDrawer = require './components/nav_drawer'
 $bottomBar = require './components/bottom_bar'
 Environment = require './services/environment'
+GlobalContext = require './context'
 
 Pages =
   $fundPage: require './pages/fund'
@@ -34,7 +35,7 @@ Pages =
   $404Page: require './pages/404'
 
 
-getRoutes = ({breakpoint, model}) ->
+getRoutes = ({breakpoint, lang}) ->
   # can have breakpoint (mobile/desktop) specific routes
   routes = new HttpHash()
 
@@ -44,7 +45,7 @@ getRoutes = ({breakpoint, model}) ->
       routeKeys = [routeKeys]
 
     paths = _flatten _map routeKeys, (routeKey) ->
-      _values model.l.getAllPathsByRouteKey routeKey
+      _values lang.getAllPathsByRouteKey routeKey
 
     _map paths, (path) ->
       routes.set path, -> Page
@@ -68,11 +69,12 @@ getRoutes = ({breakpoint, model}) ->
 
 
 module.exports = App = (props) ->
-  {requestsStream, serverData, model, router, isCrawler} = props
+  {requestsStream, serverData, model, router, portal,
+    lang, cookie, browser, isCrawler} = props
 
   {routesStream, requestsStream, entityStream} = useMemo ->
-    routesStream = model.window.getBreakpoint().map (breakpoint) ->
-      getRoutes {breakpoint, model}
+    routesStream = browser.getBreakpoint().map (breakpoint) ->
+      getRoutes {breakpoint, lang}
     .publishReplay(1).refCount()
 
     requestsStreamAndRoutesStream = RxObservable.combineLatest(
@@ -85,7 +87,7 @@ module.exports = App = (props) ->
         model.user.setReferrer req.query.referrer
 
       if isFirstRequest and isNativeApp
-        path = model.cookie.get('routerLastPath') or req.path
+        path = cookie.get('routerLastPath') or req.path
         if window?
           req.path = path # doesn't work server-side
         else
@@ -119,7 +121,7 @@ module.exports = App = (props) ->
         # if subdomain and subdomain isnt 'staging' and not entitySlug
         #   entitySlug = subdomain
 
-        entitySlug or= model.cookie.get 'lastEntitySlug'
+        entitySlug or= cookie.get 'lastEntitySlug'
 
         # FIXME
         # (if entitySlug and entitySlug isnt 'undefined' and entitySlug isnt 'null'
@@ -134,7 +136,7 @@ module.exports = App = (props) ->
     }
   , []
 
-  userAgent = model.window.getUserAgent()
+  userAgent = browser.getUserAgent()
   isNativeApp = Environment.isNativeApp {userAgent}
 
   isFirstRequest = true
@@ -157,10 +159,10 @@ module.exports = App = (props) ->
   # used if state / requestsStream fails to work
   $backupPage = if serverData?
     if isNativeApp
-      serverPath = model.cookie.get('routerLastPath') or serverData.req.path
+      serverPath = cookie.get('routerLastPath') or serverData.req.path
     else
       serverPath = serverData.req.path
-    getRoutes({model}).get(serverPath).handler?()
+    getRoutes({lang}).get(serverPath).handler?()
   else
     Pages.$404Page
 
@@ -170,7 +172,7 @@ module.exports = App = (props) ->
     me: me
     $overlays: model.overlay.get$()
     $tooltip: model.tooltip.get$()
-    windowSize: model.window.getSize()
+    windowSize: browser.getSize()
     # hideDrawer: requestsStream.switchMap (request) ->
     #   $page = router.preservedRequest?.$page or request.$page
     #   hideDrawer = $page?.hideDrawer
@@ -197,7 +199,7 @@ module.exports = App = (props) ->
 
   console.log 'overlay', request, $overlays
 
-  userAgent = model.window.getUserAgent()
+  userAgent = browser.getUserAgent()
   isIos = Environment.isIos {userAgent}
   isAndroid = Environment.isAndroid {userAgent}
   isFirefox = userAgent?.indexOf('Firefox') isnt -1
@@ -215,8 +217,6 @@ module.exports = App = (props) ->
   focusTags = ['INPUT', 'TEXTAREA', 'SELECT']
 
   pageProps = {
-    model
-    router
     serverData
     entityStream
     # FIXME!
@@ -240,7 +240,7 @@ module.exports = App = (props) ->
       z '.z-root',
         # unless hideDrawer
         #   z $navDrawer, {
-        #     model, router, entityStream, currentPath: request?.req.path
+        #     entityStream, currentPath: request?.req.path
         #   }
 
         z '.content', {
@@ -271,19 +271,22 @@ module.exports = App = (props) ->
             display: 'none'
             backgroundColor: 'var(--test-color)'
 
-  if window?
-    $body
-  else
-    z 'html', {
-      lang: 'en'
-    },
-      z $head, {
-        model
-        router
-        requestsStream
-        serverData
-        entityStream
-        # FIXME
-        meta: $page?.getMeta?()
-      }
-      z 'body', $body
+  z GlobalContext.Provider, {
+    value: {
+      model, router, portal, lang, cookie, browser
+    }
+  },
+    if window?
+      $body
+    else
+      z 'html', {
+        lang: 'en'
+      },
+        z $head, {
+          requestsStream
+          serverData
+          entityStream
+          # FIXME
+          meta: $page?.getMeta?()
+        }
+        z 'body', $body

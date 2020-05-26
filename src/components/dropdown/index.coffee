@@ -14,7 +14,7 @@ if window?
   require './index.styl'
 
 module.exports = $dropdown = (props) ->
-  {model, valueStreams, valueStream, errorStream, options, $$parentRef,
+  {valueStreams, valueStream, errorStream, options, $$parentRef,
     anchor = 'top-left', isDisabled = false} = props
 
   $$ref = useRef()
@@ -72,7 +72,6 @@ module.exports = $dropdown = (props) ->
 
     if isOpen
       z $positionedOverlay,
-        model: model
         onClose: ->
           isOpenStream.next false
         $$targetRef: $$ref

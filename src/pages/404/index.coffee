@@ -1,28 +1,29 @@
-{z} = require 'zorium'
+{z, useContext} = require 'zorium'
 
 config = require '../../config'
 $appBar = require '../../components/app_bar'
 $buttonMenu = require '../../components/button_menu'
 $button = require '../../components/button'
 colors = require '../../colors'
+context = require '../../context'
 
 module.exports = $404Page = (props) ->
-  {model, router, requestsStream, serverData, entity} = props
+  {requestsStream, serverData, entity} = props
+  {lang, router} = useContext context
 
   z '.p-404',
     z $appBar, {
-      model
-      title: model.l.get '404Page.text'
-      $topLeftButton: z $buttonMenu, {model, color: colors.$header500Icon}
+      title: lang.get '404Page.text'
+      $topLeftButton: z $buttonMenu, {color: colors.$header500Icon}
     }
     z '.content', {
       style:
         padding: '16px'
     },
-      model.l.get '404Page.text'
+      lang.get '404Page.text'
       z 'br'
       '(╯°□°)╯︵ ┻━┻'
       z $button,
-        text: model.l.get 'general.back'
+        text: lang.get 'general.back'
         onclick: ->
           router.goPath '/'

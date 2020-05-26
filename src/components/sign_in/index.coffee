@@ -1,9 +1,10 @@
-{z, useMemo, useStream} = require 'zorium'
+{z, useContext, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 $primaryInput = require '../primary_input'
 $button = require '../button'
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
@@ -12,8 +13,9 @@ if window?
 # FIXME: passing stream to child component causes 2 renders of child
 # since state updates in 2 places
 
-module.exports = $signIn = ({model, router, modeStream}) ->
-  console.log 'render sign in'
+module.exports = $signIn = ({modeStream}) ->
+  {model, router, portal, lang} = useContext context
+
   {nameValueStream, nameErrorStream, passwordValueStream, passwordErrorStream,
     emailValueStream, emailErrorStream, modeStream,
     isLoadingStream, hasErrorStream} = useMemo ->
@@ -64,7 +66,7 @@ module.exports = $signIn = ({model, router, modeStream}) ->
         when 'email' then emailErrorStream
         when 'password' then passwordErrorS
         else emailErrorStream
-      errorStream.next model.l.get err.info.langKey
+      errorStream.next lang.get err.info.langKey
       isLoadingStream.next false
 
   reset = (e) ->
@@ -87,7 +89,7 @@ module.exports = $signIn = ({model, router, modeStream}) ->
       errorStream = switch err.info.field
         when 'email' then emailErrorStream
         else emailErrorStream
-      errorStream.next model.l.get err.info.langKey
+      errorStream.next lang.get err.info.langKey
       isLoadingStream.next false
 
   signIn = (e) ->
@@ -118,7 +120,7 @@ module.exports = $signIn = ({model, router, modeStream}) ->
         when 'password' then passwordErrorStream
         else emailErrorStream
 
-      errorStream.next model.l.get err.info?.langKey
+      errorStream.next lang.get err.info?.langKey
       isLoadingStream.next false
 
   # cancel = ->
@@ -129,11 +131,11 @@ module.exports = $signIn = ({model, router, modeStream}) ->
   z '.z-sign-in',
     z '.title',
       if mode is 'join'
-      then model.l.get 'signInOverlay.join'
-      else model.l.get 'signInOverlay.signIn'
+      then lang.get 'signInOverlay.join'
+      else lang.get 'signInOverlay.signIn'
     if mode is 'join' and isMember
       z '.content',
-        model.l.get 'signIn.alreadyLoggedIn'
+        lang.get 'signIn.alreadyLoggedIn'
     else if mode
       z 'form.content',
         if mode is 'join'
@@ -141,14 +143,14 @@ module.exports = $signIn = ({model, router, modeStream}) ->
             z $primaryInput, {
               valueStream: nameValueStream
               errorStream: nameErrorStream
-              hintText: model.l.get 'general.name'
+              hintText: lang.get 'general.name'
               type: 'text'
             }
         z '.input',
           z $primaryInput, {
             valueStream: emailValueStream
             errorStream: emailErrorStream
-            hintText: model.l.get 'general.email'
+            hintText: lang.get 'general.email'
             type: 'email'
           }
         if mode isnt 'reset'
@@ -156,13 +158,13 @@ module.exports = $signIn = ({model, router, modeStream}) ->
             z $primaryInput, {
               valueStream: passwordValueStream
               errorStream: passwordErrorStream
-              hintText: model.l.get 'general.password'
+              hintText: lang.get 'general.password'
               type: 'password'
             }
 
         if mode is 'join'
           z '.terms',
-            model.l.get 'signInOverlay.terms', {
+            lang.get 'signInOverlay.terms', {
               replacements: {tos: ' '}
             }
             z 'a', {
@@ -170,7 +172,7 @@ module.exports = $signIn = ({model, router, modeStream}) ->
               target: '_system'
               onclick: (e) ->
                 e.preventDefault()
-                model.portal.call 'browser.openWindow', {
+                portal.call 'browser.openWindow', {
                   url: "https://#{config.HOST}/policies"
                   target: '_system'
                 }
@@ -180,12 +182,12 @@ module.exports = $signIn = ({model, router, modeStream}) ->
             z $button,
               isPrimary: true
               text: if isLoading \
-                    then model.l.get 'general.loading' \
+                    then lang.get 'general.loading' \
                     else if mode is 'reset' \
-                    then model.l.get 'signInOverlay.emailResetLink' \
+                    then lang.get 'signInOverlay.emailResetLink' \
                     else if mode is 'join' \
-                    then model.l.get 'signInOverlay.createAccount' \
-                    else model.l.get 'general.signIn'
+                    then lang.get 'signInOverlay.createAccount' \
+                    else lang.get 'general.signIn'
               onclick: (e) ->
                 if mode is 'reset'
                   reset e
@@ -199,6 +201,6 @@ module.exports = $signIn = ({model, router, modeStream}) ->
           #   z '.button',
           #     z $button,
           #       isInverted: true
-          #       text: model.l.get 'signInOverlay.resetPassword'
+          #       text: lang.get 'signInOverlay.resetPassword'
           #       onclick: ->
           #         mode.next 'reset'

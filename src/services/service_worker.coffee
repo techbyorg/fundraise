@@ -35,7 +35,7 @@ class ServiceWorkerService
   handleUpdate: (registration, {model}) =>
     if @hasActiveServiceWorker
       model.statusBar.open {
-        text: model.l.get 'status.newVersion'
+        text: lang.get 'status.newVersion'
         type: 'snack'
         action:
           icon: 'refresh'
@@ -46,13 +46,13 @@ class ServiceWorkerService
 
     # TODO: portal is no longer connected at this point... need to reconnect
     # to new service worker
-    # model.portal.updateServiceWorker registration
+    # portal.updateServiceWorker registration
     #
-    # model.portal.call 'cache.getVersion'
+    # portal.call 'cache.getVersion'
     # .then (version) ->
     #   if version isnt '|HASH|' # replaced by gulp build
     #     model.statusBar.open {
-    #       text: model.l.get 'status.newVersion'
+    #       text: lang.get 'status.newVersion'
     #     }
 
   # https://redfin.engineering/how-to-fix-the-refresh-button-when-using-service-workers-a8e27af6df68

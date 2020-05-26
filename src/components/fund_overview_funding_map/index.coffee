@@ -7,7 +7,7 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $fundOverviewNteePie = ({model, irsFund}) ->
+module.exports = $fundOverviewNteePie = ({irsFund}) ->
   data = _map irsFund?.fundedStates, ({key, sum}) ->
     {
       id: key

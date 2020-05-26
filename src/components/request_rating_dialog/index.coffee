@@ -1,14 +1,17 @@
-{z, useMemo, useStream} = require 'zorium'
+{z, useContext, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 $dialog = require '../dialog'
-config = require '../../config'
 colors = require '../../colors'
+context = require '../../context'
+config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $requestRatingDialog = ({model, onClose}) ->
+module.exports = $requestRatingDialog = ({onClose}) ->
+  {model, portal, lang} = useContext context
+
   {isLoadingStream} = useMemo ->
     {
       isLoadingStream: new RxBehaviorSubject false
@@ -25,24 +28,24 @@ module.exports = $requestRatingDialog = ({model, onClose}) ->
           onClose?()
         isVanilla: true
         isWide: true
-        $title: model.l.get 'requestRating.title'
-        $content: model.l.get 'requestRating.text'
+        $title: lang.get 'requestRating.title'
+        $content: lang.get 'requestRating.text'
         cancelButton:
-          text: model.l.get 'general.no'
+          text: lang.get 'general.no'
           colors:
             cText: colors.$bgText54
           onclick: ->
             localStorage.hasSeenRequestRating = '1'
             onClose?()
         submitButton:
-          text: model.l.get 'requestRating.rate'
+          text: lang.get 'requestRating.rate'
           colors:
             cText: colors.$secondaryMain
           onclick: ->
             ga? 'send', 'event', 'requestRating', 'rate'
             localStorage.hasSeenRequestRating = '1'
             isLoadingStream.next true
-            model.portal.call 'app.rate'
+            portal.call 'app.rate'
             .then ->
               isLoadingStream.next false
               model.overlay.close()

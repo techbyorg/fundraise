@@ -10,7 +10,7 @@ DRAWER_MAX_WIDTH = 72
 GRID_WIDTH = 1280
 
 module.exports = class Window
-  constructor: ({@cookie, @experiment, @userAgent}) ->
+  constructor: ({@cookie, @userAgent}) ->
     @isPaused = false
 
     @size = new RxBehaviorSubject @getSizeVal()

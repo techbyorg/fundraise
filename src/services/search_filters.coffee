@@ -23,16 +23,16 @@ states = {
 }
 
 class SearchFiltersService
-  getFundFilters: (model) ->
+  getFundFilters: (lang) ->
     [
       # search-tags. not in filter bar
       {
         id: 'fundedNteeMajor' # used as ref/key
         field: 'fundedNteeMajor'
-        title: model.l.get 'filter.fundedNteeMajor.title'
+        title: lang.get 'filter.fundedNteeMajor.title'
         type: 'listOr'
         items: _map nteeMajors, (nteeMajor) ->
-          {key: nteeMajor, label: model.l.get "nteeMajor.#{nteeMajor}"}
+          {key: nteeMajor, label: lang.get "nteeMajor.#{nteeMajor}"}
         queryFn: (value, key) ->
           {
             nested:
@@ -69,10 +69,10 @@ class SearchFiltersService
         id: 'assets' # used as ref/key
         field: 'assets'
         type: 'minMax'
-        name: model.l.get 'filter.assets'
-        title: model.l.get 'filter.assetsTitle'
+        name: lang.get 'filter.assets'
+        title: lang.get 'filter.assetsTitle'
         minOptions: [
-          {value: '0', text: model.l.get 'filter.noMin'}
+          {value: '0', text: lang.get 'filter.noMin'}
           {value: '100000', text: FormatService.abbreviateDollar 100000}
           {value: '1000000', text: FormatService.abbreviateDollar 1000000}
           {value: '10000000', text: FormatService.abbreviateDollar 10000000}
@@ -81,7 +81,7 @@ class SearchFiltersService
           {value: '10000000000', text: FormatService.abbreviateDollar 10000000000} # 10b
         ]
         maxOptions: [
-          {value: '0', text: model.l.get 'filter.noMax'}
+          {value: '0', text: lang.get 'filter.noMax'}
           {value: '100000', text: FormatService.abbreviateDollar 100000}
           {value: '1000000', text: FormatService.abbreviateDollar 1000000}
           {value: '10000000', text: FormatService.abbreviateDollar 10000000}
@@ -94,9 +94,9 @@ class SearchFiltersService
         id: 'lastYearStats.grantSum' # used as ref/key
         field: 'lastYearStats.grantSum'
         type: 'minMax'
-        name: model.l.get 'filter.grantSum'
+        name: lang.get 'filter.grantSum'
         minOptions: [
-          {value: '0', text: model.l.get 'filter.noMin'}
+          {value: '0', text: lang.get 'filter.noMin'}
           {value: '10000', text: FormatService.abbreviateDollar 10000}
           {value: '100000', text: FormatService.abbreviateDollar 100000}
           {value: '1000000', text: FormatService.abbreviateDollar 1000000}
@@ -105,7 +105,7 @@ class SearchFiltersService
           {value: '1000000000', text: FormatService.abbreviateDollar 1000000000} # 1b
         ]
         maxOptions: [
-          {value: '0', text: model.l.get 'filter.noMax'}
+          {value: '0', text: lang.get 'filter.noMax'}
           {value: '10000', text: FormatService.abbreviateDollar 10000}
           {value: '100000', text: FormatService.abbreviateDollar 100000}
           {value: '1000000', text: FormatService.abbreviateDollar 1000000}
@@ -118,9 +118,9 @@ class SearchFiltersService
         id: 'lastYearStats.grantMedian' # used as ref/key
         field: 'lastYearStats.grantMedian'
         type: 'minMax'
-        name: model.l.get 'filter.grantMedian'
+        name: lang.get 'filter.grantMedian'
         minOptions: [
-          {value: '0', text: model.l.get 'filter.noMin'}
+          {value: '0', text: lang.get 'filter.noMin'}
           {value: '1000', text: FormatService.abbreviateDollar 1000}
           {value: '10000', text: FormatService.abbreviateDollar 10000}
           {value: '100000', text: FormatService.abbreviateDollar 100000}
@@ -129,7 +129,7 @@ class SearchFiltersService
           {value: '100000000', text: FormatService.abbreviateDollar 100000000} # 100m
         ]
         maxOptions: [
-          {value: '0', text: model.l.get 'filter.noMax'}
+          {value: '0', text: lang.get 'filter.noMax'}
           {value: '1000', text: FormatService.abbreviateDollar 1000}
           {value: '10000', text: FormatService.abbreviateDollar 10000}
           {value: '100000', text: FormatService.abbreviateDollar 100000}
@@ -140,13 +140,13 @@ class SearchFiltersService
       }
   ]
 
-  getFiltersStream: ({model, filters, initialFilters, dataType = 'irsFund'}) ->
+  getFiltersStream: ({cookie, filters, initialFilters, dataType = 'irsFund'}) ->
     # eg filters from custom urls
     initialFilters ?= new RxBehaviorSubject null
     initialFilters.switchMap (initialFilters) =>
       persistentCookie = 'savedFilters'
       savedFilters = try
-        JSON.parse model.cookie.get persistentCookie
+        JSON.parse cookie.get persistentCookie
       catch
         {}
 
@@ -190,7 +190,7 @@ class SearchFiltersService
             obj["#{dataType}.#{field}"] = value
           obj
         , {}
-        model.cookie.set persistentCookie, JSON.stringify savedFilters
+        cookie.set persistentCookie, JSON.stringify savedFilters
 
         filtersWithValue
 

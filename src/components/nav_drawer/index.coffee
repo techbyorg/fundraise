@@ -1,4 +1,4 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
 _filter = require 'lodash/filter'
 _take = require 'lodash/take'
@@ -19,13 +19,15 @@ $drawer = require '../drawer'
 $ripple = require '../ripple'
 Environment = require '../../services/environment'
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   IScroll = require 'iscroll/build/iscroll-lite-snap-zoom.js'
   require './index.styl'
 
-module.exports = $navDrawer = ({model, router, entityStream, currentPath}) ->
+module.exports = $navDrawer = ({entityStream, currentPath}) ->
+  {model, lang, browser, router} = useContext context
 
   {meStream, isRateLoadingStream, expandedItemsStream, myEntitiesStream,
     menuItemsInfoStream, entityAndMyEntities} = useMemo ->
@@ -43,14 +45,14 @@ module.exports = $navDrawer = ({model, router, entityStream, currentPath}) ->
       menuItemsInfoStream: RxObservable.combineLatest(
         meStream.startWith(null)
         entityStream.startWith(null)
-        model.l.getLanguage().startWith(null)
+        lang.getLanguage().startWith(null)
         isRateLoadingStream.startWith(null)
       )
       entityAndMyEntities: RxObservable.combineLatest(
         entityStream
         myEntitiesStream
         meStream
-        model.l.getLanguage()
+        lang.getLanguage()
         (vals...) -> vals
       )
     }
@@ -59,14 +61,14 @@ module.exports = $navDrawer = ({model, router, entityStream, currentPath}) ->
   {isOpen, language, me, expandedItems, entity, windowSize, drawerWidth,
     breakpoint, menuItems} = useStream ->
     isOpen: model.drawer.isOpen()
-    language: model.l.getLanguage()
+    language: lang.getLanguage()
     me: meStream
     expandedItems: expandedItemsStream
     entity: entityStream
     # myEntities: entityAndMyEntities.map (props) ->
     #   [entity, entities, me, language] = props
     #   entities = _orderBy entities, (entity) ->
-    #     model.cookie.get("entity_#{entity.id}_lastVisit") or 0
+    #     cookie.get("entity_#{entity.id}_lastVisit") or 0
     #   , 'desc'
     #   entities = _filter entities, ({id}) ->
     #     id isnt entity.id
@@ -77,16 +79,16 @@ module.exports = $navDrawer = ({model, router, entityStream, currentPath}) ->
     #     }
     #   myEntities
 
-    windowSize: model.window.getSize()
-    drawerWidth: model.window.getDrawerWidth()
-    breakpoint: model.window.getBreakpoint()
+    windowSize: browser.getSize()
+    drawerWidth: browser.getDrawerWidth()
+    breakpoint: browser.getBreakpoint()
 
     menuItems: menuItemsInfoStream.map (menuItemsInfo) ->
       [me, entity, language, isRateLoading] = menuItemsInfo
 
       meEntityUser = entity?.meEntityUser
 
-      userAgent = model.window.getUserAgent()
+      userAgent = browser.getUserAgent()
       isNativeApp = Environment.isNativeApp({userAgent})
       needsApp = userAgent and
                 not isNativeApp and
@@ -98,13 +100,13 @@ module.exports = $navDrawer = ({model, router, entityStream, currentPath}) ->
       _filter([
         {
           path: router.get 'donate'
-          title: model.l.get 'general.organizations'
+          title: lang.get 'general.organizations'
           iconName: 'briefcase'
           isDefault: true
         }
         {
           path: router.get 'notifications'
-          title: model.l.get 'general.notifications'
+          title: lang.get 'general.notifications'
           iconName: 'notifications'
         }
         # if needsApp or isNativeApp
@@ -114,9 +116,9 @@ module.exports = $navDrawer = ({model, router, entityStream, currentPath}) ->
         # if needsApp
         #   {
         #     onclick: ->
-        #       model.portal.call 'app.install', {entity}
+        #       portal.call 'app.install', {entity}
         #       model.drawer.close()
-        #     title: model.l.get 'drawer.menuItemNeedsApp'
+        #     title: lang.get 'drawer.menuItemNeedsApp'
         #     iconName: 'get'
         #   }
         # else if isNativeApp
@@ -125,16 +127,16 @@ module.exports = $navDrawer = ({model, router, entityStream, currentPath}) ->
         #       ga? 'send', 'event', 'drawer', 'rate'
         #       isRateLoading.next true
         #       # once ios app v2.0.0+ is out, use this
-        #       # model.portal.call 'app.rate'
-        #       model.portal.appRate()
+        #       # portal.call 'app.rate'
+        #       portal.appRate()
         #       .catch (err) ->
         #         isRateLoading.next false
         #       .then ->
         #         isRateLoading.next false
         #         model.drawer.close()
         #     title: if isRateLoading \
-        #            then model.l.get 'general.loading' \
-        #            else model.l.get 'drawer.menuItemRate'
+        #            then lang.get 'general.loading' \
+        #            else lang.get 'drawer.menuItemRate'
         #     iconName: 'star'
         #   }
         ])
@@ -223,14 +225,14 @@ module.exports = $navDrawer = ({model, router, entityStream, currentPath}) ->
                 #         z $button,
                 #           isPrimary: true
                 #           isFullWidth: true
-                #           text: model.l.get 'general.signIn'
+                #           text: lang.get 'general.signIn'
                 #           onclick: ->
                 #             model.overlay.open z $signInOverlay, {model, router, data: 'signIn'}
                 #       z '.button',
                 #         z $button,
                 #           isPrimary: true
                 #           isFullWidth: true
-                #           text: model.l.get 'general.signUp'
+                #           text: lang.get 'general.signUp'
                 #           onclick: ->
                 #             model.overlay.open z $signInOverlay, {model, router, data: 'join'}
                 #     z 'li.divider'

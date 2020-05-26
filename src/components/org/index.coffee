@@ -1,4 +1,4 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 _orderBy = require 'lodash/orderBy'
 _map = require 'lodash/map'
 _min = require 'lodash/min'
@@ -11,11 +11,14 @@ $avatar = require '../avatar'
 $dropdown = require '../dropdown'
 # $graph = require '../graph_widget'
 FormatService = require '../../services/format'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
-module.exports = $org = ({model, router, irsOrgStream}) ->
+module.exports = $org = ({irsOrgStream}) ->
+  {model, lang} = useContext context
+
   {irsOrg990StatsStream, metricValueStreams, contributionsStream,
     irsOrg990StatsAndMetricStream} = useMemo ->
 
@@ -73,27 +76,27 @@ module.exports = $org = ({model, router, irsOrgStream}) ->
 
   z '.z-org',
     if irsOrg990Stats and not irsOrg990Stats.has990
-      z '.no-990', model.l.get 'org.no990'
+      z '.no-990', lang.get 'org.no990'
     else
       z '.box.analytics',
         z '.header',
-          model.l.get 'general.analytics'
+          lang.get 'general.analytics'
           z '.metric-dropdown',
             z $dropdown, {
-              currentText: model.l.get 'org.changeMetric'
+              currentText: lang.get 'org.changeMetric'
               valueStreams: metricValueStreams
               options: [
-                {value: 'revenue', text: model.l.get 'metric.revenue'}
-                {value: 'expenses', text: model.l.get 'metric.expenses'}
-                {value: 'net', text: model.l.get 'metric.net'}
-                {value: 'assets', text: model.l.get 'metric.assets'}
-                {value: 'employeeCount', text: model.l.get 'metric.employeeCount'}
-                {value: 'volunteerCount', text: model.l.get 'metric.volunteerCount'}
+                {value: 'revenue', text: lang.get 'metric.revenue'}
+                {value: 'expenses', text: lang.get 'metric.expenses'}
+                {value: 'net', text: lang.get 'metric.net'}
+                {value: 'assets', text: lang.get 'metric.assets'}
+                {value: 'employeeCount', text: lang.get 'metric.employeeCount'}
+                {value: 'volunteerCount', text: lang.get 'metric.volunteerCount'}
               ]
             }
         z '.content',
           z '.chart-header',
-            model.l.get("metric.#{metric}") or 'Custom metric' # FIXME
+            lang.get("metric.#{metric}") or 'Custom metric' # FIXME
           z '.chart',
             # if window? and graphData and graphData.series
             #   z $graph, {
@@ -119,29 +122,29 @@ module.exports = $org = ({model, router, irsOrgStream}) ->
             #   }
         z '.box.at-a-glance',
           z '.header',
-            model.l.get 'org.atAGlance'
+            lang.get 'org.atAGlance'
           z '.content',
             z '.top-metrics',
               z '.metric',
                 z '.value',
                   FormatService.number irsOrg?.employeeCount or 0
                 z '.name',
-                  model.l.get 'org.employees'
+                  lang.get 'org.employees'
               z '.metric',
                 z '.value',
                   '$'
                   FormatService.number irsOrg?.assets
                 z '.name',
-                  model.l.get 'org.assets'
+                  lang.get 'org.assets'
             z '.block',
-              z '.title', model.l.get 'general.location'
+              z '.title', lang.get 'general.location'
               z '.text', FormatService.location irsOrg
             z '.block',
-              z '.title', model.l.get 'general.category'
+              z '.title', lang.get 'general.category'
               z '.text',
-                model.l.get "nteeMajor.#{irsOrg?.nteecc?.substr(0, 1)}"
+                lang.get "nteeMajor.#{irsOrg?.nteecc?.substr(0, 1)}"
             z '.block',
-              z '.title', model.l.get 'general.mission'
+              z '.title', lang.get 'general.mission'
               z '.text.mission', {
                 className: classKebab {
                   isTruncated: irsOrg?.mission?.length > 50
@@ -150,7 +153,7 @@ module.exports = $org = ({model, router, irsOrgStream}) ->
                 irsOrg?.mission
             z '.block',
               z '.title',
-                model.l.get 'org.lastReport', {
+                lang.get 'org.lastReport', {
                   replacements: {year: irsOrg990Stats?.last?.year}
                 }
               z '.metrics',
@@ -159,17 +162,17 @@ module.exports = $org = ({model, router, irsOrgStream}) ->
                     '$'
                     FormatService.number irsOrg990Stats?.last?.expenses
                   z '.name',
-                    model.l.get 'metric.expenses'
+                    lang.get 'metric.expenses'
                 z '.metric',
                   z '.value',
                     '$'
                     FormatService.number irsOrg990Stats?.last?.revenue
                   z '.name',
-                    model.l.get 'metric.revenue'
+                    lang.get 'metric.revenue'
 
         z '.box',
           z '.header',
-            model.l.get 'general.people'
+            lang.get 'general.people'
           z '.content',
             _map irsPersons, (irsPerson) ->
               z '.person',

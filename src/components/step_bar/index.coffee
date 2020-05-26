@@ -1,29 +1,32 @@
-{z, classKebab, useStream} = require 'zorium'
+{z, classKebab, useContext, useStream} = require 'zorium'
 _defaults = require 'lodash/defaults'
 _map = require 'lodash/map'
 _range = require 'lodash/range'
+
+context = require '../../context'
 
 if window?
   require './index.styl'
 
 module.exports = $stepBar = (props) ->
-  {model, stepStream, cancel, save, steps, isStepCompleted, isLoading} = props
+  {stepStream, cancel, save, steps, isStepCompleted, isLoading} = props
+  {lang} = useContext context
 
   {step} = useStream ->
     step: stepStream
 
   cancel = _defaults cancel, {
     text: if step is 0 and cancel?.onclick \
-          then model.l.get 'general.cancel'
+          then lang.get 'general.cancel'
           else if step > 0
-          then model.l.get 'general.back'
+          then lang.get 'general.back'
           else ''
     onclick: -> null
   }
   save = _defaults save, {
     text: if step is steps - 1 \
-          then model.l.get 'general.save'
-          else model.l.get 'general.next'
+          then lang.get 'general.save'
+          else lang.get 'general.next'
     onclick: -> null
   }
 
@@ -52,5 +55,5 @@ module.exports = $stepBar = (props) ->
             step.next step + 1
     },
       if isLoading
-      then model.l.get 'general.loading'
+      then lang.get 'general.loading'
       else save.text

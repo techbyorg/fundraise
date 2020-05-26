@@ -1,6 +1,7 @@
-{z, classKebab, useRef, useStream, useEffect, useMemo} = require 'zorium'
+{z, classKebab, useContext, useRef, useStream, useEffect, useMemo} = require 'zorium'
 
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
@@ -12,15 +13,17 @@ MAX_OVERLAY_OPACITY = 0.5
 # FIXME: store iScrollContainer in state??
 
 module.exports = $drawer = (props) ->
-  {model, isOpenStream, onOpen, onClose, side = 'left', key = 'nav', isStaticStream,
+  {isOpenStream, onOpen, onClose, side = 'left', key = 'nav', isStaticStream,
     $content, hasAppBar} = props
+  {model, browser} = useContext context
+
 
   $$ref = useRef()
 
   {transformProperty, isStaticStream} = useMemo ->
     {
-      transformProperty: model.window.getTransformProperty()
-      isStaticStream: isStatic or (model.window.getBreakpoint().map (breakpoint) ->
+      transformProperty: browser.getTransformProperty()
+      isStaticStream: isStatic or (browser.getBreakpoint().map (breakpoint) ->
         breakpoint in ['desktop']
       .publishReplay(1).refCount())
     }
@@ -31,10 +34,10 @@ module.exports = $drawer = (props) ->
     {
       isOpen: isOpenStream
       isStatic: isStaticStream
-      windowSize: model.window.getSize()
-      breakpoint: model.window.getBreakpoint()
-      appBarHeight: model.window.getAppBarHeightVal()
-      drawerWidth: model.window.getDrawerWidth()
+      windowSize: browser.getSize()
+      breakpoint: browser.getBreakpoint()
+      appBarHeight: browser.getAppBarHeightVal()
+      drawerWidth: browser.getDrawerWidth()
     }
 
   useEffect ->

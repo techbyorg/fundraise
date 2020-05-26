@@ -6,7 +6,7 @@ $filterContentDialog = require '../filter_content_dialog'
 if window?
   require './index.styl'
 
-module.exports = $searchTags = ({model, filter, title, placeholder}) ->
+module.exports = $searchTags = ({filter, title, placeholder}) ->
   {isDialogVisibleStream} = useMemo ->
     {
       isDialogVisibleStream: new RxBehaviorSubject false
@@ -24,5 +24,5 @@ module.exports = $searchTags = ({model, filter, title, placeholder}) ->
     z '.tags', placeholder
     if filter and isDialogVisible
       z $filterContentDialog, {
-        model, filter, onClose: -> isDialogVisibleStream.next false
+        filter, onClose: -> isDialogVisibleStream.next false
       }

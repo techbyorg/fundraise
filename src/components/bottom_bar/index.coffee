@@ -1,4 +1,4 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
 _filter = require 'lodash/filter'
 _some = require 'lodash/some'
@@ -7,12 +7,15 @@ require 'rxjs/add/observable/combineLatest'
 
 $icon = require '../icon'
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $bottomBar = ({model, router, requestsStream, isAbsolute}) ->
+module.exports = $bottomBar = ({requestsStream, isAbsolute}) ->
+  {model, router, browser, lang} = useContext context
+
   # don't need to slow down server-side rendering for this
   {hasUnreadMessagesStream} = useMemo ->
     {
@@ -30,25 +33,25 @@ module.exports = $bottomBar = ({model, router, requestsStream, isAbsolute}) ->
     currentPath: requestsStream.map ({req}) ->
       req.path
 
-  userAgent = model.window.getUserAgent()
+  userAgent = browser.getUserAgent()
 
   menuItems = [
     {
       icon: 'give'
       route: router.get 'give'
-      text: model.l.get 'general.give'
+      text: lang.get 'general.give'
       isDefault: true
     }
     {
       icon: 'chat'
       route: router.get 'social'
-      text: model.l.get 'general.community'
+      text: lang.get 'general.community'
       hasNotification: hasUnreadMessagesStream
     }
     {
       icon: 'calendar'
       route: router.get 'events'
-      text: model.l.get 'general.events'
+      text: lang.get 'general.events'
     }
   ]
 

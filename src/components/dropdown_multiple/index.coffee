@@ -16,7 +16,7 @@ if window?
   require './index.styl'
 
 module.exports = $dropdownMultiple = (props) ->
-  {model, valueStreams, errorStream, optionsStream, isDisabled = false,
+  {valueStreams, errorStream, optionsStream, isDisabled = false,
     currentText} = props
 
   {valueStreams, isOpenStream, optionsStream, value} = useMemo ->

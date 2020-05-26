@@ -12,11 +12,11 @@ config = require '../config'
 
 module.exports = class Auth
   constructor: (options) ->
-    {@exoid, @pushToken, @l, @cookie, @userAgent, @portal} = options
+    {@exoid, @pushToken, @lang, @cookie, @userAgent, @portal} = options
 
     @waitValidAuthCookie = RxObservable.defer =>
       accessToken = @cookie.get config.AUTH_COOKIE
-      language = @l.getLanguageStr()
+      language = @lang.getLanguageStr()
       (if accessToken
         @exoid.getCached 'graphql',
           query: '''
@@ -62,7 +62,7 @@ module.exports = class Auth
 
   logout: =>
     @setAccessToken ''
-    language = @l.getLanguageStr()
+    language = @lang.getLanguageStr()
     @exoid.call 'graphql',
       query: '''
         mutation LoginAnon {

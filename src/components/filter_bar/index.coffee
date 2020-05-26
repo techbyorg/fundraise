@@ -18,7 +18,7 @@ if window?
   require './index.styl'
 
 
-module.exports = $filterBar = ({model, filtersStream}) ->
+module.exports = $filterBar = ({filtersStream}) ->
   {filterRefsCache, visibleFilterContentsStream} = useMemo ->
     {
       filterRefsCache: {}
@@ -80,7 +80,7 @@ module.exports = $filterBar = ({model, filtersStream}) ->
     _map visibleFilterContents, ({filter, $$filterRef}) ->
       id = filter.id
       z $filterContentEl, {
-        model, filter, $$targetRef: $$filterRef
+        filter, $$targetRef: $$filterRef
         onClose: ->
           visibleFilterContents = visibleFilterContentsStream.getValue()
           newFilterContents = _filter visibleFilterContents, ({filter}) ->

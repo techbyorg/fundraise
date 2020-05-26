@@ -1,25 +1,27 @@
-{z, classKebab, useEffect, useStream} = require 'zorium'
+{z, classKebab, useContext, useEffect, useStream} = require 'zorium'
 _uniq = require 'lodash/uniq'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 $icon = require '../icon'
 colors = require '../../colors'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
 # FIXME: use $positionedOverlay
 module.exports = $tooltip = (props) ->
-  {model, $$target, key, anchor, offset, isVisibleStream, zIndex
+  {$$target, key, anchor, offset, isVisibleStream, zIndex
     $title, $content} = props
+  {cookie} = useContext context
 
   close = ->
     completedTooltips = try
-      model.cookie.get('completedTooltips').split(',')
+      cookie.get('completedTooltips').split(',')
     catch error
       []
     completedTooltips ?= []
-    model.cookie.set 'completedTooltips', _uniq(
+    cookie.set 'completedTooltips', _uniq(
       completedTooltips.concat [key]
     ).join(',')
     $positionedOverlay.close()

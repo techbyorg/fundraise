@@ -1,15 +1,19 @@
-{z, useStream} = require 'zorium'
+{z, useContext, useStream} = require 'zorium'
 _map = require 'lodash/map'
 _flatten = require 'lodash/flatten'
 _range = require 'lodash/range'
 _filter = require 'lodash/filter'
 
+context = require '../../context'
+
 if window?
   require './index.styl'
 
-module.exports = $masonryGrid = ({model, $elements, columnCounts}) ->
+module.exports = $masonryGrid = ({$elements, columnCounts}) ->
+  {browser} = useContext context
+
   {breakpoint} = useStream ->
-    breakpoint: model.window.getBreakpoint()
+    breakpoint: browser.getBreakpoint()
 
   columnCount = columnCounts[breakpoint or 'mobile'] or columnCounts['mobile']
   if columnCount is 1

@@ -1,13 +1,10 @@
 RouterService = require '../services/router'
-Language = require '../models/language'
+Language = require '../services/language'
 config = require '../config'
-
-model =
-  l: new Language()
 
 router = new RouterService {
   router: null
-  model: model
+  lang: new Language()
 }
 
 module.exports = class Push

@@ -1,13 +1,16 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
+
+context = require '../../context'
 
 if window?
   require './index.styl'
 
 module.exports = $togle = (props) ->
-  {isSelectedStreams, isSelectedStreams, model, onToggle, withText} = props
+  {isSelectedStreams, isSelectedStreams, onToggle, withText} = props
+  {lang} = useContext context
 
   {isSelectedStreams} = useMemo ->
     unless isSelectedStreams
@@ -36,8 +39,8 @@ module.exports = $togle = (props) ->
   },
     z '.track',
       if withText and isSelected
-        model.l.get 'general.yes'
+        lang.get 'general.yes'
       else if withText
-        model.l.get 'general.no'
+        lang.get 'general.no'
 
     z '.knob'

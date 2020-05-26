@@ -1,13 +1,16 @@
-{z, useMemo, useStream} = require 'zorium'
+{z, useContext, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
 
 $icon = require '../icon'
 colors = require '../../colors'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
-module.exports = $fund990s = ({model, router, irsFundStream}) ->
+module.exports = $fund990s = ({irsFundStream}) ->
+  {model, lang, router} = useContext context
+
   {irsFund990sStream} = useMemo ->
     {
       irsFund990sStream: irsFundStream.switchMap (irsFund) ->
@@ -20,7 +23,7 @@ module.exports = $fund990s = ({model, router, irsFundStream}) ->
     irsFund990s: irsFund990sStream
 
   z '.z-fund-990s',
-    z '.title', model.l.get 'fund990s.title'
+    z '.title', lang.get 'fund990s.title'
     z '.irs-990s',
       _map irsFund990s?.nodes, ({ein, year, taxPeriod}, i) ->
         folder1 = ein.substr 0, 3
@@ -36,6 +39,6 @@ module.exports = $fund990s = ({model, router, irsFundStream}) ->
                 isTouchTarget: false
                 color: colors.$red500
             if i is 0
-              "#{year} #{model.l.get 'fund990s.latestFiling'}"
+              "#{year} #{lang.get 'fund990s.latestFiling'}"
             else
               "#{year}"

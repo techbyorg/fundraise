@@ -1,4 +1,4 @@
-{z} = require 'zorium'
+{z, useContext} = require 'zorium'
 _map = require 'lodash/map'
 _orderBy = require 'lodash/orderBy'
 _reduce = require 'lodash/reduce'
@@ -6,6 +6,7 @@ _take = require 'lodash/take'
 
 $chartPie = require '../chart_pie'
 FormatService = require '../../services/format'
+context = require '../../context'
 config = require '../../config'
 
 if window?
@@ -13,8 +14,9 @@ if window?
 
 LEGEND_COUNT = 5
 
-module.exports = $fundOverviewNteePie = ({model, irsFund}) ->
-  console.log 'colors', config.NTEE_MAJOR_COLORS
+module.exports = $fundOverviewNteePie = ({irsFund}) ->
+  {lang} = useContext context
+
   # TODO: useMemo?
   nteeMajors = _orderBy irsFund?.fundedNteeMajors, 'count', 'desc'
   pieNteeMajors = _reduce nteeMajors, (obj, {count, percent, key}) ->
@@ -29,8 +31,8 @@ module.exports = $fundOverviewNteePie = ({model, irsFund}) ->
   , {}
   data = _map pieNteeMajors, ({count, percent, key}) ->
     label = if key is 'rest' \
-            then model.l.get 'general.other' \
-            else model.l.get "nteeMajor.#{key}"
+            then lang.get 'general.other' \
+            else lang.get "nteeMajor.#{key}"
 
     color = if key is 'rest' \
             then config.NTEE_MAJOR_COLORS['Z'] \
@@ -55,6 +57,6 @@ module.exports = $fundOverviewNteePie = ({model, irsFund}) ->
               background: config.NTEE_MAJOR_COLORS[key]
           }
           z '.info',
-            z '.ntee', model.l.get "nteeMajor.#{key}"
+            z '.ntee', lang.get "nteeMajor.#{key}"
             # z '.dollars', FormatService.abbreviateDollar value
           z '.percent', "#{Math.round(percent)}%"

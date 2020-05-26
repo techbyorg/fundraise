@@ -1,9 +1,13 @@
-{z} = require 'zorium'
+{z, useContext} = require 'zorium'
+
+context = require '../../context'
 
 if window?
   require './index.styl'
 
 module.exports = $tos = ->
+  {router} = useContext context
+
   z '.z-tos',
     z 'p',
       '''
@@ -11,7 +15,7 @@ module.exports = $tos = ->
       . The app is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules,
       policies (including, without limitation,
       '''
-      router?.link z 'a',
+      router.link z 'a',
         href: router.get 'privacy'
         'Breezy\'s Privacy Policy'
       '''

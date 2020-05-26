@@ -29,7 +29,7 @@ class PushService
         @firebaseMessaging?.useServiceWorker registration
         @resolveReady?()
 
-  init: ({model}) ->
+  init: ({model, portal}) ->
     onReply = (reply) ->
       payload = reply.additionalData.payload or reply.additionalData.data
       if payload.conversationId
@@ -37,19 +37,19 @@ class PushService
           body: reply.additionalData.inlineReply
           conversationId: payload.conversationId
         }
-    model.portal.call 'push.registerAction', {
+    portal.call 'push.registerAction', {
       action: 'reply'
     }, onReply
 
-  register: ({model, isAlwaysCalled}) ->
+  register: ({model, portal, cookie, isAlwaysCalled}) ->
     Promise.all [
-      model.portal.call 'push.register'
-      model.portal.call 'app.getDeviceId'
+      portal.call 'push.register'
+      portal.call 'app.getDeviceId'
       .catch (err) -> ''
     ]
     .then ([{token, sourceType} = {}, deviceId]) ->
       if token?
-        if not isAlwaysCalled or not model.cookie.get 'hasPushToken'
+        if not isAlwaysCalled or not cookie.get 'hasPushToken'
           isNativeApp = Environment.isNativeApp()
           sourceType ?= if Environment.isAndroid() and isNativeApp \
                         then 'android' \
@@ -57,7 +57,7 @@ class PushService
                         then 'ios-fcm' \
                         else 'web-fcm'
           model.pushToken.upsert {tokenStr: token, sourceType, deviceId}
-          model.cookie.set 'hasPushToken', 1, {ttlMs: ONE_DAY_MS}
+          cookie.set 'hasPushToken', 1, {ttlMs: ONE_DAY_MS}
 
         model.pushToken.setCurrentPushToken token
     .catch (err) ->

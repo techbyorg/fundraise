@@ -23,7 +23,7 @@ isSimpleClick = (e) ->
   not (e.which > 1 or e.shiftKey or e.altKey or e.metaKey or e.ctrlKey)
 
 class RouterService
-  constructor: ({@router, @model, @host}) ->
+  constructor: ({@router, @model, @cookie, @lang, @portal, @host}) ->
     @history = if window? then [window.location.pathname] else []
     @requestsStream = null
     @onBackFn = null
@@ -45,8 +45,8 @@ class RouterService
 
     if path
       # store current page for app re-launch
-      if Environment.isNativeApp() and @model.cookie
-        @model.cookie.set 'routerLastPath', path
+      if Environment.isNativeApp() and @cookie
+        @cookie.set 'routerLastPath', path
 
       @router?.go path
 
@@ -68,7 +68,7 @@ class RouterService
   get: (routeKey, replacements, options) =>
     replacements ?= {}
 
-    route = @model.l.get routeKey, {file: 'paths', language: options?.language}
+    route = @lang.get routeKey, {file: 'paths', language: options?.language}
 
     isEntityPage = route?.indexOf(':entitySlug') isnt -1
 
@@ -120,7 +120,7 @@ class RouterService
              else url
       @goPath path
     else
-      @model.portal.call 'browser.openWindow', {
+      @portal.call 'browser.openWindow', {
         url: url
         target: '_system'
       }
@@ -140,7 +140,7 @@ class RouterService
     if @model.drawer.isOpen().getValue()
       return @model.drawer.close()
     if fromNative and _last(@history) is @get 'home'
-      @model.portal.call 'app.exit'
+      @portal.call 'app.exit'
     else if @history.length > 1 and window.history.length > 0
       window.history.back()
       @history.pop()
@@ -154,9 +154,9 @@ class RouterService
   openInAppBrowser: (addon, {replacements} = {}) =>
     if _isEmpty(addon.data?.translatedLanguages) or
           addon.data?.translatedLanguages.indexOf(
-            @model.l.getLanguageStr()
+            @lang.getLanguageStr()
           ) isnt -1
-      language = @model.l.getLanguageStr()
+      language = @lang.getLanguageStr()
     else
       language = 'en'
 
@@ -167,7 +167,7 @@ class RouterService
       key = variable.replace /\{|\}/g, ''
       str.replace variable, replacements[key] or ''
     , addon.url
-    @model.portal.call 'browser.openWindow', {
+    @portal.call 'browser.openWindow', {
       url: url
       target: '_blank'
       options:
@@ -180,7 +180,7 @@ class RouterService
         }
         title: {
           color: colors.getRawColor colors.$bgText
-          staticText: @model.l.get "#{addon.key}.title", {
+          staticText: @lang.get "#{addon.key}.title", {
             file: 'addons'
           }
         }
@@ -192,7 +192,7 @@ class RouterService
           event: 'closePressed'
         }
     }, (data) =>
-      @model.portal.portal.onMessageInAppBrowserWindow data
+      @portal.portal.onMessageInAppBrowserWindow data
 
   openAddon: (addon, {replacements} = {}) =>
     isNative = Environment.isNativeApp()

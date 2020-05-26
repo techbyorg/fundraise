@@ -1,16 +1,19 @@
-{z, useEffect, useMemo, useStream} = require 'zorium'
+{z, useContext, useEffect, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/fromPromise'
 
 Spinner = require '../../components/spinner'
 Button = require '../../components/button'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $unsubscribeEmailPage = ({model, requestsStream, router}) ->
+module.exports = $unsubscribeEmailPage = ({requestsStream}) ->
+  {model, browser, lang, router} = useContext
+
   useEffect ->
     if window?
       disposable = requestsStream.switchMap ({req, route}) ->
@@ -39,7 +42,7 @@ module.exports = $unsubscribeEmailPage = ({model, requestsStream, router}) ->
   , []
 
   {windowSize, isUnsubscribed, error} = useStream ->
-    windowSize: model.window.getSize()
+    windowSize: browser.getSize()
     isUnsubscribed: isUnsubscribedStream
     error: errorStream
 
@@ -49,10 +52,10 @@ module.exports = $unsubscribeEmailPage = ({model, requestsStream, router}) ->
   },
     if isUnsubscribed or error
       z '.is-verified',
-        error or model.l.get 'unsubscribeEmail.isUnsubscribed'
+        error or lang.get 'unsubscribeEmail.isUnsubscribed'
         z '.home',
           z $button,
-            text: model.l.get 'unsubscribeEmail.tapHome'
+            text: lang.get 'unsubscribeEmail.tapHome'
             onclick: ->
               router.go 'home'
     else

@@ -1,4 +1,4 @@
-{z, useMemo, useStream} = require 'zorium'
+{z, useContext, useMemo, useStream} = require 'zorium'
 _find = require 'lodash/find'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
@@ -15,14 +15,17 @@ $searchTags = require '../search_tags'
 $table = require '../table'
 FormatService = require '../../services/format'
 SearchFiltersService = require '../../services/search_filters'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
-module.exports = $search = ({model, router, org}) ->
+module.exports = $search = ({org}) ->
+  {model, lang, cookie} = useContext context
+
   {filtersStream, nameStream, modeStream, searchResultsStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {
-      model, filters: SearchFiltersService.getFundFilters(model)
+      cookie, filters: SearchFiltersService.getFundFilters(lang)
     }
     nameStream = new RxBehaviorSubject ''
 
@@ -70,30 +73,28 @@ module.exports = $search = ({model, router, org}) ->
 
   z '.z-search',
     z '.search',
-      z '.title', model.l.get 'fundSearch.titleSpecific'
+      z '.title', lang.get 'fundSearch.titleSpecific'
       z '.search-box',
         if mode is 'specific'
           z $searchInput,
             valueStream: nameStream
-            placeholder: model.l.get 'fundSearch.byNameEinPlaceholder'
+            placeholder: lang.get 'fundSearch.byNameEinPlaceholder'
         else
           [
             z $searchTags,
-              model: model
               filter: focusAreasFilter
-              title: model.l.get 'fund.focusAreas'
-              placeholder: model.l.get 'fundSearch.focusAreasPlaceholder'
+              title: lang.get 'fund.focusAreas'
+              placeholder: lang.get 'fundSearch.focusAreasPlaceholder'
             z '.divider'
             z $searchTags,
-              model: model
               filter: statesFilter
-              title: model.l.get 'general.location'
-              placeholder: model.l.get 'fundSearch.locationPlaceholder'
+              title: lang.get 'general.location'
+              placeholder: lang.get 'fundSearch.locationPlaceholder'
             z '.button',
               z $button,
                 isPrimary: true
                 icon: 'search'
-                text: model.l.get 'general.search'
+                text: lang.get 'general.search'
           ]
 
       z '.alt', {
@@ -105,19 +106,19 @@ module.exports = $search = ({model, router, org}) ->
             statesFilter.valueStreams.next RxObservable.of null
             modeStream.next 'specific'
       },
-        z '.or', model.l.get 'general.or'
-        z '.text', model.l.get 'fundSearch.byNameEin'
+        z '.or', lang.get 'general.or'
+        z '.text', lang.get 'fundSearch.byNameEin'
 
     z '.results',
       z '.title',
-        model.l.get 'fundSearch.resultsTitle', {
+        lang.get 'fundSearch.resultsTitle', {
           replacements:
             count: FormatService.number searchResults?.totalCount
         }
       z '.filter-bar',
-        z $filterBar, {model, filtersStream}
+        z $filterBar, {filtersStream}
 
-      z $fundSearchResults, {model, router, rows: searchResults?.nodes}
+      z $fundSearchResults, {rows: searchResults?.nodes}
 
 
     # z '.title', 'Search foundations'

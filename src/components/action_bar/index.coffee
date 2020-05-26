@@ -1,24 +1,26 @@
-{z} = require 'zorium'
+{z, useContext} = require 'zorium'
 _defaults = require 'lodash/defaults'
 
 $appBar = require '../app_bar'
 $icon = require '../icon'
 colors = require '../../colors'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
 module.exports = $actionBar = (props) ->
-  {model, title, cancel, save, isSaving, isPrimary, isSecondary} = props
+  {title, cancel, save, isSaving, isPrimary, isSecondary} = props
+  {lang} = useContext context
 
   cancel = _defaults cancel, {
     icon: 'close'
-    text: model.l.get 'general.cancel'
+    text: lang.get 'general.cancel'
     onclick: -> null
   }
   save = _defaults save, {
     icon: 'check'
-    text: model.l.get 'general.save'
+    text: lang.get 'general.save'
     # onclick: -> null
   }
 
@@ -34,7 +36,6 @@ module.exports = $actionBar = (props) ->
 
   z '.z-action-bar',
     z $appBar, {
-      model
       title: title
       isPrimary
       isSecondary

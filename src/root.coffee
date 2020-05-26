@@ -1,7 +1,7 @@
 require './polyfill'
 
 {z, render} = require 'zorium'
-cookie = require 'cookie'
+cookieLib = require 'cookie'
 LocationRouter = require 'location-router'
 Environment = require './services/environment'
 socketIO = require 'socket.io-client/dist/socket.io.slim.js'
@@ -14,9 +14,12 @@ DateService = require './services/date'
 RouterService = require './services/router'
 PushService = require './services/push'
 ServiceWorkerService = require './services/service_worker'
+CookieService = require './services/cookie'
+LanguageService = require './services/language'
+PortalService = require './services/portal'
+WindowService = require './services/window'
 $app = require './app'
 Model = require './models'
-Portal = require './models/portal'
 config = require './config'
 colors = require './colors'
 
@@ -58,8 +61,7 @@ window.onerror = (message, file, line, column, error) ->
 # Model stuff
 ###
 
-portal = new Portal()
-initialCookies = cookie.parse(document.cookie)
+initialCookies = cookieLib.parse(document.cookie)
 
 isBackendUnavailable = new RxBehaviorSubject false
 currentNotification = new RxBehaviorSubject false
@@ -82,11 +84,18 @@ fullLanguage = window.navigator.languages?[0] or window.navigator.language
 language = initialCookies?['language'] or fullLanguage?.substr(0, 2)
 unless language in config.LANGUAGES
   language = 'en'
-model = new Model {
-  io, portal, language, initialCookies
+userAgent = navigator?.userAgent
+cookie = new CookieService {
+  initialCookies
   setCookie: (key, value, options) ->
-    document.cookie = cookie.serialize \
+    document.cookie = cookieLib.serialize \
       key, value, options
+}
+lang = new LanguageService {language, cookie}
+portal = new PortalService {lang}
+browser = new WindowService {cookie, userAgent}
+model = new Model {
+  io, portal, lang, cookie, userAgent
 }
 
 onOnline = ->
@@ -96,12 +105,12 @@ onOnline = ->
 onOffline = ->
   model.exoid.disableInvalidation()
   model.statusBar.open {
-    text: model.l.get 'status.offline'
+    text: lang.get 'status.offline'
   }
 
 # TODO: show status bar for translating
 # @isTranslateCardVisibleStreams = new RxReplaySubject 1
-model.l.getLanguage().take(1).subscribe (lang) ->
+lang.getLanguage().take(1).subscribe (lang) ->
   console.log 'lang', lang
   needTranslations = ['fr', 'es']
   isNeededLanguage = lang in needTranslations
@@ -114,20 +123,20 @@ model.l.getLanguage().take(1).subscribe (lang) ->
     fr: 'français'
     pt: 'português'
 
-  if isNeededLanguage and not model.cookie.get 'hideTranslateBar'
+  if isNeededLanguage and not cookie.get 'hideTranslateBar'
     model.statusBar.open {
-      text: model.l.get 'translateBar.request', {
+      text: lang.get 'translateBar.request', {
         replacements:
           language: translation[language] or language
         }
       type: 'snack'
       onClose: =>
-        model.cookie.set 'hideTranslateBar', '1'
+        cookie.set 'hideTranslateBar', '1'
       action:
-        text: model.l.get 'general.yes'
+        text: lang.get 'general.yes'
         onclick: ->
           ga? 'send', 'event', 'translate', 'click', language
-          model.portal.call 'browser.openWindow',
+          portal.call 'browser.openWindow',
             url: 'https://crowdin.com/project/FIXME' # FIXME
             target: '_system'
     }
@@ -142,7 +151,7 @@ model.l.getLanguage().take(1).subscribe (lang) ->
 window.addEventListener 'load', ->
   ServiceWorkerService.register {model}
 
-model.portal.listen()
+portal.listen()
 
 ###
 # DOM stuff
@@ -151,7 +160,7 @@ model.portal.listen()
 init = ->
   console.log 'INIIIIIIIT'
   router = new RouterService {
-    model: model
+    model, cookie, lang, portal
     router: new LocationRouter()
     host: window.location.host
   }
@@ -168,6 +177,10 @@ init = ->
     requestsStream
     model
     router
+    portal
+    lang
+    cookie
+    browser
     isBackendUnavailable
     currentNotification
   }), document.body # document.documentElement
@@ -180,33 +193,33 @@ init = ->
   #   model.installOverlay.setPrompt e
   #   return false
 
-  model.portal.call 'networkInformation.onOffline', onOffline
-  model.portal.call 'networkInformation.onOnline', onOnline
+  portal.call 'networkInformation.onOffline', onOffline
+  portal.call 'networkInformation.onOnline', onOnline
 
-  model.portal.call 'statusBar.setBackgroundColor', {
+  portal.call 'statusBar.setBackgroundColor', {
     color: colors.getRawColor colors.$primary700
   }
 
-  model.portal.call 'app.onBack', ->
+  portal.call 'app.onBack', ->
     router.back({fromNative: true})
 
-  lastVisitDate = model.cookie.get 'lastVisitDate'
+  lastVisitDate = cookie.get 'lastVisitDate'
   currentDate = DateService.format new Date(), 'yyyy-mm-dd'
-  daysVisited = parseInt model.cookie.get 'daysVisited'
+  daysVisited = parseInt cookie.get 'daysVisited'
   if lastVisitDate isnt currentDate
     if isNaN daysVisited
       daysVisited = 0
-    model.cookie.set 'lastVisitDate', currentDate
+    cookie.set 'lastVisitDate', currentDate
     daysVisited += 1
-    model.cookie.set 'daysVisited', daysVisited
+    cookie.set 'daysVisited', daysVisited
 
 
   # iOS scrolls past header
-  # model.portal.call 'keyboard.disableScroll'
-  # model.portal.call 'keyboard.onShow', ({keyboardHeight}) ->
-  #   model.window.setKeyboardHeight keyboardHeight
-  # model.portal.call 'keyboard.onHide', ->
-  #   model.window.setKeyboardHeight 0
+  # portal.call 'keyboard.disableScroll'
+  # portal.call 'keyboard.onShow', ({keyboardHeight}) ->
+  #   browser.setKeyboardHeight keyboardHeight
+  # portal.call 'keyboard.onHide', ->
+  #   browser.setKeyboardHeight 0
 
   routeHandler = (data) ->
     data ?= {}
@@ -225,7 +238,7 @@ init = ->
     if _isPush and _original?.additionalData?.foreground
       model.exoid.invalidateAll()
       if Environment.isIos() and Environment.isNativeApp()
-        model.portal.call 'push.setBadgeNumber', {number: 0}
+        portal.call 'push.setBadgeNumber', {number: 0}
 
       currentNotification.next {
         title: _original?.additionalData?.title or _original.title
@@ -246,7 +259,7 @@ init = ->
       {category, action, label} = data.logEvent
       ga? 'send', 'event', category, action, label
 
-  model.portal.call 'top.onData', (e) ->
+  portal.call 'top.onData', (e) ->
     console.log 'top on data', e
     routeHandler e
 
@@ -259,7 +272,7 @@ init = ->
     console.log err
     router.go()
   .then ->
-    model.portal.call 'app.isLoaded'
+    portal.call 'app.isLoaded'
 
     # untilStable hangs many seconds and the timeout (200ms) doesn't  work
     if model.wasCached()
@@ -283,21 +296,21 @@ init = ->
     #   $$root.parentNode.replaceChild root, $$root
 
   # window.addEventListener 'resize', app.onResize
-  # model.portal.call 'orientation.onChange', app.onResize
+  # portal.call 'orientation.onChange', app.onResize
 
   (if Environment.isNativeApp()
     PushService.register {model, isAlwaysCalled: true}
     .then ->
-      PushService.init {model}
+      PushService.init {model, portal, cookie}
   else
     Promise.resolve null)
   .then ->
-    model.portal.call 'app.onResume', ->
+    portal.call 'app.onResume', ->
       # console.log 'resume invalidate'
       model.exoid.invalidateAll()
-      model.window.resume()
+      browser.resume()
       if Environment.isIos() and Environment.isNativeApp()
-        model.portal.call 'push.setBadgeNumber', {number: 0}
+        portal.call 'push.setBadgeNumber', {number: 0}
 
 if document.readyState isnt 'complete' and
     not document.getElementById 'zorium-root'

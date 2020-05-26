@@ -1,17 +1,20 @@
-{z, classKebab, useStream} = require 'zorium'
+{z, classKebab, useContext, useStream} = require 'zorium'
 _map = require 'lodash/map'
 _isEmpty = require 'lodash/isEmpty'
 
 $icon = require '../icon'
 $spinner = require '../spinner'
 DateService = require '../../services/date'
-config = require '../../config'
 colors = require '../../colors'
+context = require '../../context'
+config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $notifications = ({model, router}) ->
+module.exports = $notifications = ->
+  {model, router} = useContext context
+
   useEffect ->
     return beforeUnmount
   , []

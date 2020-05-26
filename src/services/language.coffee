@@ -42,7 +42,8 @@ class Language
   setLanguage: (language) =>
     @language.next language
     @cookie?.set 'language', language
-    DateService.setL this
+    # FIXME: shouldn't have to do this. should date be on context?
+    DateService.setLang this
     DateService.setLocale language
 
   getLanguage: => @language

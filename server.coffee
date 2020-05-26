@@ -17,6 +17,9 @@ gulpPaths = require './gulp_paths'
 $app = require './src/app'
 Model = require './src/models'
 RouterService = require './src/services/router'
+LanguageService = require './src/services/language'
+CookieService = require './src/services/cookie'
+WindowService = require './src/services/window'
 request = require './src/services/request'
 
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
@@ -96,22 +99,29 @@ app.use (req, res, next) ->
     fullLanguage?.substr(0, 2)
   unless language in config.LANGUAGES
     language = 'en'
-  model = new Model {
-    io, language, host
+  cookie = new CookieService {
+    host
     initialCookies: req.cookies
-    serverHeaders: req.headers
     setCookie: (key, value, options) ->
       res.cookie key, value, options
   }
+  lang = new LanguageService {language, cookie}
+  browser = new WindowService {cookie, userAgent}
+  model = new Model {
+    io
+    lang
+    cookie
+    userAgent
+    serverHeaders: req.headers
+  }
   router = new RouterService {
+    model, cookie, lang, host
     router: null
-    model: model
-    host: host
   }
   requestsStream = new RxBehaviorSubject(req)
 
   # for client to access
-  model.cookie.set(
+  cookie.set(
     'ip'
     req.headers?['x-forwarded-for'] or req.connection.remoteAddress
   )
@@ -152,7 +162,9 @@ app.use (req, res, next) ->
         next err
 
   try
-    html = await renderToString (z $app, {requestsStream, model, serverData, router, isCrawler}), {
+    html = await renderToString (z $app, {
+      requestsStream, model, lang, cookie, browser, serverData, router, isCrawler
+    }), {
       timeout: if isCrawler \
                then BOT_RENDER_TO_STRING_TIMEOUT_MS \
                else RENDER_TO_STRING_TIMEOUT_MS

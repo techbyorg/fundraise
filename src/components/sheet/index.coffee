@@ -1,10 +1,11 @@
-{z, createPortal, useRef, useMemo, useEffect} = require 'zorium'
+{z, createPortal, useContext, useRef, useMemo, useEffect} = require 'zorium'
 _defaults = require 'lodash/defaults'
 
 $icon = require '../icon'
 $button = require '../button'
-config = require '../../config'
 colors = require '../../colors'
+context = require '../../context'
+config = require '../../config'
 
 CLOSE_DELAY_MS = 450 # 0.45s for animation
 
@@ -12,7 +13,8 @@ if window?
   require './index.styl'
 
 module.exports = $sheet = (props) ->
-  {model, router, icon, message, submitButton, onClose, $content} = props
+  {icon, message, submitButton, onClose, $content} = props
+  {lang} = useContext context
 
   $$ref = useRef()
 
@@ -53,7 +55,7 @@ module.exports = $sheet = (props) ->
                 z '.message', message
               z '.actions',
                 z $button,
-                  text: model.l.get 'general.notNow'
+                  text: lang.get 'general.notNow'
                   isFullWidth: false
                   onclick: close
                 z $button, _defaults submitButton, {

@@ -10,18 +10,18 @@ class DateService
   constructor: ->
     @setLocale 'en'
 
-  setL: (@l) => null
+  setLang: (@lang) => null
 
   format: (date, format) ->
     unless date instanceof Date
       date = new Date date
     # TODO: only thing that uses this so far uses yyyy-mm-dd format and MMM Do
     if format is 'MMM D'
-      MMM = @l.get("months.#{date.getMonth()}").substring(0, 3)
+      MMM = @lang.get("months.#{date.getMonth()}").substring(0, 3)
       D = date.getDate()
       "#{MMM} #{D}"
     else if format is 'MMM D, h:mm a'
-      MMM = @l.get("months.#{date.getMonth()}").substring(0, 3)
+      MMM = @lang.get("months.#{date.getMonth()}").substring(0, 3)
       D = date.getDate()
       hours = date.getHours()
       h = hours % 12
@@ -31,11 +31,11 @@ class DateService
       a = if hours > 12 then 'pm' else 'am'
       "#{MMM} #{D}, #{h}:#{mm} #{a}"
     else if format is 'MMMM yyyy'
-      MMMM = @l.get("months.#{date.getMonth()}")
+      MMMM = @lang.get("months.#{date.getMonth()}")
       yyyy = date.getFullYear()
       "#{MMMM} #{yyyy}"
     else if format is 'MMM yyyy'
-      MMM = @l.get("months.#{date.getMonth()}").substring(0, 3)
+      MMM = @lang.get("months.#{date.getMonth()}").substring(0, 3)
       yyyy = date.getFullYear()
       "#{MMM} #{yyyy}"
     else
@@ -67,33 +67,33 @@ class DateService
   formatSeconds: (seconds, precision = 0) =>
     if seconds < ONE_MINUTE_S
       divisor = 1
-      str = @l.get 'time.secondShorthand'
+      str = @lang.get 'time.secondShorthand'
     else if seconds < ONE_HOUR_S
       divisor = ONE_MINUTE_S
-      str = @l.get 'time.minuteShorthand'
+      str = @lang.get 'time.minuteShorthand'
     else if seconds <= ONE_DAY_S
       divisor = ONE_HOUR_S
-      str = @l.get 'time.hourShorthand'
+      str = @lang.get 'time.hourShorthand'
     else if seconds <= ONE_WEEK_S
       divisor = ONE_DAY_S
-      str = @l.get 'time.dayShorthand'
+      str = @lang.get 'time.dayShorthand'
     return +parseFloat(seconds / divisor).toFixed(precision) + str
 
   fromNowSeconds: (seconds) =>
     if isNaN seconds
       '...'
     else if seconds < 30
-      @l.get 'time.justNow'
+      @lang.get 'time.justNow'
     else if seconds < ONE_MINUTE_S
-      return parseInt(seconds) + @l.get 'time.secondShorthand'
+      return parseInt(seconds) + @lang.get 'time.secondShorthand'
     else if seconds < ONE_HOUR_S
-      return parseInt(seconds / ONE_MINUTE_S) + @l.get 'time.minuteShorthand'
+      return parseInt(seconds / ONE_MINUTE_S) + @lang.get 'time.minuteShorthand'
     else if seconds <= ONE_DAY_S
-      return parseInt(seconds / ONE_HOUR_S) + @l.get 'time.hourShorthand'
+      return parseInt(seconds / ONE_HOUR_S) + @lang.get 'time.hourShorthand'
     else if seconds <= ONE_WEEK_S
-      return parseInt(seconds / ONE_DAY_S) + @l.get 'time.dayShorthand'
+      return parseInt(seconds / ONE_DAY_S) + @lang.get 'time.dayShorthand'
     else
-      return parseInt(seconds / ONE_WEEK_S) + @l.get 'time.weekShorthand'
+      return parseInt(seconds / ONE_WEEK_S) + @lang.get 'time.weekShorthand'
 
   fromNow: (date) =>
     unless date instanceof Date
@@ -103,7 +103,7 @@ class DateService
 
   setLocale: (locale) ->
     null
-    # @localeFile = if window?
+    # @langocaleFile = if window?
     #   window?.dateLocales?[locale]
     # else
     #   require("date-fns/locale/#{locale}")

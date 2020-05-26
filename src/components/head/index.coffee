@@ -1,4 +1,4 @@
-{z, useStream} = require 'zorium'
+{z, useContext, useStream} = require 'zorium'
 Environment = require '../../services/environment'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
@@ -9,16 +9,18 @@ _mapValues = require 'lodash/mapValues'
 _defaults = require 'lodash/defaults'
 _kebabCase = require 'lodash/kebabCase'
 
-config = require '../../config'
-colors = require '../../colors'
 fontsCss = require './fonts'
+colors = require '../../colors'
+context = require '../../context'
+config = require '../../config'
 
 DEFAULT_IMAGE = 'https://fdn.uno/d/images/web_icon_256.png'
 
 module.exports = $head = (props) ->
-  {model, router, meta, requestsStream, serverData, entity} = props
+  {meta, requestsStream, serverData, entity} = props
+  {router, lang, model, browser, cookie} = useContext context
 
-  console.log 'props', props
+  console.log 'render head'
 
   # TODO: memoize???
   _getCssVariables = (entity) ->
@@ -48,10 +50,10 @@ module.exports = $head = (props) ->
     #       color: newStatusBarColor
     #     }
     #     lastEntitySlug = entity?.slug
-    #     model.cookie.set 'lastEntitySlug', entity?.slug
-    #     model.cookie.set "entity_#{entity?.slug}_lastVisit", Date.now()
+    #     cookie.set 'lastEntitySlug', entity?.slug
+    #     cookie.set "entity_#{entity?.slug}_lastVisit", Date.now()
     #     if cssVariables
-    #       model.cookie.set 'cachedCssVariables', cssVariables
+    #       cookie.set 'cachedCssVariables', cssVariables
     #
     #   cssVariables
 
@@ -61,7 +63,7 @@ module.exports = $head = (props) ->
   path = requestsStream.map ({req}) ->
     req.path
   requestsStreamAndLanguage = RxObservable.combineLatest(
-    requestsStream, model.l.getLanguage(), (vals...) -> vals
+    requestsStream, lang.getLanguage(), (vals...) -> vals
   )
   meta = requestsStreamAndLanguage.switchMap ([{$page}, language]) ->
     meta = $page?.getMeta?()
@@ -85,7 +87,7 @@ module.exports = $head = (props) ->
     # entity: entity
     routeKey: route.map (route) ->
       if route?.src
-        routeKey = model.l.getRouteKeyByValue route.src
+        routeKey = lang.getRouteKeyByValue route.src
     modelSerialization: unless window?
       model.getSerializationStream()
     additionalCss: model.additionalScript.getCss()
@@ -94,16 +96,16 @@ module.exports = $head = (props) ->
   gaId = 'UA-27992080-36'
   gaSampleRate = 100
 
-  paths = _mapValues model.l.getAllPathsByRouteKey(routeKey), (path) ->
+  paths = _mapValues lang.getAllPathsByRouteKey(routeKey), (path) ->
     pathVars = path.match /:([a-zA-Z0-9-]+)/g
     _map pathVars, (pathVar) ->
       path = path.replace pathVar, route.params[pathVar.substring(1)]
     path
 
-  userAgent = model.window.getUserAgent()
+  userAgent = browser.getUserAgent()
 
   meta = _merge {
-    title: model.l.get 'meta.defaultTitle'
+    title: lang.get 'meta.defaultTitle'
     icon256: "#{config.CDN_URL}/web_icon_256.png"
     twitter:
       siteHandle: '' # TODO
@@ -257,7 +259,7 @@ module.exports = $head = (props) ->
       key: 'css-variables'
       dangerouslySetInnerHTML:
         __html:
-          ":root {#{cssVariables or model.cookie.get 'cachedCssVariables'}}"
+          ":root {#{cssVariables or cookie.get 'cachedCssVariables'}}"
     if isInliningSource
       z 'link#bundle-css',
         rel: 'stylesheet'

@@ -1,11 +1,11 @@
 module.exports = class OfflineDataModel
-  constructor: ({@exoid, @portal, @l, @statusBar}) ->
+  constructor: ({@exoid, @portal, @lang, @statusBar}) ->
     @isRecording = false
 
   record: =>
     @isRecording = true
     @statusBar.open {
-      text: @l.get 'status.recordingData'
+      text: @lang.get 'status.recordingData'
       onclick: @save
     }
     @exoid.invalidateAll()

@@ -1,15 +1,18 @@
-{z} = require 'zorium'
+{z, useContext} = require 'zorium'
 
 $sheet = require '../sheet'
 PushService = require '../../services/push'
+context = require '../../context'
 
-module.exports = $pushNotificationSheet = ({model, router}) ->
+module.exports = $pushNotificationSheet = ->
+  {model, lang} = useContext context
+
   z '.z-push-notifications-sheet',
     z $sheet, {
-      message: model.l.get 'pushNotificationsSheet.message'
+      message: lang.get 'pushNotificationsSheet.message'
       icon: 'notifications'
       submitButton:
-        text: model.l.get 'pushNotificationsSheet.submitButtonText'
+        text: lang.get 'pushNotificationsSheet.submitButtonText'
         onclick: ->
           PushService.register {model}
           .catch -> null

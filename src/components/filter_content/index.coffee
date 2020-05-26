@@ -1,4 +1,4 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
@@ -14,13 +14,15 @@ $icon = require '../icon'
 $input = require '../input'
 $inputRange = require '../input_range'
 colors = require '../../colors'
+context= require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
 module.exports = $filterContent = (props) ->
-  {model, filter, resetValue, isGrouped, overlayAnchor, $$parentRef} = props
+  {filter, resetValue, isGrouped, overlayAnchor, $$parentRef} = props
+  {lang} = useContext context
 
   {custom} = useMemo ->
     switch filter.type
@@ -99,16 +101,16 @@ module.exports = $filterContent = (props) ->
             z '.title', filter.title or filter.name
 
           unless isGrouped
-            z '.info', model.l.get "filterSheet.#{filter.field}Label"
-          z '.info', model.l.get "levelText.#{filter.field}#{value}"
+            z '.info', lang.get "filterSheet.#{filter.field}Label"
+          z '.info', lang.get "levelText.#{filter.field}#{value}"
           z $inputRange, {
-            model, valueStreams: filter.valueStreams, minValue: 1, maxValue: 5
+            valueStreams: filter.valueStreams, minValue: 1, maxValue: 5
           }
     when 'maxIntCustom', 'minIntCustom'
       $content =
         z '.content',
           z '.label',
-            z '.text', model.l.get "filterSheet.#{filter.key}"
+            z '.text', lang.get "filterSheet.#{filter.key}"
             z '.small-input',
               filter.inputPrefix
               z $input, {
@@ -160,7 +162,6 @@ module.exports = $filterContent = (props) ->
           z '.flex',
             z '.block',
               z $dropdown, {
-                model
                 $$parentRef
                 valueStream: custom.minStream
                 options: filter.minOptions
@@ -169,7 +170,6 @@ module.exports = $filterContent = (props) ->
             z '.dash', '-'
             z '.block',
               z $dropdown, {
-                model
                 $$parentRef
                 valueStream: custom.maxStream
                 options: filter.maxOptions

@@ -1,15 +1,17 @@
-{z, classKebab, createPortal, useLayoutEffect, useMemo, useRef, useStream} = require 'zorium'
+{z, classKebab, createPortal, useContext, useLayoutEffect, useMemo, useRef, useStream} = require 'zorium'
 _uniq = require 'lodash/uniq'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 useOnClickOutside = require '../../services/use_on_click_outside'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
 module.exports = $positionedOverlay = (props) ->
-  {model, $$targetRef, hasBackdrop, onClose, anchor, offset, fillTargetWidth,
+  {$$targetRef, hasBackdrop, onClose, anchor, offset, fillTargetWidth,
     zIndex, $content, $$ref, $$parentRef, repositionOnChangeStr} = props
+  {browser} = useContext context
 
   $$ref ?= useRef()
 
@@ -29,7 +31,7 @@ module.exports = $positionedOverlay = (props) ->
     setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0
     targetBoundingRect = $$targetRef.current?.getBoundingClientRect() or {}
     refRect = $$ref.current.getBoundingClientRect()
-    windowSize = model.window.getSize().getValue()
+    windowSize = browser.getSize().getValue()
     position = {
       x: targetBoundingRect.left + window.pageXOffset
       y: targetBoundingRect.top + window.pageYOffset

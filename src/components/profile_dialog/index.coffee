@@ -1,4 +1,4 @@
-{z, classKebab, useEffect, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useEffect, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
 _filter = require 'lodash/filter'
 _clone = require 'lodash/clone'
@@ -12,13 +12,15 @@ $avatar = require '../avatar'
 $dialog = require '../dialog'
 $icon = require '../icon'
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
 module.exports = $profileDialog = (props) ->
-  {model, router, userStreamy, entityUserStream, entityStream} = options
+  {userStreamy, entityUserStream, entityStream} = props
+  {model, router, browser, lang} = useContext context
 
   {isVisibleStream, loadingItemsStream, meStream, userStream, entityAndMeStream,
     entityAndUserStream, expandedItemsStream} = useMemo ->
@@ -72,7 +74,7 @@ module.exports = $profileDialog = (props) ->
     entity: entity
     loadingItems: loadingItemsStream
     expandedItems: expandedItemsStream
-    windowSize: model.window.getSize()
+    windowSize: browser.getSize()
 
   isLoadingByText = (text) ->
     loadingItems.indexOf(text) isnt -1
@@ -93,7 +95,7 @@ module.exports = $profileDialog = (props) ->
     _filter [
       {
         icon: 'profile'
-        text: model.l.get 'general.profile'
+        text: lang.get 'general.profile'
         isVisible: true
         onclick: ->
           if user?.username

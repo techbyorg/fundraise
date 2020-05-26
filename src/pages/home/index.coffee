@@ -6,6 +6,6 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $homePage = ({model, router, requestsStream, serverData, entity}) ->
+module.exports = $homePage = ({requestsStream, serverData, entity}) ->
   z '.p-home',
     $spinner

@@ -1,4 +1,4 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
 _uniq = require 'lodash/uniq'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
@@ -9,21 +9,24 @@ Privacy = require '../privacy'
 Tos = require '../tos'
 Environment = require '../../services/environment'
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $policies = ({model, router, isIabStream, $dropdowns}) ->
+module.exports = $policies = ({isIabStream, $dropdowns}) ->
+  {lang, router} = useContext context
+
   $dropdowns = [
     {
       $title: 'Privacy Policy'
-      $content: z $privacy, {model, router}
+      $content: z $privacy
       isVisible: false
     }
     {
       $title: 'Terms of Service'
-      $content: z $tos, {model, router}
+      $content: z $tos
       isVisible: false
     }
   ]
@@ -39,9 +42,9 @@ module.exports = $policies = ({model, router, isIabStream, $dropdowns}) ->
     visibleDropdowns: visibleDropdownsStream
 
   z '.z-policies',
-    z '.title', model.l.get 'policies.title'
+    z '.title', lang.get 'policies.title'
     z '.description',
-      model.l.get 'policies.description'
+      lang.get 'policies.description'
 
     _map $dropdowns, ($dropdown, i) ->
       {$content, $title} = $dropdown

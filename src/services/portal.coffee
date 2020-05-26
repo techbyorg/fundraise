@@ -22,7 +22,7 @@ urlBase64ToUint8Array = (base64String) ->
   outputArray
 
 module.exports = class Portal
-  constructor: ->
+  constructor: ({@lang}) ->
     if window?
       @portal = new PortalGun() # TODO: check isParentValid
 
@@ -33,7 +33,7 @@ module.exports = class Portal
     WEB: 'web'
 
   setModels: (props) =>
-    {@user, @pushToken, @l, @installOverlay, @overlay} = props
+    {@user, @pushToken, @installOverlay, @overlay} = props
     null
 
   call: (args...) =>
@@ -178,7 +178,7 @@ module.exports = class Portal
 
     else
       @overlay.open new GetAppDialog {
-        model: {@l, @overlay, portal: this}
+        model: {@lang, @overlay, portal: this}
         onClose: =>
           @overlay.close()
       }

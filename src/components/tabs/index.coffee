@@ -1,8 +1,9 @@
-{z, classKebab, useEffect, useMemo, useRef, useStream} = require 'zorium'
+{z, classKebab, useContext, useEffect, useMemo, useRef, useStream} = require 'zorium'
 _map = require 'lodash/map'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 $tabsBar = require '../../components/tabs_bar'
+context = require '../../context'
 
 if window?
   IScroll = require 'iscroll/build/iscroll-lite-snap-zoom.js'
@@ -12,10 +13,11 @@ TRANSITION_TIME_MS = 500 # 0.5s
 
 # FIXME: i don't think this will actually unsub mountDisposable?
 module.exports = $tabs = (props) ->
-  {model, selectedIndexStream, hideTabBarStream,
+  {selectedIndexStream, hideTabBarStream,
     disableDeceleration, deferTabLoads, tabs, barColor, barBgColor,
     barInactiveColor, isBarFixed, isBarFlat, isBarArrow, barTabWidth,
     barTabHeight, windowSize, vDomKey, isPrimary} = props
+  {browser} = useContext context
 
   $$ref = useRef()
 
@@ -26,7 +28,7 @@ module.exports = $tabs = (props) ->
     }
   , []
 
-  transformProperty = model.window.getTransformProperty()
+  transformProperty = browser.getTransformProperty()
   transitionTime = TRANSITION_TIME_MS
 
 
@@ -56,7 +58,7 @@ module.exports = $tabs = (props) ->
     selectedIndex: selectedIndexStream
     hideTabBar: hideTabBarStream
     isPaused: isPausedStream
-    windowSize: model.window.getSize()
+    windowSize: browser.getSize()
 
   # FIXME: have these callable by parent (ref, see checkbox component for ex)
   disableTransition = -> transitionTime = 0
@@ -142,7 +144,6 @@ module.exports = $tabs = (props) ->
       unless hideTabBar
         z '.tabs-bar',
           z $tabsBar, {
-            model
             selectedIndexStream
             isFixed: isBarFixed
             isFlat: isBarFlat

@@ -9,11 +9,10 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $searchPage = ({model, router, entityStream}) ->
+module.exports = $searchPage = ({entityStream}) ->
   z '.p-search',
     z $appBar, {
-      model
       hasLogo: true
       # $topLeftButton: z $buttonBack, {color: colors.$header500Icon}
     }
-    z $search, {model, router}
+    z $search

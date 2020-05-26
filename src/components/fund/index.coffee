@@ -1,4 +1,4 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 $fundAtAGlance = require '../fund_at_a_glance'
@@ -8,12 +8,13 @@ $fundPersons = require '../fund_persons'
 $fundApplicationInfo = require '../fund_application_info'
 $fund990s = require '../fund_990s'
 $tapTabs = require '../tap_tabs'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
-module.exports = $fund = (props) ->
-  {model, router, placeholderNameStream, irsFundStream} = props
+module.exports = $fund = ({placeholderNameStream, irsFundStream}) ->
+  {lang} = useContext context
 
   {selectedIndexStream} = useMemo ->
     {selectedIndexStream: new RxBehaviorSubject 0}
@@ -25,23 +26,23 @@ module.exports = $fund = (props) ->
 
   tabs = [
     {
-      name: model.l.get 'fund.tabOverview'
+      name: lang.get 'fund.tabOverview'
       $el: $fundOverview
     }
     {
-      name: model.l.get 'fund.tabGrants'
+      name: lang.get 'fund.tabGrants'
       $el: $fundGrants
     }
     {
-      name: model.l.get 'fund.tabPersons'
+      name: lang.get 'fund.tabPersons'
       $el: $fundPersons
     }
     {
-      name: model.l.get 'fund.tabApplicationInfo'
+      name: lang.get 'fund.tabApplicationInfo'
       $el: $fundApplicationInfo
     }
     {
-      name: model.l.get 'fund.tab990s'
+      name: lang.get 'fund.tab990s'
       $el: $fund990s
     }
   ]
@@ -50,12 +51,12 @@ module.exports = $fund = (props) ->
     className: classKebab {scrollFitContent: not (selectedIndex in [1, 2])}
   },
     z '.quick-info',
-      z $fundAtAGlance, {model, router, placeholderNameStream, irsFund}
+      z $fundAtAGlance, {placeholderNameStream, irsFund}
 
     z '.content',
       z '.inner',
         z $tapTabs, {
           selectedIndexStream, tabs, tabProps: {
-            model, router, irsFund, irsFundStream
+            irsFund, irsFundStream
           }
         }

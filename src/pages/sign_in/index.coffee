@@ -9,11 +9,10 @@ config = require '../../config'
 if window?
   require './index.styl'
 
-module.exports = $signInPage = ({model, router, entityStream}) ->
+module.exports = $signInPage = ({entityStream}) ->
   z '.p-sign-in',
     z $appBar, {
-      model
       hasLogo: true
       # $topLeftButton: z $buttonBack, {color: colors.$header500Icon}
     }
-    z $signIn, {model, router}
+    z $signIn

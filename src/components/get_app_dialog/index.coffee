@@ -1,14 +1,15 @@
-{z} = require 'zorium'
+{z, useContext} = require 'zorium'
 
 $dialog = require '../dialog'
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $getAppDialog = ({model, onClose}) ->
-  $dialog = new
+module.exports = $getAppDialog = ({onClose}) ->
+  {lang, portal} = useContext context
 
   iosAppUrl = config.IOS_APP_URL
   googlePlayAppUrl = config.GOOGLE_PLAY_APP_URL
@@ -17,23 +18,23 @@ module.exports = $getAppDialog = ({model, onClose}) ->
     z $dialog,
       onClose: onClose
       isVanilla: true
-      $title: model.l.get 'getAppDialog.title'
+      $title: lang.get 'getAppDialog.title'
       $content:
         z '.z-get-app-dialog_dialog',
           z '.badge.ios', {
             onclick: ->
-              model.portal.call 'browser.openWindow',
+              portal.call 'browser.openWindow',
                 url: iosAppUrl
                 target: '_system'
           }
           z '.badge.android', {
             onclick: ->
-              model.portal.call 'browser.openWindow',
+              portal.call 'browser.openWindow',
                 url: googlePlayAppUrl
                 target: '_system'
           }
           z '.text',
-            model.l.get 'getAppDialog.text'
+            lang.get 'getAppDialog.text'
       cancelButton:
-        text: model.l.get 'general.cancel'
+        text: lang.get 'general.cancel'
         onclick: onClose

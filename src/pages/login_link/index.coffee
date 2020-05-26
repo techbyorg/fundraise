@@ -1,14 +1,17 @@
-{z, useEffect, useStream} = require 'zorium'
+{z, useContext, useEffect, useStream} = require 'zorium'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/fromPromise'
 
 $spinner = require '../../components/spinner'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $loginLinkPage = ({model, requestsStream, router, serverData}) ->
+module.exports = $loginLinkPage = ({requestsStream, serverData}) ->
+  {model, router, browser} = useContext context
+
   useEffect ->
     if window?
       disposable = requestsStream.switchMap ({req, route}) ->
@@ -41,13 +44,7 @@ module.exports = $loginLinkPage = ({model, requestsStream, router, serverData}) 
       disposable?.unsubscribe()
   , []
 
-  {windowSize} = useStream ->
-    windowSize: model.window.getSize()
-
-  z '.p-login-link', {
-    style:
-      height: "#{windowSize.height}px"
-  },
+  z '.p-login-link',
     z $spinner
     z '.loading', 'Loading...'
     router.link z 'a.stuck', {

@@ -1,16 +1,19 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 $tabs = require '../tabs'
 $icon = require '../icon'
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $slideSteps = ({model, onSkip, onDone, steps, doneText}) ->
+module.exports = $slideSteps = ({onSkip, onDone, steps, doneText}) ->
+  {lang} = useContext context
+
   {selectedIndexStream} = useMemo ->
     {
       selectedIndexStream: new RxBehaviorSubject 0
@@ -22,7 +25,6 @@ module.exports = $slideSteps = ({model, onSkip, onDone, steps, doneText}) ->
 
   z '.p-slide-steps',
     z $tabs, {
-      model
       selectedIndex
       hideTabBar: true
       isBarFixed: false
@@ -45,13 +47,13 @@ module.exports = $slideSteps = ({model, onSkip, onDone, steps, doneText}) ->
         z '.text', {
           onclick: onSkip
         },
-          model.l.get 'general.skip'
+          lang.get 'general.skip'
       else if selectedIndex
         z '.text', {
           onclick: ->
             selectedIndex.next Math.max(selectedIndex - 1, 0)
         },
-          model.l.get 'general.back'
+          lang.get 'general.back'
       else
         z '.text'
       z '.step-counter',
@@ -73,10 +75,10 @@ module.exports = $slideSteps = ({model, onSkip, onDone, steps, doneText}) ->
             selectedIndex.next \
               Math.min(selectedIndex + 1, steps?.length - 1)
         },
-          model.l.get 'general.next'
+          lang.get 'general.next'
       else
         z '.text', {
           onclick: onDone
         },
-          doneText or model.l.get 'general.gotIt'
+          doneText or lang.get 'general.gotIt'
     ]

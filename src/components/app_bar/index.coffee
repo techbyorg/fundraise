@@ -6,7 +6,7 @@ if window?
   require './index.styl'
 
 module.exports = $appBar = (props) ->
-  {model, $topLeftButton, $topRightButton, title, bgColor, color, isFlat, isPrimary
+  {$topLeftButton, $topRightButton, title, bgColor, color, isFlat, isPrimary
     isSecondary, isFullWidth, hasLogo} = props
 
   if isPrimary

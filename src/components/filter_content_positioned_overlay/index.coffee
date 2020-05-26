@@ -1,4 +1,4 @@
-{z, useMemo, useEffect, useRef, useStream} = require 'zorium'
+{z, useContext, useMemo, useEffect, useRef, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -7,13 +7,15 @@ $positionedOverlay = require '../positioned_overlay'
 $filterContent = require '../filter_content'
 $button = require '../button'
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
 module.exports = $filterContentPositionedOverlay = (props) ->
-  {model, filter, onClose, $$targetRef} = props
+  {filter, onClose, $$targetRef} = props
+  {lang} = useContext context
 
   $$ref = useRef()
   $$overlayRef = useRef() # have all child positionedOverlays be inside me
@@ -34,7 +36,6 @@ module.exports = $filterContentPositionedOverlay = (props) ->
 
   z '.z-filter-content-positioned-overlay',
     z $positionedOverlay,
-      model: model
       onClose: onClose
       $$targetRef: $$targetRef
       $$ref: $$overlayRef
@@ -48,14 +49,14 @@ module.exports = $filterContentPositionedOverlay = (props) ->
         },
           z '.content',
             z $filterContent, {
-              model, filter, resetValue, $$parentRef: $$overlayRef
+              filter, resetValue, $$parentRef: $$overlayRef
             }
           if value
             z '.actions',
               z '.reset',
                 if value
                   z $button,
-                    text: model.l.get 'general.reset'
+                    text: lang.get 'general.reset'
                     onclick: =>
                       filter.valueStreams.next RxObservable.of null
                       setTimeout ->

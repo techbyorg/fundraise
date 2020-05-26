@@ -1,12 +1,14 @@
-{z} = require 'zorium'
+{z, useContext} = require 'zorium'
 
 $icon = require '../icon'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
-module.exports = $fundApplicationInfo = ({model, router, irsFund}) ->
-  console.log irsFund
+module.exports = $fundApplicationInfo = ({irsFund}) ->
+  {lang} = useContext context
+
   z '.z-fund-application-info',
     if irsFund?.applicantInfo
       [
@@ -16,17 +18,17 @@ module.exports = $fundApplicationInfo = ({model, router, irsFund}) ->
               z $icon,
                 icon: 'info'
                 isTouchTarget: false
-            z '.text', model.l.get 'fundApplicantInfo.noUnsolicited'
-        z '.title', model.l.get 'fundApplicantInfo.deadline'
+            z '.text', lang.get 'fundApplicantInfo.noUnsolicited'
+        z '.title', lang.get 'fundApplicantInfo.deadline'
         z '.block', irsFund.applicantInfo.deadlines
 
-        z '.title', model.l.get 'fundApplicantInfo.instructions'
+        z '.title', lang.get 'fundApplicantInfo.instructions'
         z '.block', irsFund.applicantInfo.requirements
 
-        z '.title', model.l.get 'fundApplicantInfo.restrictions'
+        z '.title', lang.get 'fundApplicantInfo.restrictions'
         z '.block', irsFund.applicantInfo.restrictions
 
-        z '.title', model.l.get 'general.contact'
+        z '.title', lang.get 'general.contact'
         z '.name', irsFund.applicantInfo.recipientName
         if irsFund.applicantInfo.address
           [

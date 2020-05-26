@@ -1,15 +1,16 @@
-{z, classKebab} = require 'zorium'
+{z, classKebab, useContext} = require 'zorium'
 
 $icon = require '../icon'
 DateService = require '../../services/date'
 colors = require '../../colors'
+context = require '../../context'
 
 if window?
   require './index.styl'
 
 module.exports = $author = (props) ->
-  {model, router, user, entityUser, time, isTimeAlignedLeft,
-    onclick, isFullDate} = props
+  {user, entityUser, time, isTimeAlignedLeft, onclick, isFullDate} = props
+  {model} = useContext context
 
   isModerator = entityUser?.roleNames and
                 (

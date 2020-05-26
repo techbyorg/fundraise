@@ -1,16 +1,19 @@
-{z, classKebab, useEffect, useMemo, useStream} = require 'zorium'
+{z, classKebab, useContext, useEffect, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 _map = require 'lodash/map'
 _range = require 'lodash/range'
 
+context = require '../../context'
+
 if window?
   require './index.styl'
 
 module.exports = $inputRange = (props) ->
-  {model, valueStream, valueStreams, minValue, maxValue, onChange,
+  {valueStream, valueStreams, minValue, maxValue, onChange,
     hideInfo, step} = props
+  {lang} = useContext context
 
   useEffect ->
     if onChange
@@ -59,7 +62,7 @@ module.exports = $inputRange = (props) ->
             setValue parseInt(e.currentTarget.value)
       unless hideInfo
         z '.info',
-          z '.unset', model.l.get 'inputRange.default'
+          z '.unset', lang.get 'inputRange.default'
           z '.numbers',
             _map _range(minValue, maxValue + 1), (number) ->
               z '.number', {

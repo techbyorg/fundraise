@@ -1,16 +1,19 @@
-{z, useEffect, useMemo, useStream} = require 'zorium'
+{z, useContext, useEffect, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/fromPromise'
 
 Spinner = require '../../components/spinner'
 Button = require '../../components/button'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
 module.exports = $verifyEmailPage = ({model, requestsStream, router}) ->
+  {model, browser, lang, router} = useContext context
+
   useEffect ->
     if window?
       disposable = requestsStream.switchMap ({req, route}) ->
@@ -39,7 +42,7 @@ module.exports = $verifyEmailPage = ({model, requestsStream, router}) ->
   , []
 
   {windowSize, isVerified, error} = useStream ->
-    windowSize: model.window.getSize()
+    windowSize: browser.getSize()
     isVerified: isVerifiedStream
     error: errorStream
 
@@ -49,10 +52,10 @@ module.exports = $verifyEmailPage = ({model, requestsStream, router}) ->
   },
     if isVerified or error
       z '.is-verified',
-        error or model.l.get 'verifyEmail.isVerified'
+        error or lang.get 'verifyEmail.isVerified'
         z '.home',
           z $button,
-            text: model.l.get 'verifyEmail.tapHome'
+            text: lang.get 'verifyEmail.tapHome'
             onclick: ->
               router.go 'home'
     else

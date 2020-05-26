@@ -1,4 +1,4 @@
-{z, useMemo, useStream} = require 'zorium'
+{z, useContext, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -7,12 +7,15 @@ $sheet = require '../sheet'
 $filterContent = require '../filter_content'
 $button = require '../button'
 colors = require '../../colors'
+context = require '../../context'
 config = require '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $filterContentSheet = ({model, id, filter, onClose}) ->
+module.exports = $filterContentSheet = ({id, filter, onClose}) ->
+  {lang} = useContext content
+
   {resetStream} = useMemo ->
     {resetStream: new RxBehaviorSubject null}
   , []
@@ -26,7 +29,6 @@ module.exports = $filterContentSheet = ({model, id, filter, onClose}) ->
   z '.z-filter-content-sheet',
     key: filter.id
     z $sheet,
-      model: model
       id: filter.id
       onClose: onClose
       isVanilla: true
@@ -35,12 +37,12 @@ module.exports = $filterContentSheet = ({model, id, filter, onClose}) ->
           z '.reset',
             if value
               z $button,
-                text: model.l.get 'general.reset'
+                text: lang.get 'general.reset'
                 onclick: =>
                   filter.valueStreams.next RxObservable.of null
                   setTimeout ->
                     resetStream.next Math.random()
                   , 0
           z $filterContent, {
-            model, filter, resetValue, overlayAnchor: 'bottom-left'
+            filter, resetValue, overlayAnchor: 'bottom-left'
           }

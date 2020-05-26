@@ -5,7 +5,7 @@ _map = require 'lodash/map'
 if window?
   require './index.styl'
 
-module.exports = $uploadOverlay = ({model, isMulti, onSelect}) ->
+module.exports = $uploadOverlay = ({isMulti, onSelect}) ->
   readFile = (file) ->
     new Promise (resolve, reject) ->
       reader = new FileReader()
