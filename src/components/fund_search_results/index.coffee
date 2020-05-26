@@ -23,7 +23,7 @@ module.exports = $fundSearchResults = ({model, router, rows}) ->
         router.goFund rows[i]
       mobileRowRenderer: $fundSearchResultsMobileRow
       columns: [
-        {key: 'name', name: model.l.get 'general.name', width: 240, isFlex: true}
+        {key: 'name', name: model.l.get('general.name'), width: 240, isFlex: true}
         {
           key: 'focusAreas', name: model.l.get 'fund.focusAreas'
           width: 400, passThroughSize: true,
@@ -37,20 +37,20 @@ module.exports = $fundSearchResults = ({model, router, rows}) ->
             z $tags, {tags, size, maxVisibleCount: VISIBLE_FOCUS_AREAS_COUNT}
         }
         {
-          key: 'assets', name: model.l.get 'org.assets'
+          key: 'assets', name: model.l.get('org.assets')
           width: 150
           content: ({row}) ->
 
             FormatService.abbreviateDollar row.assets
         }
         {
-          key: 'grantMedian', name: model.l.get 'fund.medianGrant'
+          key: 'grantMedian', name: model.l.get('fund.medianGrant')
           width: 170
           content: ({row}) ->
             FormatService.abbreviateDollar row.lastYearStats?.grantMedian
         }
         {
-          key: 'grantSum', name: model.l.get 'fund.grantsPerYear'
+          key: 'grantSum', name: model.l.get('fund.grantsPerYear')
           width: 150
           content: ({row}) ->
             FormatService.abbreviateDollar row.lastYearStats?.grantSum

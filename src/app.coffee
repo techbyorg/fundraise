@@ -237,49 +237,39 @@ module.exports = App = (props) ->
           if focusTag in focusTags and not (e.target.tagName in focusTags)
             document.activeElement.blur()
     },
-      # FIXME
-      # used for screenshotting
-      if $page?.isPlain
-        z '.z-root',
-          z '.content', {
-            style:
-              height: "#{windowSize.height}px"
-          },
+      z '.z-root',
+        # unless hideDrawer
+        #   z $navDrawer, {
+        #     model, router, entityStream, currentPath: request?.req.path
+        #   }
+
+        z '.content', {
+          style:
+            height: "#{windowSize.height}px"
+        },
+          z '.page', {key: 'page'},
             z $page, pageProps
-      else
-        z '.z-root',
-          # unless hideDrawer
-          #   z $navDrawer, {
-          #     model, router, entityStream, currentPath: request?.req.path
-          #   }
 
-          z '.content', {
+        if $overlayPage
+          z '.overlay-page', {
+            key: 'overlay-page'
             style:
               height: "#{windowSize.height}px"
           },
-            z '.page', {key: 'page'},
-              z $page, pageProps
+            z $overlayPage, pageProps
 
-          if $overlayPage
-            z '.overlay-page', {
-              key: 'overlay-page'
-              style:
-                height: "#{windowSize.height}px"
-            },
-              z $overlayPage, pageProps
+        z '#overlays-portal',
+          # legacy overlays
+          _map $overlays, ($overlay) ->
+            $overlay
 
-          z '#overlays-portal',
-            # legacy overlays
-            _map $overlays, ($overlay) ->
-              $overlay
+        # z $tooltip
 
-          # z $tooltip
-
-          # used in color.coffee to detect support
-          z '#css-variable-test',
-            style:
-              display: 'none'
-              backgroundColor: 'var(--test-color)'
+        # used in color.coffee to detect support
+        z '#css-variable-test',
+          style:
+            display: 'none'
+            backgroundColor: 'var(--test-color)'
 
   if window?
     $body
