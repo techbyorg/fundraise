@@ -15,27 +15,26 @@ LEGEND_COUNT = 5
 
 module.exports = $fundOverviewNteePie = ({model, irsFund}) ->
   console.log 'colors', config.NTEE_MAJOR_COLORS
-  # TODO: useMemo
-  nteeMajors = _map irsFund?.fundedNteeMajors, ({count, percent}, nteeMajor) ->
-    {count, percent, nteeMajor}
-  nteeMajors = _orderBy nteeMajors, 'count', 'desc'
-  pieNteeMajors = _reduce nteeMajors, (obj, {count, percent, nteeMajor}) ->
+  # TODO: useMemo?
+  nteeMajors = _orderBy irsFund?.fundedNteeMajors, 'count', 'desc'
+  pieNteeMajors = _reduce nteeMajors, (obj, {count, percent, key}) ->
     if percent > 7
-      obj[nteeMajor] = {count, percent, nteeMajor}
+      obj[key] = {count, percent, key}
     else
-      obj.rest ?= {count: 0, percent: 0, nteeMajor}
+      obj.rest ?= {count: 0, percent: 0, key: 'rest'}
+       # FIXME: find and add to 'rest'
       obj.rest.count += count
       obj.rest.percent += percent
     obj
   , {}
-  data = _map pieNteeMajors, ({count, percent, nteeMajor}) ->
-    label = if nteeMajor is 'rest' \
+  data = _map pieNteeMajors, ({count, percent, key}) ->
+    label = if key is 'rest' \
             then model.l.get 'general.other' \
-            else model.l.get "nteeMajor.#{nteeMajor}"
+            else model.l.get "nteeMajor.#{key}"
 
-    color = if nteeMajor is 'rest' \
+    color = if key is 'rest' \
             then config.NTEE_MAJOR_COLORS['Z'] \
-            else config.NTEE_MAJOR_COLORS[nteeMajor]
+            else config.NTEE_MAJOR_COLORS[key]
     {
       id: label
       label: label
@@ -49,13 +48,13 @@ module.exports = $fundOverviewNteePie = ({model, irsFund}) ->
   z '.z-fund-overview-ntee-pie',
     z $chartPie, {data, colors}
     z '.legend',
-      _map _take(nteeMajors, LEGEND_COUNT), ({count, percent, nteeMajor}) ->
+      _map _take(nteeMajors, LEGEND_COUNT), ({count, percent, key}) ->
         z '.legend-item',
           z '.color', {
             style:
-              background: config.NTEE_MAJOR_COLORS[nteeMajor]
+              background: config.NTEE_MAJOR_COLORS[key]
           }
           z '.info',
-            z '.ntee', model.l.get "nteeMajor.#{nteeMajor}"
+            z '.ntee', model.l.get "nteeMajor.#{key}"
             # z '.dollars', FormatService.abbreviateDollar value
           z '.percent', "#{Math.round(percent)}%"

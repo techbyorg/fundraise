@@ -1,6 +1,6 @@
 {useEffect} = require 'zorium'
 _isArray = require 'lodash/isArray'
-_some = require 'lodash/every'
+_some = require 'lodash/some'
 
 module.exports = useOnClickOutside = ($$refs, handler) ->
   console.log 'use', $$refs

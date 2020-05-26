@@ -4,6 +4,7 @@ RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 _defaults = require 'lodash/defaults'
 _filter = require 'lodash/filter'
+_find = require 'lodash/find'
 _map = require 'lodash/map'
 _orderBy = require 'lodash/orderBy'
 _uniqBy = require 'lodash/uniqBy'
@@ -33,17 +34,25 @@ module.exports = $filterBar = ({model, filtersStream}) ->
         filter
       _orderBy filters, (({value}) -> value?), 'desc'
 
-  showFilterContent = ({filter, $$filterRef}) =>
-    visibleFilterContentsStream.next _uniqBy visibleFilterContents.concat([
-      {filter, $$filterRef}
-    ]), ({filter}) -> filter.id
+  toggleFilterContent = ({filter, $$filterRef}) =>
+    isVisible = _find visibleFilterContents, (visibleFilter) ->
+      visibleFilter.filter.id is filter.id
+    console.log 'toggle', isVisible
+    if isVisible
+      visibleFilterContentsStream.next(
+        _filter visibleFilterContents, (visibleFilter) ->
+          visibleFilter.filter.id isnt filter.id
+      )
+    else
+      visibleFilterContentsStream.next visibleFilterContents.concat [
+        {filter, $$filterRef}
+      ]
+
 
   isMobile = Environment.isMobile()
   $filterContentEl = if isMobile \
                      then $filterContentSheet \
                      else $filterContentPositionedOverlay
-
-  console.log 'vis', visibleFilterContents
 
   z '.z-filter-bar',
     z '.filters',
@@ -63,8 +72,7 @@ module.exports = $filterBar = ({model, filtersStream}) ->
                   RxObservable.of (not filter.value) or null
                 )
               else
-                console.log filter.id, filterRefsCache[filter.id]
-                showFilterContent {
+                toggleFilterContent {
                   filter, $$filterRef: filterRefsCache[filter.id]
                 }
           }, filter.name

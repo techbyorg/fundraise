@@ -9,7 +9,9 @@ module.exports = class IrsFund
         query IrsFundGetByEin($ein: String!) {
           irsFund(ein: $ein) {
             ein, name, city, state, assets, mission, website,
-            contributionStats, yearlyStats,
+            yearlyStats {
+              years { year, assets }
+            },
             lastYearStats {
               grants, grantMedian, grantSum, revenue, expenses
             },
@@ -20,7 +22,8 @@ module.exports = class IrsFund
                 street1, street2, postalCode, city, state, countryCode
               }
             }
-            fundedNteeMajors
+            fundedNteeMajors { key, count, percent, sum, sumPercent }
+            fundedStates { key, count, percent, sum, sumPercent }
           }
         }
       '''
@@ -38,7 +41,7 @@ module.exports = class IrsFund
               lastYearStats {
                 grants, grantMedian, grantSum
               }
-              fundedNteeMajors
+              fundedNteeMajors { key, count }
             }
           }
         }

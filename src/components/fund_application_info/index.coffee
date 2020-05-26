@@ -28,11 +28,14 @@ module.exports = $fundApplicationInfo = ({model, router, irsFund}) ->
 
         z '.title', model.l.get 'general.contact'
         z '.name', irsFund.applicantInfo.recipientName
-        z '.address-line', irsFund.applicantInfo.address.street1
-        if irsFund.applicantInfo.address.street2
-          z '.address-line', irsFund.applicantInfo.address.street2
-        z '.address-line',
-          "#{irsFund.applicantInfo.address.city}, "
-          irsFund.applicantInfo.address.state
-          " #{irsFund.applicantInfo.address.postalCode}"
+        if irsFund.applicantInfo.address
+          [
+            z '.address-line', irsFund.applicantInfo.address.street1
+            if irsFund.applicantInfo.address.street2
+              z '.address-line', irsFund.applicantInfo.address.street2
+            z '.address-line',
+              "#{irsFund.applicantInfo.address.city}, "
+              irsFund.applicantInfo.address.state
+              " #{irsFund.applicantInfo.address.postalCode}"
+          ]
       ]

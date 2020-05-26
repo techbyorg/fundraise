@@ -29,30 +29,44 @@ module.exports = $fundPersons = ({model, router, irsFund, irsFundStream}) ->
   {persons} = useStream ->
     persons: personsStream
 
-  console.log 'persons', persons
-
   z '.z-fund-persons',
     z '.persons',
       z $table,
+        model: model
+        router: router
         data: persons
+        mobileRowRenderer: $fundPersonsMobileRow
         columns: [
           {
-            key: 'name', name: 'Name', isFlex: true
+            key: 'name', name: model.l.get('general.name'), isFlex: true
           }
           {
-            key: 'title', name: 'Title', isFlex: true
+            key: 'title', name: model.l.get('person.title'), isFlex: true
             content: ({row}) ->
               row.maxYear.title
           }
           {
-            key: 'compensation', name: 'Compensation', width: 200
+            key: 'compensation', name: model.l.get('person.compensation'), width: 200
             content: ({row}) ->
               FormatService.abbreviateDollar row.maxYear.compensation
           }
           {
-            key: 'year', name: 'Years', width: 150
+            key: 'year', name: model.l.get('person.years'), width: 150
             content: ({row}) ->
               z '.z-fund-persons_years',
                 FormatService.yearsArrayToEnglish _map(row.years, 'year')
           }
         ]
+
+$fundPersonsMobileRow = ({model, row}) ->
+  z '.z-fund-persons-mobile-row',
+    z '.name', row.name
+    z '.title', row.maxYear.title
+    z '.compensation',
+      model.l.get 'person.compensation'
+      ': '
+      FormatService.abbreviateDollar row.maxYear.compensation
+    z '.years',
+      model.l.get 'person.years'
+      ': '
+      FormatService.yearsArrayToEnglish _map(row.years, 'year')

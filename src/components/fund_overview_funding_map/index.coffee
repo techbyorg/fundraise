@@ -8,11 +8,11 @@ if window?
   require './index.styl'
 
 module.exports = $fundOverviewNteePie = ({model, irsFund}) ->
-  data = _map irsFund?.contributionStats?.states, ({sum}, state) ->
+  data = _map irsFund?.fundedStates, ({key, sum}) ->
     {
-      id: state
+      id: key
       value: sum
     }
 
-  z '.z-fund-overview-ntee-pie',
+  z '.z-fund-overview-funding-map',
     z $chartUsMap, {data}

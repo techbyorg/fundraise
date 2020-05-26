@@ -41,7 +41,9 @@ module.exports = $filterContent = (props) ->
         filter.valueStreams.next RxObservable.combineLatest(
           minStream, maxStream, (vals...) -> vals
         ).map ([min, max]) ->
-          if min? or max?
+          min = min and parseInt min
+          max = max and parseInt max
+          if min or max
             {min, max}
 
         {custom: {minStream, maxStream}}
@@ -215,7 +217,10 @@ module.exports = $filterContent = (props) ->
                 height: '24px'
               }
 
-  z '.z-filter-content',
+  z '.z-filter-content', {
+    # we want all inputs, etc... to restart w/ new valueStreams
+    key: "#{resetValue}"
+  },
     unless isGrouped
       z '.title', filter.title or filter.name
     $content

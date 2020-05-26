@@ -23,18 +23,16 @@ module.exports = $fundSearchResults = ({model, router, rows}) ->
         router.goFund rows[i]
       mobileRowRenderer: $fundSearchResultsMobileRow
       columns: [
-        {key: 'name', name: 'Name', width: 240, isFlex: true}
+        {key: 'name', name: model.l.get 'general.name', width: 240, isFlex: true}
         {
           key: 'focusAreas', name: model.l.get 'fund.focusAreas'
           width: 400, passThroughSize: true,
           content: ({row, size}) ->
-            focusAreas = _map row.fundedNteeMajors, ({count, percent}, nteeMajor) ->
-              {count, percent, nteeMajor}
-            focusAreas = _orderBy focusAreas, 'count', 'desc'
-            tags = _map focusAreas, ({nteeMajor}) ->
+            focusAreas = _orderBy row.fundedNteeMajors, 'count', 'desc'
+            tags = _map focusAreas, ({key}) ->
               {
-                text: model.l.get "nteeMajor.#{nteeMajor}"
-                color: config.NTEE_MAJOR_COLORS[nteeMajor]
+                text: model.l.get "nteeMajor.#{key}"
+                color: config.NTEE_MAJOR_COLORS[key]
               }
             z $tags, {tags, size, maxVisibleCount: VISIBLE_FOCUS_AREAS_COUNT}
         }

@@ -18,7 +18,6 @@ module.exports = $checkbox = (props) ->
       valueStream: valueStream or new RxBehaviorSubject null
       errorStream: new RxBehaviorSubject null
     }
-  , []
 
   # $$ref = useRef (props) ->
   #   props.ref.current = {isChecked: -> ref.current.checked}

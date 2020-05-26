@@ -73,7 +73,6 @@ module.exports = $input = (props) ->
         if valueStreams
           valueStreams.next RxObservable.of e.target.value
         else
-          console.log 'set', e.target.value
           valueStream.next e.target.value
       onfocus: (e) ->
         if disableAutoComplete

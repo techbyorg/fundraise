@@ -11,6 +11,7 @@
 
   &.is-mobile
     fix-overflow-shadows()
+    background: transparent
 
   &.has-row-click
     > .tbody > .tr
@@ -55,5 +56,6 @@
 
     > .tr-mobile
       shadow-1()
+      background: getColor('$bgColor')
       margin-bottom: 12px
       padding: 16px

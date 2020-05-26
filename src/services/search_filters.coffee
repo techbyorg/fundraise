@@ -35,7 +35,14 @@ class SearchFiltersService
           {key: nteeMajor, label: model.l.get "nteeMajor.#{nteeMajor}"}
         queryFn: (value, key) ->
           {
-            range: {"fundedNteeMajors.#{key}.percent": {gte: 2}}
+            nested:
+              path: 'fundedNteeMajors'
+              query:
+                bool:
+                  must: [
+                    {match: {'fundedNteeMajors.key': key}}
+                    {range: {'fundedNteeMajors.percent': {gte: 2}}}
+                  ]
           }
       }
       # search-tags, not in filter bar
@@ -47,8 +54,14 @@ class SearchFiltersService
           {key: stateCode, label: state}
         queryFn: (value, key) ->
           {
-            # FIXME: implement this
-            range: {"fundedStates.#{stateCode}.percent": {gte: 2}}
+            nested:
+              path: 'fundedStates'
+              query:
+                bool:
+                  must: [
+                    {match: {'fundedStates.key': key}}
+                    {range: {'fundedStates.percent': {gte: 2}}}
+                  ]
           }
       }
 

@@ -40,7 +40,8 @@ module.exports = $appBar = (props) ->
           if hasLogo
             [
               # z '.icon'
-              'breezy'
+              z '.span.logo-tech', 'tech'
+              z '.span.logo-by', 'by'
             ]
           else
             title

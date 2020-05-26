@@ -1,12 +1,16 @@
 {z, useMemo, useStream} = require 'zorium'
 _find = require 'lodash/find'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+RxObservable = require('rxjs/Observable').Observable
+require 'rxjs/add/observable/combineLatest'
+require 'rxjs/add/observable/of'
 
 $button = require '../button'
 $filterBar = require '../filter_bar'
 # $irsSearch = require '../irs_search'
 $fundSearchResults = require '../fund_search_results'
 $input = require '../input'
+$searchInput = require '../search_input'
 $searchTags = require '../search_tags'
 $table = require '../table'
 FormatService = require '../../services/format'
@@ -16,25 +20,39 @@ if window?
   require './index.styl'
 
 module.exports = $search = ({model, router, org}) ->
-  {filtersStream, modeStream, searchResultsStream} = useMemo ->
+  {filtersStream, nameStream, modeStream, searchResultsStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {
       model, filters: SearchFiltersService.getFundFilters(model)
     }
+    nameStream = new RxBehaviorSubject ''
 
     esQueryFilterStream = filtersStream.map (filters) ->
       SearchFiltersService.getESQueryFilterFromFilters(
         filters
       )
 
+    esQueryFilterAndNameStream = RxObservable.combineLatest(
+      esQueryFilterStream, nameStream, (vals...) -> vals
+    )
+
     {
       filtersStream
+      nameStream
       modeStream: new RxBehaviorSubject 'tags'
-      searchResultsStream: esQueryFilterStream.switchMap (esQueryFilter) ->
-        console.log 'es', esQueryFilter
+      searchResultsStream: esQueryFilterAndNameStream
+      .switchMap ([esQueryFilter, name]) ->
+        bool = {filter: esQueryFilter}
+        if name
+          bool.must =
+            multi_match:
+              query: name
+              type: 'bool_prefix'
+              fields: ['name', 'name._2gram', 'ein']
+
         model.irsFund.search {
           query:
-            bool:
-              filter: esQueryFilter
+            bool: bool
+
           limit: 10
         }
     }
@@ -52,10 +70,12 @@ module.exports = $search = ({model, router, org}) ->
 
   z '.z-search',
     z '.search',
+      z '.title', model.l.get 'fundSearch.titleSpecific'
       z '.search-box',
         if mode is 'specific'
-          z $input,
-            hintText: model.l.get 'fundSearch.byNameEinPlaceholder'
+          z $searchInput,
+            valueStream: nameStream
+            placeholder: model.l.get 'fundSearch.byNameEinPlaceholder'
         else
           [
             z $searchTags,
@@ -81,6 +101,8 @@ module.exports = $search = ({model, router, org}) ->
           if mode is 'specific'
             modeStream.next 'tags'
           else
+            focusAreasFilter.valueStreams.next RxObservable.of null
+            statesFilter.valueStreams.next RxObservable.of null
             modeStream.next 'specific'
       },
         z '.or', model.l.get 'general.or'

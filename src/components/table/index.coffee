@@ -14,7 +14,7 @@ if window?
 # https://github.com/mckervinc/react-fluid-table
 # so i'm using same api to make for easy replacement
 module.exports = $table = (props) ->
-  {model, data, columns, onRowClick, mobileRowRenderer} = props
+  {model, router, data, columns, onRowClick, mobileRowRenderer} = props
   getStyle = ({width, isFlex}) ->
     if isFlex
       {minWidth: "#{width}px", flex: 1}
@@ -58,7 +58,7 @@ module.exports = $table = (props) ->
             onclick: (e) ->
               onRowClick e, i
           },
-            mobileRowRenderer {model, row}
+            mobileRowRenderer {model, router, row}
         else
           z '.tr', {
             onclick: (e) ->
@@ -70,6 +70,6 @@ module.exports = $table = (props) ->
                 style: getStyle {width, isFlex}
               },
                 if content
-                  content {row, size}
+                  content {model, router, row, size}
                 else
                   row[key]

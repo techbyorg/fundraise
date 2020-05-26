@@ -14,7 +14,7 @@ module.exports = $positionedOverlay = (props) ->
   $$ref ?= useRef()
 
   unless hasBackdrop
-    useOnClickOutside $$ref, onClose
+    useOnClickOutside [$$ref, $$targetRef], onClose
 
   {$$overlays, anchorStream, transformStream, sizeStream} = useMemo ->
     {
@@ -24,8 +24,6 @@ module.exports = $positionedOverlay = (props) ->
       sizeStream: new RxBehaviorSubject null
     }
   , [$$parentRef]
-
-  console.log 'ovvv', $$overlays
 
   useLayoutEffect ->
     setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0

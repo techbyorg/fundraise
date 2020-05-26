@@ -41,6 +41,6 @@ module.exports = $filterContentDialog = ({model, filter, onClose}) ->
                     text: model.l.get 'general.reset'
                     onclick: =>
                       filter.valueStreams.next RxObservable.of null
-                      # setTimeout ->
-                      #   resetStream.next Math.random()
-                      # , 0
+                      setTimeout ->
+                        resetStream.next Math.random()
+                      , 0

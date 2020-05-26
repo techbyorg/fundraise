@@ -31,7 +31,7 @@ module.exports = $dropdown = (props) ->
     _valueStream = valueStreams?.switch() or valueStream
     value: _valueStream
     selectedOption: _valueStream.map (value) ->
-      _find options, {value}
+      _find options, {value: "#{value}"}
     error: errorStream
     isOpen: isOpenStream
     options: options
@@ -84,7 +84,7 @@ module.exports = $dropdown = (props) ->
           z '.z-dropdown_options',
             _map options, (option) ->
               z 'label.option', {
-                className: classKebab {isSelected: value is option.value}
+                className: classKebab {isSelected: "#{value}" is option.value}
                 onclick: ->
                   setValue option.value
                   toggle()
