@@ -11,30 +11,30 @@ module.exports = $tos = ->
   z '.z-tos',
     z 'p',
       '''
-      The following terms and conditions govern all use of the Breezy app and all content, services and products available at or through the app. The app is owned and operated by Breezy.
+      The following terms and conditions govern all use of the TechBy app and all content, services and products available at or through the app. The app is owned and operated by TechBy.
       . The app is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules,
       policies (including, without limitation,
       '''
       router.link z 'a',
         href: router.get 'privacy'
-        'Breezy\'s Privacy Policy'
+        'TechBy\'s Privacy Policy'
       '''
       ) and procedures that may be published from time to'
-      time on this Site by Breezy (collectively, the "Agreement").
+      time on this Site by TechBy (collectively, the "Agreement").
       '''
     z 'p',
       '''
       Please read this Agreement carefully before accessing or using the app. By accessing or using any part of the web site, you agree to become bound by the
       terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the app or use any services.
-      If these terms and conditions are considered an offer by Breezy, acceptance is expressly limited to these terms. The app is available only to individuals who
+      If these terms and conditions are considered an offer by TechBy, acceptance is expressly limited to these terms. The app is available only to individuals who
       are at least 13 years old.
       '''
     z 'ol',
       z 'li',
-        z 'div.is-bold', 'Your Breezy Account and Site.'
+        z 'div.is-bold', 'Your TechBy Account and Site.'
         '''
         If you create an account on the app, you are responsible for maintaining the accuracy and security of your account,
-        and you are fully responsible for all activities that occur under the account and any other actions taken in connection with the account. Breezy will not
+        and you are fully responsible for all activities that occur under the account and any other actions taken in connection with the account. TechBy will not
         be liable for any acts or omissions by You, including any damages of any kind incurred as a result of such acts or omissions.
         '''
       z 'li',
@@ -46,104 +46,104 @@ module.exports = $tos = ->
       z 'li',
         z 'div.is-bold', 'Responsibility of app Visitors.'
         '''
-        Breezy has not reviewed, and cannot review, all of the material, including computer software,
-        posted to the app, and cannot therefore be responsible for that material's content, use or effects. By operating the app, Breezy does not
+        TechBy has not reviewed, and cannot review, all of the material, including computer software,
+        posted to the app, and cannot therefore be responsible for that material's content, use or effects. By operating the app, TechBy does not
         represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful.
         or destructive content. The app may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing
         technical inaccuracies, typographical mistakes, and other errors. The app may also contain material that violates the privacy or publicity rights,
         or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional
-        terms and conditions, stated or unstated. Breezy disclaims any responsibility for any harm resulting from the use by visitors of the app, or from
+        terms and conditions, stated or unstated. TechBy disclaims any responsibility for any harm resulting from the use by visitors of the app, or from
         any downloading by those visitors of content there posted.
         '''
       z 'li',
         z 'div.is-bold', 'Content Posted on Other apps.'
         '''
         We have not reviewed, and cannot review, all of the material, including computer software, made available
-        through the apps and webpages to which Breezy links, and that link to Breezy. Breezy does not have any control over those external
-        apps and webpages, and is not responsible for their contents or their use. By linking to a non-Breezy app or webpage, Breezy does not represent
+        through the apps and webpages to which TechBy links, and that link to TechBy. TechBy does not have any control over those external
+        apps and webpages, and is not responsible for their contents or their use. By linking to a non-TechBy app or webpage, TechBy does not represent
         or imply that it endorses such app or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from
-        viruses, worms, Trojan horses, and other harmful or destructive content. Breezy disclaims any responsibility for any harm resulting from your use of
-        non-Breezy apps and webpages.
+        viruses, worms, Trojan horses, and other harmful or destructive content. TechBy disclaims any responsibility for any harm resulting from your use of
+        non-TechBy apps and webpages.
         '''
       z 'li',
         z 'div.is-bold', 'Copyright Infringement and DMCA Policy.'
         '''
-        As Breezy asks others to respect its intellectual property rights, it respects the intellectual property rights
-        of others. If you believe that material located on or linked to by Breezy violates your copyright, you are encouraged to notify Breezy in
+        As TechBy asks others to respect its intellectual property rights, it respects the intellectual property rights
+        of others. If you believe that material located on or linked to by TechBy violates your copyright, you are encouraged to notify TechBy in
         accordance with
         '''
         router.link z 'a',
-          href: 'https://github.com/breezy/legal/blob/master/DMCA/Site%20Pages/DMCA%20Takedown%20Notice.md'
-          'Breezy\'s Digital Millennium Copyright Act Policy'
+          href: 'https://github.com/techby/legal/blob/master/DMCA/Site%20Pages/DMCA%20Takedown%20Notice.md'
+          'TechBy\'s Digital Millennium Copyright Act Policy'
         '''
-        . Breezy will respond
-        to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. Breezy     will terminate a visitor's access to and use of the app if, under appropriate circumstances, the visitor is determined to be a repeat infringer of
-        the copyrights or other intellectual property rights of Breezy or others. In the case of such termination, Breezy will have no obligation to provide
-        a refund of any amounts previously paid to Breezy.
+        . TechBy will respond
+        to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. TechBy     will terminate a visitor's access to and use of the app if, under appropriate circumstances, the visitor is determined to be a repeat infringer of
+        the copyrights or other intellectual property rights of TechBy or others. In the case of such termination, TechBy will have no obligation to provide
+        a refund of any amounts previously paid to TechBy.
         '''
       z 'li',
         z 'div.is-bold', 'Intellectual Property.'
         '''
-        This Agreement does not transfer from Breezy to you any Breezy or third party intellectual property, and all
-        right, title and interest in and to such property will remain (as between the parties) solely with Breezy. Breezy, the
-        Breezy logo, and all other trademarks, service marks, graphics and logos used in connection with Breezy, or the app are trademarks or
-        registered trademarks of Breezy or Breezy's licensors. Other trademarks, service marks, graphics and logos used in connection with the app
-        may be the trademarks of other third parties. Your use of the app grants you no right or license to reproduce or otherwise use any Breezy or
+        This Agreement does not transfer from TechBy to you any TechBy or third party intellectual property, and all
+        right, title and interest in and to such property will remain (as between the parties) solely with TechBy. TechBy, the
+        TechBy logo, and all other trademarks, service marks, graphics and logos used in connection with TechBy, or the app are trademarks or
+        registered trademarks of TechBy or TechBy's licensors. Other trademarks, service marks, graphics and logos used in connection with the app
+        may be the trademarks of other third parties. Your use of the app grants you no right or license to reproduce or otherwise use any TechBy or
         third-party trademarks.
         '''
       z 'li',
         z 'div.is-bold', 'Your rights'
         '''
-        You retain your rights to any Content you submit, post or display on or through Breezy. By submitting, posting or displaying content on or through Breezy, you grant us a worldwide, non-exclusive, royalty-free license (with the right to sublicense) to use, copy, reproduce, process, adapt, modify, publish, transmit, display and distribute such content in any and all media or distribution methods (now known or later developed).
+        You retain your rights to any Content you submit, post or display on or through TechBy. By submitting, posting or displaying content on or through TechBy, you grant us a worldwide, non-exclusive, royalty-free license (with the right to sublicense) to use, copy, reproduce, process, adapt, modify, publish, transmit, display and distribute such content in any and all media or distribution methods (now known or later developed).
 
-        You agree that this license includes the right for Breezy to provide, promote, and improve Breezy and to make content submitted to or through Breezy available to other companies, organizations or individuals who partner with Breezy for the syndication, broadcast, distribution or publication of such content on other media and services, subject to our terms and conditions for such content use.
+        You agree that this license includes the right for TechBy to provide, promote, and improve TechBy and to make content submitted to or through TechBy available to other companies, organizations or individuals who partner with TechBy for the syndication, broadcast, distribution or publication of such content on other media and services, subject to our terms and conditions for such content use.
 
-        Such additional uses by Breezy, or other companies, organizations or individuals who partner with Breezy, may be made with no compensation paid to you with respect to the content that you submit, post, transmit or otherwise make available through Breezy.
+        Such additional uses by TechBy, or other companies, organizations or individuals who partner with TechBy, may be made with no compensation paid to you with respect to the content that you submit, post, transmit or otherwise make available through TechBy.
 
         We may modify or adapt your content in order to transmit, display or distribute it over computer networks and in various media and/or make changes to your content as are necessary to conform and adapt that content to any requirements or limitations of any networks, devices, services or media.
 
-        You are responsible for your use of Breezy, for any content you provide, and for any consequences thereof, including the use of your content by other users and our third party partners. You understand that your content may be syndicated, broadcast, distributed, or published by our partners and if you do not have the right to submit content for such use, it may subject you to liability. Breezy will not be responsible or liable for any use of your content by Breezy in accordance with these Terms. You represent and warrant that you have all the rights, power and authority necessary to grant the rights granted herein to any content that you submit.
+        You are responsible for your use of TechBy, for any content you provide, and for any consequences thereof, including the use of your content by other users and our third party partners. You understand that your content may be syndicated, broadcast, distributed, or published by our partners and if you do not have the right to submit content for such use, it may subject you to liability. TechBy will not be responsible or liable for any use of your content by TechBy in accordance with these Terms. You represent and warrant that you have all the rights, power and authority necessary to grant the rights granted herein to any content that you submit.
 
 
         '''
       z 'li',
         z 'div.is-bold', 'Changes.'
         '''
-        Breezy reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility
+        TechBy reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility
         to check this Agreement periodically for changes. Your continued use of or access to the app following the posting of any changes to this Agreement
-        constitutes acceptance of those changes. Breezy may also, in the future, offer new services and/or features through the app (including, the
+        constitutes acceptance of those changes. TechBy may also, in the future, offer new services and/or features through the app (including, the
         release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
         '''
       z 'li',
         z 'div.is-bold', 'Termination.'
         '''
-        Breezy may terminate your access to all or any part of the app at any time, with or without cause, with or without notice,
-        effective immediately. If you wish to terminate this Agreement or your Breezy account (if you have one), you may simply discontinue using the
+        TechBy may terminate your access to all or any part of the app at any time, with or without cause, with or without notice,
+        effective immediately. If you wish to terminate this Agreement or your TechBy account (if you have one), you may simply discontinue using the
         app. All provisions of this Agreement which by their nature should survive termination
         shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
         '''
       z 'li.important',
         z 'div.is-bold', 'Disclaimer of Warranties.'
         '''
-        The app is provided "as is". Breezy and its suppliers and licensors hereby disclaim
+        The app is provided "as is". TechBy and its suppliers and licensors hereby disclaim
         all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose
-        and non-infringement. Neither Breezy nor its suppliers and licensors, makes any warranty that the app will be error free or that access
+        and non-infringement. Neither TechBy nor its suppliers and licensors, makes any warranty that the app will be error free or that access
         thereto will be continuous or uninterrupted.
         You understand that you download from, or otherwise obtain content or services through, the app at your own discretion and risk.
         '''
       z 'li.important',
         z 'div.is-bold', 'Limitation of Liability.'
-        '''In no event will Breezy, or its suppliers or licensors, be liable with respect to any subject matter of
+        '''In no event will TechBy, or its suppliers or licensors, be liable with respect to any subject matter of
         this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages;
         (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that
-        exceed the fees paid by you to Breezy under this agreement during the twelve (12) month period prior to the cause of action. Breezy shall have no
+        exceed the fees paid by you to TechBy under this agreement during the twelve (12) month period prior to the cause of action. TechBy shall have no
         liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
         '''
       z 'li',
         z 'div.is-bold', 'General Representation and Warranty.'
         '''
         You represent and warrant that (i) your use of the app will be in strict accordance with the
-        Breezy Privacy Policy, with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in
+        TechBy Privacy Policy, with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in
         your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the
         transmission of technical data exported from the United States or the country in which you reside) and (ii) your use of the app will not infringe or
         misappropriate the intellectual property rights of any third party.
@@ -151,15 +151,15 @@ module.exports = $tos = ->
       z 'li',
         z 'div.is-bold', 'Indemnification.'
         '''
-        You agree to indemnify and hold harmless Breezy, its contractors, and its licensors, and their respective directors,
+        You agree to indemnify and hold harmless TechBy, its contractors, and its licensors, and their respective directors,
         officers, employees and agents from and against any and all claims and expenses, including attorneys' fees, arising out of your use of the app,
         including but not limited to your violation of this Agreement.
         '''
       z 'li',
         z 'div.is-bold', 'Miscellaneous.'
         '''
-        This Agreement constitutes the entire agreement between Breezy and you concerning the subject matter
-        hereof, and they may only be modified by a written amendment signed by an authorized executive of Breezy, or by the posting by Breezy    of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the app will
+        This Agreement constitutes the entire agreement between TechBy and you concerning the subject matter
+        hereof, and they may only be modified by a written amendment signed by an authorized executive of TechBy, or by the posting by TechBy    of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the app will
         be governed by the laws of the state of Texas, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes
         arising out of or relating to any of the same will be the state and federal courts located in Austin County, Texas. Except for
         claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without
@@ -170,7 +170,7 @@ module.exports = $tos = ->
         invalid or unenforceable, that part will be construed to reflect the parties' original intent, and the remaining portions will remain in full
         force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive
         such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees
-        to be bound by, its terms and conditions; Breezy may assign its rights under this Agreement without condition. This Agreement will be binding
+        to be bound by, its terms and conditions; TechBy may assign its rights under this Agreement without condition. This Agreement will be binding
         upon and will inure to the benefit of the parties, their successors and permitted assigns.
         '''
   # coffeelint: enable=max_line_length

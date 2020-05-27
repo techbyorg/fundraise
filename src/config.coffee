@@ -49,7 +49,7 @@ else
   API_PATH = ''
 # All keys must have values at run-time (value may be null)
 isomorphic =
-  APP_KEY: 'breezy'
+  APP_KEY: 'techby'
   LANGUAGES: ['en']
   # also in backend TODO: shared config file
   BASE_NAME_COLORS: ['#2196F3', '#8BC34A', '#FFC107', '#f44336']#, '#673AB7']

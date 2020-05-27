@@ -46,7 +46,7 @@
     "yargs": "^12.0.5"
   },
   "dependencies": {
-    "@nivo/geo": "github:breezyhq/nivo-geo",
+    "@nivo/geo": "github:techbyorg/nivo-geo",
     "@nivo/line": "^0.60.0",
     "@nivo/pie": "^0.60.0",
     "assert-none-missing": "git://github.com/claydotio/assert-none-missing.git",
