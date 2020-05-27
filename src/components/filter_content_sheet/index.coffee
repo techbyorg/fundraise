@@ -35,7 +35,6 @@ module.exports = $filterContentSheet = ({id, filter, onClose}) ->
     z $sheet,
       id: filter.id
       onClose: onClose
-      isVanilla: true
       $content:
         z '.z-filter-content-sheet_sheet',
           z '.actions',
@@ -53,6 +52,8 @@ module.exports = $filterContentSheet = ({id, filter, onClose}) ->
                 onclick: ->
                   filter.valueStreams.next valueStreams.switch()
                   onClose()
+          z '.title',
+            filter?.title or filter?.name
           z $filterContent, {
             filter, filterValue, valueStreams, overlayAnchor: 'bottom-left'
           }

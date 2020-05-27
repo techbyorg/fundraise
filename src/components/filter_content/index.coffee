@@ -102,9 +102,6 @@ module.exports = $filterContent = (props) ->
       value = filterValue?.value or filterValue
       $content =
         z '.content',
-          if isGrouped
-            z '.title', filter.title or filter.name
-
           unless isGrouped
             z '.info', lang.get "filterSheet.#{filter.field}Label"
           z '.info', lang.get "levelText.#{filter.field}#{value}"
@@ -127,9 +124,6 @@ module.exports = $filterContent = (props) ->
     when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
       $content =
         z '.content.tappable',
-          if isGrouped
-            z '.title', filter.title or filter.name
-
           z '.tap-items', {
             className: classKebab {isFullWidth: filter.field is 'subType'}
           },
@@ -144,7 +138,6 @@ module.exports = $filterContent = (props) ->
               },
                 label or "FIXME: #{filter.id}"
     when 'listAnd', 'listOr', 'fieldList'
-      # $title = filter?.name
       $content =
         z '.content',
           _map custom.checkboxes, ({valueStream, label}) ->
@@ -226,6 +219,4 @@ module.exports = $filterContent = (props) ->
     # we want all inputs, etc... to restart w/ new valueStreams
     key: "#{filterValueStr}"
   },
-    unless isGrouped
-      z '.title', filter.title or filter.name
     $content

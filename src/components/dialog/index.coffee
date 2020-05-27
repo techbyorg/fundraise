@@ -12,8 +12,7 @@ colors = require '../../colors'
 CLOSE_DELAY_MS = 450 # 0.45s for animation
 
 module.exports = $dialog = (props) ->
-  {onClose, $content = '', $title, cancelButton, resetButton, submitButton, isVanilla,
-    isWide} = props
+  {onClose, $content = '', $title, $actions, isWide} = props
 
   $$ref = useRef()
 
@@ -45,38 +44,18 @@ module.exports = $dialog = (props) ->
   createPortal(
     z '.z-dialog', {
       ref: $$ref
-      className: classKebab {isVanilla, isWide}
+      className: classKebab {isWide}
     },
       z '.backdrop', {
         onclick: close
       }
 
       z '.dialog',
+        if $title
+          z '.title', $title
         z '.content',
-          if $title
-            z '.title',
-              $title
           $content
-        if cancelButton or submitButton
-          z '.actions',
-            if cancelButton
-              z '.action', {
-                className: classKebab {isFullWidth: cancelButton.isFullWidth}
-              },
-                z $button, _defaults cancelButton, {
-                  colors: {cText: colors.$primaryMain}
-                }
-            if resetButton
-              z '.action', {
-                className: classKebab {isFullWidth: resetButton.isFullWidth}
-              },
-                z $button, _defaults resetButton, {
-                  colors: {cText: colors.$primaryMain}
-                }
-            if submitButton
-              z '.action',
-                z $button, _defaults submitButton, {
-                  colors: {cText: colors.$primaryMain}
-                }
+        if $actions
+          z '.actions', $actions
     $$overlays
   )

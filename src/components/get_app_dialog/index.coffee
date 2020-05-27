@@ -1,5 +1,6 @@
 {z, useContext} = require 'zorium'
 
+$button = require '../button'
 $dialog = require '../dialog'
 colors = require '../../colors'
 context = require '../../context'
@@ -17,7 +18,6 @@ module.exports = $getAppDialog = ({onClose}) ->
   z '.z-get-app-dialog',
     z $dialog,
       onClose: onClose
-      isVanilla: true
       $title: lang.get 'getAppDialog.title'
       $content:
         z '.z-get-app-dialog_dialog',
@@ -35,6 +35,7 @@ module.exports = $getAppDialog = ({onClose}) ->
           }
           z '.text',
             lang.get 'getAppDialog.text'
-      cancelButton:
-        text: lang.get 'general.cancel'
-        onclick: onClose
+      $actions:
+        z $button,
+          text: lang.get 'general.cancel'
+          onclick: onClose

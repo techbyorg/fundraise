@@ -34,24 +34,26 @@ module.exports = $filterContentDialog = ({filter, onClose}) ->
   z '.z-filter-content-dialog',
     z $dialog,
       onClose: onClose
+      $title: filter?.title or filter?.name
       $content:
         z '.z-filter-content-dialog_content',
           z '.content',
             z $filterContent, {
               filter, filterValue, valueStreams
             }
-          z '.actions',
-            z '.reset',
-              if hasValue
-                z $button,
-                  text: lang.get 'general.reset'
-                  onclick: =>
-                    filter.valueStreams.next RxObservable.of null
-                    valueStreams.next RxObservable.of null
-            z '.save',
+      $actions:
+        z '.z-filter-content-dialog_actions',
+          z '.reset',
+            if hasValue
               z $button,
-                text: lang.get 'general.save'
-                isPrimary: true
+                text: lang.get 'general.reset'
                 onclick: =>
-                  filter.valueStreams.next valueStreams.switch()
-                  onClose()
+                  filter.valueStreams.next RxObservable.of null
+                  valueStreams.next RxObservable.of null
+          z '.save',
+            z $button,
+              text: lang.get 'general.save'
+              isPrimary: true
+              onclick: =>
+                filter.valueStreams.next valueStreams.switch()
+                onClose()

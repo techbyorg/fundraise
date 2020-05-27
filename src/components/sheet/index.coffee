@@ -13,7 +13,7 @@ if window?
   require './index.styl'
 
 module.exports = $sheet = (props) ->
-  {icon, message, submitButton, onClose, $content} = props
+  {onClose, $content, $actions} = props
   {lang} = useContext context
 
   $$ref = useRef()
@@ -42,26 +42,8 @@ module.exports = $sheet = (props) ->
         onclick: close
       z '.sheet',
         z '.inner',
-          if $content
-            $content
-          else
-            [
-              z '.content',
-                z '.icon',
-                  z $icon,
-                    icon: icon
-                    color: colors.$primaryMain
-                    isTouchTarget: false
-                z '.message', message
-              z '.actions',
-                z $button,
-                  text: lang.get 'general.notNow'
-                  isFullWidth: false
-                  onclick: close
-                z $button, _defaults submitButton, {
-                  isFullWidth: false
-                  colors: {cText: colors.$primaryMain}
-                }
-            ]
+          $content
+          if $actions
+            z '.actions', $actions
   $$overlays
   )
