@@ -59,7 +59,6 @@ module.exports = $dropdown = (props) ->
     z '.wrapper', {
       onclick: ->
         toggle()
-
     }
     z '.current', {
       onclick: toggle

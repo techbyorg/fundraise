@@ -12,7 +12,7 @@ if window?
   require './index.styl'
 
 module.exports = $fundPersons = ({irsFund, irsFundStream}) ->
-  {lang} = useContext context
+  {model, lang} = useContext context
 
   {personsStream} = useMemo ->
     {

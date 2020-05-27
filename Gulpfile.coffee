@@ -18,7 +18,7 @@ HandleCSSLoader = require 'webpack-handle-css-loader'
 TerserPlugin = require 'terser-webpack-plugin'
 MiniCssExtractPlugin = require 'mini-css-extract-plugin'
 # Visualizer = require('webpack-visualizer-plugin')
-# BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 gcPub = require 'gulp-gcloud-publish'
 gzip = require 'gulp-gzip'
 sizereport = require 'gulp-sizereport'
@@ -132,7 +132,7 @@ gulp.task 'dist:scripts', gulp.series('dist:clean', ->
     }
     plugins: [
       # new Visualizer()
-      # new BundleAnalyzerPlugin()
+      new BundleAnalyzerPlugin()
       new webpack.IgnorePlugin /\.json$/, /lang/
       new MiniCssExtractPlugin {
         filename: 'bundle.css'
@@ -234,7 +234,7 @@ gulp.task 'dist', gulp.series(
   gulp.parallel('dist:scripts', 'dist:static')
   'dist:concat'
   'dist:sw'
-  'dist:gc'
+  # 'dist:gc'
   'dist:sizereport'
 )
 
