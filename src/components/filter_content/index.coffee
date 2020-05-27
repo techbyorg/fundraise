@@ -1,4 +1,5 @@
 {z, classKebab, useContext, useMemo, useStream} = require 'zorium'
+RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
@@ -21,15 +22,17 @@ if window?
   require './index.styl'
 
 module.exports = $filterContent = (props) ->
-  {filter, resetValue, isGrouped, overlayAnchor, $$parentRef} = props
+  {filter, valueStreams, filterValue, isGrouped, overlayAnchor, $$parentRef} = props
   {lang} = useContext context
+
+  filterValueStr = JSON.stringify filterValue # for "deep" compare
 
   {custom} = useMemo ->
     switch filter.type
       when 'gtlt'
-        operatorStream = new RxBehaviorSubject filter.value?.operator
-        valueStream = new RxBehaviorSubject filter.value?.value or ''
-        filter.valueStreams.next RxObservable.combineLatest(
+        operatorStream = new RxBehaviorSubject filterValue?.operator
+        valueStream = new RxBehaviorSubject filterValue?.value or ''
+        valueStreams.next RxObservable.combineLatest(
           operatorStream, valueStream, (vals...) -> vals
         ).map ([operator, value]) ->
           if operator or value
@@ -38,9 +41,9 @@ module.exports = $filterContent = (props) ->
         {custom: {operatorStream, valueStream}}
 
       when 'minMax'
-        minStream = new RxBehaviorSubject filter.value?.min or filter.minOptions[0].value
-        maxStream = new RxBehaviorSubject filter.value?.max or filter.maxOptions[0].value
-        filter.valueStreams.next RxObservable.combineLatest(
+        minStream = new RxBehaviorSubject filterValue?.min or filter.minOptions[0].value
+        maxStream = new RxBehaviorSubject filterValue?.max or filter.maxOptions[0].value
+        valueStreams.next RxObservable.combineLatest(
           minStream, maxStream, (vals...) -> vals
         ).map ([min, max]) ->
           min = min and parseInt min
@@ -54,13 +57,13 @@ module.exports = $filterContent = (props) ->
         list = filter.items
         items = _map list, ({key, label}) =>
           valueStream = new RxBehaviorSubject(
-            filter.value?[key]
+            filterValue?[key]
           )
           {
             valueStream, label, key
           }
 
-        filter.valueStreams.next RxObservable.combineLatest(
+        valueStreams.next RxObservable.combineLatest(
           _map items, 'valueStream'
           (vals...) -> vals
         ).map (vals) ->
@@ -76,11 +79,11 @@ module.exports = $filterContent = (props) ->
 
         checkboxes =  _map list, ({key, label}) =>
           valueStream = new RxBehaviorSubject(
-            filter.value?[key]
+            filterValue?[key]
           )
           {valueStream, label}
 
-        filter.valueStreams.next RxObservable.combineLatest(
+        valueStreams.next RxObservable.combineLatest(
           _map checkboxes, 'valueStream'
           (vals...) -> vals
         ).map (vals) ->
@@ -90,7 +93,9 @@ module.exports = $filterContent = (props) ->
         {
           custom: {checkboxes}
         }
-  , [resetValue]
+      else
+        {}
+  , [filterValueStr]
 
   switch filter.type
     when 'maxInt', 'minInt'
@@ -104,7 +109,7 @@ module.exports = $filterContent = (props) ->
             z '.info', lang.get "filterSheet.#{filter.field}Label"
           z '.info', lang.get "levelText.#{filter.field}#{value}"
           z $inputRange, {
-            valueStreams: filter.valueStreams, minValue: 1, maxValue: 5
+            valueStreams, minValue: 1, maxValue: 5
           }
     when 'maxIntCustom', 'minIntCustom'
       $content =
@@ -114,7 +119,7 @@ module.exports = $filterContent = (props) ->
             z '.small-input',
               filter.inputPrefix
               z $input, {
-                valueStreams: filter.valueStreams
+                valueStreams
                 type: 'number'
                 height: '30px'
               }
@@ -153,7 +158,7 @@ module.exports = $filterContent = (props) ->
         z '.content',
           z 'label.label',
             z '.checkbox',
-              z $checkbox, {valueStreams: filter.valueStreams}
+              z $checkbox, {valueStreams}
             z '.text', filter.title or filter.name
 
     when 'minMax'
@@ -219,7 +224,7 @@ module.exports = $filterContent = (props) ->
 
   z '.z-filter-content', {
     # we want all inputs, etc... to restart w/ new valueStreams
-    key: "#{resetValue}"
+    key: "#{filterValueStr}"
   },
     unless isGrouped
       z '.title', filter.title or filter.name

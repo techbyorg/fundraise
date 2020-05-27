@@ -36,6 +36,8 @@ module.exports = $dropdown = (props) ->
     isOpen: isOpenStream
     options: options
 
+  console.log 'dropdown val', value
+
   setValue = (value) ->
     if valueStreams
       valueStreams.next RxObservable.of value

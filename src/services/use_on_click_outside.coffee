@@ -3,7 +3,6 @@ _isArray = require 'lodash/isArray'
 _some = require 'lodash/some'
 
 module.exports = useOnClickOutside = ($$refs, handler) ->
-  console.log 'use', $$refs
   unless _isArray $$refs
     $$refs = [$$refs]
 
