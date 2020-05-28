@@ -1,4 +1,4 @@
-{z} = require 'zorium'
+import {z} from 'zorium'
 import _map from 'lodash/map'
 
 import $chartLine from '../chart_line'
@@ -7,7 +7,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $fundOverviewlineChart = ({irsFund}) ->
+export default $fundOverviewlineChart = ({irsFund}) ->
   data = [{
     id: 'main'
     data: _map irsFund?.yearlyStats?.years, ({year, assets}) ->

@@ -1,4 +1,4 @@
-{z} = require 'zorium'
+import {z} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 import _map from 'lodash/map'
 
@@ -10,7 +10,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $searchPage = ->
+export default $searchPage = ->
   z '.p-search',
     z $appBar, {
       hasLogo: true

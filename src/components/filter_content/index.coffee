@@ -1,4 +1,4 @@
-{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
@@ -16,13 +16,13 @@ import $inputRange from 'frontend-shared/components/input_range'
 
 import $icon from '../icon'
 import colors from '../../colors'
-context= require '../../context'
+import context from '../../context'
 import config from '../../config'
 
 if window?
   require './index.styl'
 
-module.exports = $filterContent = (props) ->
+export default $filterContent = (props) ->
   {filter, valueStreams, filterValue, isGrouped, overlayAnchor, $$parentRef} = props
   {lang} = useContext context
 

@@ -1,4 +1,4 @@
-{z, useContext, useMemo, useStream} = require 'zorium'
+import {z, useContext, useMemo, useStream} from 'zorium'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
@@ -12,7 +12,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $orgPage = ({requestsStream}) ->
+export default $orgPage = ({requestsStream}) ->
   {model} = useContext context
 
   {irsOrgStream} = useMemo ->

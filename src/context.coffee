@@ -1,1 +1,1 @@
-module.exports = require 'frontend-shared/context'
+export default require 'frontend-shared/context'

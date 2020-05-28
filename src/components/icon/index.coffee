@@ -1,4 +1,4 @@
-{z, classKebab} = require 'zorium'
+import {z, classKebab} from 'zorium'
 
 import icons from './icons'
 import colors from '../../colors'
@@ -6,7 +6,7 @@ import colors from '../../colors'
 if window?
   require './index.styl'
 
-module.exports = $icon = (props) ->
+export default $icon = (props) ->
   {icon, size, isAlignedTop, isAlignedLeft, isAlignedRight,
     isAlignedBottom, isTouchTarget, color, onclick, onmousedown,
     viewBox, heightRatio, hasRipple,

@@ -7,6 +7,6 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $homePage = ({requestsStream, serverData, entity}) ->
+export default $homePage = ({requestsStream, serverData, entity}) ->
   z '.p-home',
     $spinner

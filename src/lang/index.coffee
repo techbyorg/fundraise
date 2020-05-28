@@ -37,4 +37,4 @@ class Language
     str = JSON.stringify files
     "if(typeof window !== 'undefined'){window.languageStrings=#{str};} "
 
-module.exports = new Language()
+export default new Language()

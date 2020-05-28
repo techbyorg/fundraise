@@ -1,4 +1,4 @@
-{z, useContext, useMemo, useStream} = require 'zorium'
+import {z, useContext, useMemo, useStream} from 'zorium'
 import _find from 'lodash/find'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
@@ -10,7 +10,7 @@ import $input from 'frontend-shared/components/input'
 import $table from 'frontend-shared/components/table'
 import FormatService from 'frontend-shared/services/format'
 
-# $irsSearch = require '../irs_search'
+#import  $irsSearch from '../irs_search'
 import $filterBar from '../filter_bar'
 import $fundSearchResults from '../fund_search_results'
 import $searchInput from '../search_input'
@@ -21,7 +21,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $search = ({org}) ->
+export default $search = ({org}) ->
   {model, lang, cookie} = useContext context
 
   {filtersStream, nameStream, modeStream, searchResultsStream} = useMemo ->

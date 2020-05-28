@@ -1,4 +1,4 @@
-{z, classKebab, useRef, useMemo, useStream} = require 'zorium'
+import {z, classKebab, useRef, useMemo, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -19,7 +19,7 @@ if window?
   require './index.styl'
 
 
-module.exports = $filterBar = ({filtersStream}) ->
+export default $filterBar = ({filtersStream}) ->
   {filterRefsCache, visibleFilterContentsStream} = useMemo ->
     {
       filterRefsCache: {}

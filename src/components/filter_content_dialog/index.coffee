@@ -1,4 +1,4 @@
-{z, useContext, useMemo, useEffect, useRef, useStream} = require 'zorium'
+import {z, useContext, useMemo, useEffect, useRef, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
@@ -16,7 +16,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $filterContentDialog = ({filter, onClose}) ->
+export default $filterContentDialog = ({filter, onClose}) ->
   {lang} = useContext context
 
   {valueStreams} = useMemo ->

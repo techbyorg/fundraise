@@ -1,6 +1,6 @@
 DEFAULT_FIELDS = "id, slug"
 
-module.exports = class Entity
+export default class Entity
   namespace: 'entities'
 
   constructor: ({@auth}) -> null

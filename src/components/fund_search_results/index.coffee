@@ -1,4 +1,4 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 import _map from 'lodash/map'
 import _orderBy from 'lodash/orderBy'
 import _take from 'lodash/take'
@@ -16,7 +16,7 @@ if window?
 
 VISIBLE_FOCUS_AREAS_COUNT = 2
 
-module.exports = $fundSearchResults = ({rows}) ->
+export default $fundSearchResults = ({rows}) ->
   {lang, router} = useContext context
 
   z '.z-fund-search-results',

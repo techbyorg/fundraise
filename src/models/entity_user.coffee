@@ -6,7 +6,7 @@ import config from '../config'
 
 # TODO: need to convert to graphql before this will work
 
-module.exports = class EntityUser
+export default class EntityUser
   namespace: 'entityUsers'
 
   constructor: ({@auth}) -> null

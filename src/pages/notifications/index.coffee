@@ -1,4 +1,4 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 RxObservable = require('rxjs/Observable').Observable
 
 import $appBar from 'frontend-shared/components/app_bar'
@@ -12,7 +12,7 @@ import colors from '../../colors'
 if window?
   require './index.styl'
 
-module.exports = $notificationsPage = ->
+export default $notificationsPage = ->
   {lang} = useContext context
 
   z '.p-notifications',

@@ -1,6 +1,6 @@
 import config from '../config'
 
-module.exports = class IrsContribution
+export default class IrsContribution
   constructor: ({@auth}) -> null
 
   getAllByFromEin: (fromEin, {limit} = {}) =>

@@ -1,4 +1,4 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 import _map from 'lodash/map'
 import _orderBy from 'lodash/orderBy'
 import _reduce from 'lodash/reduce'
@@ -15,7 +15,7 @@ if window?
 
 LEGEND_COUNT = 5
 
-module.exports = $fundOverviewNteePie = ({irsFund}) ->
+export default $fundOverviewNteePie = ({irsFund}) ->
   {lang} = useContext context
 
   # TODO: useMemo?

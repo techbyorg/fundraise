@@ -1,4 +1,4 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 
 import FormatService from 'frontend-shared/services/format'
 
@@ -7,7 +7,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $fundSearchResultsMobileRow = ({row}) ->
+export default $fundSearchResultsMobileRow = ({row}) ->
   {lang} = useContext context
 
   z '.z-fund-search-results-mobile-row',

@@ -1,4 +1,4 @@
-{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import _orderBy from 'lodash/orderBy'
 import _map from 'lodash/map'
 import _min from 'lodash/min'
@@ -15,7 +15,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $org = ({irsOrgStream}) ->
+export default $org = ({irsOrgStream}) ->
   {model, lang} = useContext context
 
   {irsOrg990StatsStream, metricValueStreams, contributionsStream,

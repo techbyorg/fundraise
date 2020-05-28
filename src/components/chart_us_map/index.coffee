@@ -1,4 +1,4 @@
-{z, lazy, Suspense, Boundary, useRef, useMemo, useStream, useEffect} = require 'zorium'
+import {z, lazy, Suspense, Boundary, useRef, useMemo, useStream, useEffect} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 import _map from 'lodash/map'
 import _min from 'lodash/min'
@@ -50,7 +50,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $chartUsMap = ({data}) ->
+export default $chartUsMap = ({data}) ->
   $$ref = useRef()
 
   {min, max} = useMemo ->

@@ -1,9 +1,9 @@
-{z, useRef, useLayoutEffect} = require 'zorium'
+import {z, useRef, useLayoutEffect} from 'zorium'
 
 if window?
   require './index.styl'
 
-module.exports = $searchInput = ({placeholder, valueStream}) ->
+export default $searchInput = ({placeholder, valueStream}) ->
   # {value} = useStream ->
   #   value: valueStream
 

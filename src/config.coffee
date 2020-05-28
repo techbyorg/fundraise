@@ -172,7 +172,9 @@ server =
 
 assertNoneMissing isomorphic
 if window?
+  # TODO: esm?
   module.exports = isomorphic
 else
   assertNoneMissing server
+  # TODO: esm?
   module.exports = _merge isomorphic, server

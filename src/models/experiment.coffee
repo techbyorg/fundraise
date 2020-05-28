@@ -1,4 +1,4 @@
-module.exports = class Experiment
+export default class Experiment
   # TODO: have exp cookies only last ~ a month
   constructor: ({@cookie}) ->
     expDefault = @cookie.get 'exp:default'

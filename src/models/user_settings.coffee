@@ -1,6 +1,6 @@
 # TODO: need to convert to graphql before this will work
 
-module.exports = class UserSettings
+export default class UserSettings
   namespace: 'userSettings'
 
   constructor: ({@auth}) -> null

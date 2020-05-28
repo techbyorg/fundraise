@@ -1,4 +1,4 @@
-{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import $tapTabs from 'frontend-shared/components/tap_tabs'
@@ -14,7 +14,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $fund = ({placeholderNameStream, irsFundStream}) ->
+export default $fund = ({placeholderNameStream, irsFundStream}) ->
   {lang} = useContext context
 
   {selectedIndexStream} = useMemo ->

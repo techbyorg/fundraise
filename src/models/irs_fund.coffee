@@ -1,6 +1,6 @@
 import config from '../config'
 
-module.exports = class IrsFund
+export default class IrsFund
   constructor: ({@auth}) -> null
 
   getByEin: (ein) =>

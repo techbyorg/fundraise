@@ -1,6 +1,6 @@
 # TODO: need to convert to graphql before this will work
 
-module.exports = class Subscription
+export default class Subscription
   namespace: 'subscriptions'
 
   constructor: ({@auth}) -> null

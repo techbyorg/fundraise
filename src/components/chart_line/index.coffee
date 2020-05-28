@@ -1,4 +1,4 @@
-{z, lazy, Suspense, Boundary} = require 'zorium'
+import {z, lazy, Suspense, Boundary} from 'zorium'
 $line = lazy -> (`import(/* webpackChunkName: "nivo" */'@nivo/line').then(({ResponsiveLine}) => ResponsiveLine)`)
 
 import $spinner from 'frontend-shared/components/spinner'
@@ -16,7 +16,7 @@ make sure there aren't dupe react/preact/nivos in package-lock.json.
 also make sure nothing is npm-linked (idk why)
 ###
 
-module.exports = $chartLine = ({data}) ->
+export default $chartLine = ({data}) ->
   z '.z-chart-line',
     if window?
       z Boundary, {fallback: z '.error', 'err'},

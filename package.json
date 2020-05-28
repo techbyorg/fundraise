@@ -13,7 +13,7 @@
     "clay-coffeescript-style-guide": "^1.1.0",
     "coffeelint": "^2.1.0",
     "coffeescript": "^2.5.1",
-    "frontend-shared-dev": "file:frontend-shared-dev-0.0.1.tgz",
+    "frontend-shared-dev": "github:techbyorg/frontend-shared-dev",
     "gulp": "^4.0.2"
   },
   "dependencies": {

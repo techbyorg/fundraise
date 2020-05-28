@@ -1,6 +1,6 @@
 # TODO: need to convert to graphql before this will work
 
-module.exports = class UserData
+export default class UserData
   namespace: 'userData'
 
   constructor: ({@auth}) -> null

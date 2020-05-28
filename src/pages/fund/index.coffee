@@ -1,4 +1,4 @@
-{z, useContext, useMemo, useStream} = require 'zorium'
+import {z, useContext, useMemo, useStream} from 'zorium'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 import _startCase from 'lodash/startCase'
@@ -13,7 +13,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $fundPage = ({requestsStream}) ->
+export default $fundPage = ({requestsStream}) ->
   {model} = useContext context
 
   {placeholderNameStream, irsFundStream} = useMemo ->

@@ -1,4 +1,4 @@
-{z, classKebab, useContext, useStream} = require 'zorium'
+import {z, classKebab, useContext, useStream} from 'zorium'
 
 import FormatService from 'frontend-shared/services/format'
 import context from '../../context'
@@ -6,7 +6,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $fundAtAGlance = (props) ->
+export default $fundAtAGlance = (props) ->
   {placeholderNameStream, irsFund} = props
   {lang, router} = useContext context
 

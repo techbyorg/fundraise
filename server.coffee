@@ -8,4 +8,4 @@ import Model from './src/models'
 
 app = setup {config, gulpPaths, $app, Lang, Model}
 
-module.exports = app
+export default app

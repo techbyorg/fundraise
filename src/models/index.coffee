@@ -15,7 +15,7 @@ import Subscription from './subscription'
 import UserData from './user_data'
 import UserSettings from './user_settings'
 
-module.exports = class Model extends SharedModel
+export default class Model extends SharedModel
   constructor: ->
     super arguments...
     @entity = new Entity {@auth}

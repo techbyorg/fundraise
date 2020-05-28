@@ -1,4 +1,4 @@
-{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import _isEmpty from 'lodash/isEmpty'
 import _map from 'lodash/map'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
@@ -18,7 +18,7 @@ if window?
 
 SEARCH_DEBOUNCE = 300
 
-module.exports = $irsSearch = ({irsType = 'irsFund', hintText}) ->
+export default $irsSearch = ({irsType = 'irsFund', hintText}) ->
   {model, router} = useContext context
 
   {nameValueStream, debouncedNameValueStream, isEntitiesVisibleStream,

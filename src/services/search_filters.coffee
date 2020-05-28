@@ -294,4 +294,4 @@ class SearchFiltersService
     filter
 
 
-module.exports = new SearchFiltersService()
+export default new SearchFiltersService()

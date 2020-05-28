@@ -1,4 +1,4 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 
 import $icon from '../icon'
 import context from '../../context'
@@ -6,7 +6,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $fundApplicationInfo = ({irsFund}) ->
+export default $fundApplicationInfo = ({irsFund}) ->
   {lang} = useContext context
 
   z '.z-fund-application-info',

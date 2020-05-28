@@ -1,4 +1,4 @@
-{z, useContext, useMemo, useStream} = require 'zorium'
+import {z, useContext, useMemo, useStream} from 'zorium'
 import _map from 'lodash/map'
 
 import $table from 'frontend-shared/components/table'
@@ -9,7 +9,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $fundGrants = ({irsFund, irsFundStream}) ->
+export default $fundGrants = ({irsFund, irsFundStream}) ->
   {model, lang} = useContext context
 
   {contributionsStream} = useMemo ->

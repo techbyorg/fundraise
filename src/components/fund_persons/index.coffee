@@ -1,4 +1,4 @@
-{z, useContext, useMemo, useStream} = require 'zorium'
+import {z, useContext, useMemo, useStream} from 'zorium'
 import _defaults from 'lodash/defaults'
 import _orderBy from 'lodash/orderBy'
 import _maxBy from 'lodash/maxBy'
@@ -12,7 +12,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $fundPersons = ({irsFund, irsFundStream}) ->
+export default $fundPersons = ({irsFund, irsFundStream}) ->
   {model, lang} = useContext context
 
   {personsStream} = useMemo ->

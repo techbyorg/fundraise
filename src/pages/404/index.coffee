@@ -1,4 +1,4 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 
 import $appBar from 'frontend-shared/components/app_bar'
 import $buttonMenu from 'frontend-shared/components/button_menu'
@@ -8,7 +8,7 @@ import colors from '../../colors'
 import context from '../../context'
 import config from '../../config'
 
-module.exports = $404Page = (props) ->
+export default $404Page = (props) ->
   {requestsStream, serverData, entity} = props
   {lang, router} = useContext context
 

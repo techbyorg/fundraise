@@ -1,4 +1,4 @@
-{z} = require 'zorium'
+import {z} from 'zorium'
 import _defaults from 'lodash/defaults'
 
 import $sharedApp from 'frontend-shared/app'
@@ -18,7 +18,7 @@ import $unsubscribeEmailPage from 'frontend-shared/pages/unsubscribe_email'
 import $verifyEmailPage from 'frontend-shared/pages/verify_email'
 import $404Page from './pages/404'
 
-module.exports = $app = (props) ->
+export default $app = (props) ->
 
   z $sharedApp, _defaults {
     routes:

@@ -198,4 +198,4 @@ if window?
     colors = _mapValues colors, (color, key) ->
       colors.getRawColor color
 
-module.exports = colors
+export default colors

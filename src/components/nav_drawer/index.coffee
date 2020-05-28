@@ -1,4 +1,4 @@
-{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import _map from 'lodash/map'
 import _filter from 'lodash/filter'
 import _take from 'lodash/take'
@@ -28,7 +28,7 @@ if window?
   require './index.styl'
 
 # TODO: if using this with entity/groupStream, get it from context
-module.exports = $navDrawer = ({entityStream, currentPath}) ->
+export default $navDrawer = ({entityStream, currentPath}) ->
   {model, lang, browser, router} = useContext context
 
   {meStream, isRateLoadingStream, expandedItemsStream, myEntitiesStream,

@@ -1,6 +1,6 @@
 # TODO: need to convert to graphql before this will work
 
-module.exports = class Notification
+export default class Notification
   namespace: 'notifications'
 
   constructor: ({@auth}) -> null

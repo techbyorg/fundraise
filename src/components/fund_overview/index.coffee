@@ -1,4 +1,4 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 
 import $fundOverviewLineChart from '../fund_overview_line_chart'
 import $fundOverviewNteePie from '../fund_overview_ntee_pie'
@@ -8,7 +8,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $fundOverview = ({irsFund}) ->
+export default $fundOverview = ({irsFund}) ->
   {lang} = useContext context
 
   z '.z-fund-overview',

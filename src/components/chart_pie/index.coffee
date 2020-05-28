@@ -1,4 +1,4 @@
-{z, lazy, Suspense, Boundary} = require 'zorium'
+import {z, lazy, Suspense, Boundary} from 'zorium'
 $pie = lazy -> (`import(/* webpackChunkName: "nivo" */'@nivo/pie').then(({ResponsivePie}) => ResponsivePie)`)
 
 import $spinner from 'frontend-shared/components/spinner'
@@ -8,7 +8,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $chartPie = ({data, colors}) ->
+export default $chartPie = ({data, colors}) ->
   z '.z-chart-pie',
     if window?
       z Boundary, {fallback: z '.error', 'err'},
