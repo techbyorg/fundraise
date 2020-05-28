@@ -6,9 +6,10 @@ RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 require 'rxjs/add/operator/debounceTime'
 
+$primaryInput = require 'frontend-shared/components/primary_input'
+FormatService = require 'frontend-shared/components/services/format'
+
 $icon = require '../icon'
-$primaryInput = require '../primary_input'
-FormatService = require '../../services/format'
 context = require '../../context'
 config = require '../../config'
 

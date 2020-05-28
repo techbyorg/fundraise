@@ -40,9 +40,10 @@ $choropleth = lazy ->
         borderWidth: 1
         borderColor: colors.getRawColor colors.$bgColor
 
-$spinner = require '../spinner'
-FormatService = require '../../services/format'
-useRefSize = require '../../services/use_ref_size'
+$spinner = require 'frontend-shared/components/spinner'
+FormatService = require 'frontend-shared/services/format'
+useRefSize = require 'frontend-shared/services/use_ref_size'
+
 colors = require '../../colors'
 config = require '../../config'
 

@@ -1,13 +1,14 @@
 {z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
+$tapTabs = require 'frontend-shared/components/tap_tabs'
+
 $fundAtAGlance = require '../fund_at_a_glance'
 $fundOverview = require '../fund_overview'
 $fundGrants = require '../fund_grants'
 $fundPersons = require '../fund_persons'
 $fundApplicationInfo = require '../fund_application_info'
 $fund990s = require '../fund_990s'
-$tapTabs = require '../tap_tabs'
 context = require '../../context'
 
 if window?

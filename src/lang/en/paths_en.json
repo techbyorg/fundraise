@@ -6,7 +6,7 @@
   "signIn": "/:entitySlug/sign-in",
   "unsubscribeEmail": "/:entitySlug/unsubscribe-email/:userId/:tokenStr",
   "verifyEmail": "/:entitySlug/verify-email/:userId/:tokenStr",
-  "404": "/:entitySlug/*",
+  "fourOhFour": "/:entitySlug/*",
 
   "home": "/",
   "fundByEin": "/fund/:slug/:ein",

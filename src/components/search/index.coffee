@@ -5,15 +5,16 @@ RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/observable/of'
 
-$button = require '../button'
-$filterBar = require '../filter_bar'
+$button = require 'frontend-shared/components/button'
+$input = require 'frontend-shared/components/input'
+$table = require 'frontend-shared/components/table'
+FormatService = require 'frontend-shared/services/format'
+
 # $irsSearch = require '../irs_search'
+$filterBar = require '../filter_bar'
 $fundSearchResults = require '../fund_search_results'
-$input = require '../input'
 $searchInput = require '../search_input'
 $searchTags = require '../search_tags'
-$table = require '../table'
-FormatService = require '../../services/format'
 SearchFiltersService = require '../../services/search_filters'
 context = require '../../context'
 

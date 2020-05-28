@@ -1,2 +1,0 @@
-if window?
-  require './polyfill'

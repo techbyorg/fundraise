@@ -4,8 +4,9 @@ _orderBy = require 'lodash/orderBy'
 _reduce = require 'lodash/reduce'
 _take = require 'lodash/take'
 
+FormatService = require 'frontend-shared/services/format'
+
 $chartPie = require '../chart_pie'
-FormatService = require '../../services/format'
 context = require '../../context'
 config = require '../../config'
 

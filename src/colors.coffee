@@ -1,13 +1,19 @@
 _defaults = require 'lodash/defaults'
 _mapValues = require 'lodash/mapValues'
 
-materialColors = require './material_colors'
+$black12 = 'rgba(0, 0, 0, 0.12)'
+$black26 = 'rgba(0, 0, 0, 0.26)'
+$black54 = 'rgba(0, 0, 0, 0.54)'
+$black70 = 'rgba(0, 0, 0, 0.70)'
+$black87 = 'rgba(0, 0, 0, 0.87)'
+$white = '#ffffff'
+$white54 = 'rgba(255, 255, 255, 0.54)'
 
 colors = _defaults {
   default:
     '--header-500': '#ffffff' # t100
-    '--header-500-text': materialColors.$black87
-    '--header-500-text-54': materialColors.$black54
+    '--header-500-text': $black87
+    '--header-500-text-54': $black54
     '--header-500-icon': '#757575'
 
     '--primary-50': 'rgba(63, 113, 222, 0.04)'
@@ -20,8 +26,8 @@ colors = _defaults {
     '--primary-700': '#315ED5'
     '--primary-800': '#2954D1'
     '--primary-900': '#1B42C8'
-    '--primary-100-text': materialColors.$black87
-    '--primary-200-text': materialColors.$black87
+    '--primary-100-text': $black87
+    '--primary-200-text': $black87
     '--primary-300-text': '#FAFAFA'
     '--primary-400-text': '#FAFAFA'
     '--primary-500-text': '#FAFAFA'
@@ -41,32 +47,32 @@ colors = _defaults {
     '--secondary-700': '#00B2AF'
     '--secondary-800': '#00AAA7'
     '--secondary-900': '#009C99'
-    '--secondary-100-text': materialColors.$black87
-    '--secondary-200-text': materialColors.$black87
-    '--secondary-300-text': materialColors.$black87
-    '--secondary-400-text': materialColors.$black87
-    '--secondary-500-text': materialColors.$white
-    '--secondary-600-text': materialColors.$white
-    '--secondary-700-text': materialColors.$white
-    '--secondary-800-text': materialColors.$white
-    '--secondary-900-text': materialColors.$white
+    '--secondary-100-text': $black87
+    '--secondary-200-text': $black87
+    '--secondary-300-text': $black87
+    '--secondary-400-text': $black87
+    '--secondary-500-text': $white
+    '--secondary-600-text': $white
+    '--secondary-700-text': $white
+    '--secondary-800-text': $white
+    '--secondary-900-text': $white
 
     '--bg-color': '#ffffff'
     '--bg-color-alt-1': '#F8F8F8' # changed from f5f5f5
     '--bg-color-alt-2': '#EEEEEE'
     '--bg-backdrop': 'rgba(250, 250, 250, 0.73)'
-    '--bg-text': materialColors.$black70
+    '--bg-text': $black70
     '--bg-text-6': 'rgba(0, 0, 0, 0.06)'
-    '--bg-text-12': materialColors.$black12
-    '--bg-text-26': materialColors.$black26
+    '--bg-text-12': $black12
+    '--bg-text-26': $black26
     '--bg-text-38': 'rgba(0, 0, 0, 0.38)'
-    '--bg-text-54': materialColors.$black54
+    '--bg-text-54': $black54
     '--bg-text-60': 'rgba(0, 0, 0, 0.6)'
-    '--bg-text-70': materialColors.$black70
-    '--bg-text-87': materialColors.$black87
+    '--bg-text-70': $black70
+    '--bg-text-87': $black87
 
     '--quaternary-500': '#fedf57'
-    '--quaternary-500-text': materialColors.$white
+    '--quaternary-500-text': $white
     '--test-color': '#000' # don't change
 
 
@@ -163,21 +169,24 @@ colors = _defaults {
   '$bgText70': 'var(--bg-text-70)'
   '$bgText87': 'var(--bg-text-87)'
 
-  '$tabSelected': materialColors.$white
+  '$tabSelected': $white
   '$tabUnselected': '#1a1a1a'
 
-  '$tabSelectedAlt': materialColors.$white
-  '$tabUnselectedAlt': materialColors.$white54
+  '$tabSelectedAlt': $white
+  '$tabUnselectedAlt': $white54
 
   '$transparent': 'rgba(0, 0, 0, 0)'
   '$common': '#3e4447'
+  '$white': $white
+  '$red500': '#F44336'
+  '$amber500': '#FFC107'
 
   getRawColor: (color) ->
     if typeof color is 'string' and matches = color.match(/\(([^)]+)\)/)
       colors.default[matches[1]]
     else
       color
-}, materialColors
+}
 
 # no css-variable support
 if window?

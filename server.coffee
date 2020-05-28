@@ -12,15 +12,17 @@ fs = require 'fs'
 socketIO = require 'socket.io-client'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
+RouterService = require 'frontend-shared/services/router'
+LanguageService = require 'frontend-shared/services/language'
+CookieService = require 'frontend-shared/services/cookie'
+WindowService = require 'frontend-shared/services/window'
+request = require 'frontend-shared/services/request'
+
 config = require './src/config'
 gulpPaths = require './gulp_paths'
 $app = require './src/app'
+Lang = require './src/lang'
 Model = require './src/models'
-RouterService = require './src/services/router'
-LanguageService = require './src/services/language'
-CookieService = require './src/services/cookie'
-WindowService = require './src/services/window'
-request = require './src/services/request'
 
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
@@ -105,7 +107,7 @@ app.use (req, res, next) ->
     setCookie: (key, value, options) ->
       res.cookie key, value, options
   }
-  lang = new LanguageService {language, cookie}
+  lang = new LanguageService {language, cookie, files: Lang.getLangFiles()}
   browser = new WindowService {cookie, userAgent}
   model = new Model {
     io

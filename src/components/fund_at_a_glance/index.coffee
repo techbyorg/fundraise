@@ -1,6 +1,6 @@
 {z, classKebab, useContext, useStream} = require 'zorium'
 
-FormatService = require '../../services/format'
+FormatService = require 'frontend-shared/services/format'
 context = require '../../context'
 
 if window?

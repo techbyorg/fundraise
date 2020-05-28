@@ -1,27 +1,29 @@
-require './polyfill'
+require 'frontend-shared/polyfill'
 
 {z, render} = require 'zorium'
 cookieLib = require 'cookie'
 LocationRouter = require 'location-router'
-Environment = require './services/environment'
 socketIO = require 'socket.io-client/dist/socket.io.slim.js'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 require 'rxjs/add/operator/do'
 
-require './root.styl'
+require 'frontend-shared/root.styl'
 
-DateService = require './services/date'
-RouterService = require './services/router'
-PushService = require './services/push'
-ServiceWorkerService = require './services/service_worker'
-CookieService = require './services/cookie'
-LanguageService = require './services/language'
-PortalService = require './services/portal'
-WindowService = require './services/window'
+Environment = require 'frontend-shared/services/environment'
+DateService = require 'frontend-shared/services/date'
+RouterService = require 'frontend-shared/services/router'
+PushService = require 'frontend-shared/services/push'
+ServiceWorkerService = require 'frontend-shared/services/service_worker'
+CookieService = require 'frontend-shared/services/cookie'
+LanguageService = require 'frontend-shared/services/language'
+PortalService = require 'frontend-shared/services/portal'
+WindowService = require 'frontend-shared/services/window'
+
 $app = require './app'
+Lang = require './lang'
 Model = require './models'
-config = require './config'
 colors = require './colors'
+config = require './config'
 
 MAX_ERRORS_LOGGED = 5
 
@@ -91,7 +93,12 @@ cookie = new CookieService {
     document.cookie = cookieLib.serialize \
       key, value, options
 }
-lang = new LanguageService {language, cookie}
+lang = new LanguageService {
+  language
+  cookie
+  # prod uses bundled language json
+  files: if config.ENV isnt config.ENVS.PROD then Lang.getLangFiles()
+}
 portal = new PortalService {lang}
 browser = new WindowService {cookie, userAgent}
 model = new Model {

@@ -2,8 +2,9 @@
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
-$appBar = require '../../components/app_bar'
-$buttonBack = require '../../components/button_back'
+$appBar = require 'frontend-shared/components/app_bar'
+$buttonBack = require 'frontend-shared/components/button_back'
+
 $org = require '../../components/org'
 colors = require '../../colors'
 context = require '../../context'

@@ -7,10 +7,9 @@ RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/observable/of'
 
-$avatar = require '../avatar'
-$dropdown = require '../dropdown'
-# $graph = require '../graph_widget'
-FormatService = require '../../services/format'
+$avatar = require 'frontend-shared/components/avatar'
+$dropdown = require 'frontend-shared/components/dropdown'
+FormatService = require 'frontend-shared/services/format'
 context = require '../../context'
 
 if window?

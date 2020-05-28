@@ -1,6 +1,7 @@
 z = require 'zorium'
 
-$spinner = require '../../components/spinner'
+$spinner = require 'frontend-shared/components/spinner'
+
 config = require '../../config'
 
 if window?

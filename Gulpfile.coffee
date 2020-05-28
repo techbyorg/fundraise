@@ -233,7 +233,7 @@ gulp.task 'dist', gulp.series(
   'dist:clean'
   gulp.parallel('dist:scripts', 'dist:static')
   'dist:concat'
-  'dist:sw'
+  # 'dist:sw'
   # 'dist:gc'
   'dist:sizereport'
 )

@@ -9,9 +9,10 @@ _map = require 'lodash/map'
 _orderBy = require 'lodash/orderBy'
 _uniqBy = require 'lodash/uniqBy'
 
+Environment = require 'frontend-shared/services/environment'
+
 $filterContentPositionedOverlay = require '../filter_content_positioned_overlay'
 $filterContentSheet = require '../filter_content_sheet'
-Environment = require '../../services/environment'
 colors = require '../../colors'
 
 if window?

@@ -1,8 +1,9 @@
 {z, lazy, Suspense, Boundary} = require 'zorium'
 $line = lazy -> (`import(/* webpackChunkName: "nivo" */'@nivo/line').then(({ResponsiveLine}) => ResponsiveLine)`)
 
-$spinner = require '../spinner'
-FormatService = require '../../services/format'
+$spinner = require 'frontend-shared/components/spinner'
+FormatService = require 'frontend-shared/services/format'
+
 colors = require '../../colors'
 config = require '../../config'
 

@@ -1,8 +1,9 @@
 {z, useContext, useMemo, useStream} = require 'zorium'
 _map = require 'lodash/map'
 
-$table = require '../table'
-FormatService = require '../../services/format'
+$table = require 'frontend-shared/components/table'
+FormatService = require 'frontend-shared/services/format'
+
 context = require '../../context'
 
 if window?

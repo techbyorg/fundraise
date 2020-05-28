@@ -4,9 +4,10 @@ RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
-$sheet = require '../sheet'
+$sheet = require 'frontend-shared/components/sheet'
+$button = require 'frontend-shared/components/button'
+
 $filterContent = require '../filter_content'
-$button = require '../button'
 colors = require '../../colors'
 context = require '../../context'
 config = require '../../config'

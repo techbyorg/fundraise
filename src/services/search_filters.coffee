@@ -13,7 +13,7 @@ _reduce = require 'lodash/reduce'
 _some = require 'lodash/some'
 _zipWith = require 'lodash/zipWith'
 
-FormatService = require './format'
+FormatService = require 'frontend-shared/services/format'
 
 nteeMajors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']

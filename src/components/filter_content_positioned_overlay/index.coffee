@@ -4,9 +4,10 @@ RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
-$positionedOverlay = require '../positioned_overlay'
+$positionedOverlay = require 'frontend-shared/components/positioned_overlay'
+$button = require 'frontend-shared/components/button'
+
 $filterContent = require '../filter_content'
-$button = require '../button'
 colors = require '../../colors'
 context = require '../../context'
 config = require '../../config'

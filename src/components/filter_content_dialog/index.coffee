@@ -5,9 +5,10 @@ RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 _isEqual = require 'lodash/isEqual'
 
-$dialog = require '../dialog'
+$dialog = require 'frontend-shared/components/dialog'
+$button = require 'frontend-shared/components/button'
+
 $filterContent = require '../filter_content'
-$button = require '../button'
 colors = require '../../colors'
 context = require '../../context'
 config = require '../../config'

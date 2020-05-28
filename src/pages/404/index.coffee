@@ -1,11 +1,12 @@
 {z, useContext} = require 'zorium'
 
-config = require '../../config'
-$appBar = require '../../components/app_bar'
-$buttonMenu = require '../../components/button_menu'
-$button = require '../../components/button'
+$appBar = require 'frontend-shared/components/app_bar'
+$buttonMenu = require 'frontend-shared/components/button_menu'
+$button = require 'frontend-shared/components/button'
+
 colors = require '../../colors'
 context = require '../../context'
+config = require '../../config'
 
 module.exports = $404Page = (props) ->
   {requestsStream, serverData, entity} = props

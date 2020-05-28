@@ -1,17 +1,8 @@
 module.exports =
   static: './src/static/**/*'
-  coffee: ['./*.coffee', './src/**/*.coffee', './test/**/*.coffee']
-  cover: [
-    './*.coffee'
-    './src/**/*.coffee'
-    '!./src/**/*.test.coffee'
-    '!./src/**/test.coffee'
-  ]
-  unitTests: ['./src/**/test.coffee', './src/**/*.test.coffee']
-  serverTests: './test/server/index.coffee'
-  functionalTests: './test/functional/**/*.coffee'
+  coffee: ['./*.coffee', './src/**/*.coffee']
   root: './src/root.coffee'
-  sw: './src/service_worker/index.coffee'
+  sw: 'frontend-shared/service_worker/index.coffee'
   dist: './dist'
   build: './build'
   swBuild: './build/service_worker.js'

@@ -13,11 +13,12 @@ require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/operator/map'
 require 'rxjs/add/operator/startWith'
 
+$button = require 'frontend-shared/components/button'
+$drawer = require 'frontend-shared/components/drawer'
+$ripple = require 'frontend-shared/components/ripple'
+Environment = require 'frontend-shared/services/environment'
+
 $icon = require '../icon'
-$button = require '../button'
-$drawer = require '../drawer'
-$ripple = require '../ripple'
-Environment = require '../../services/environment'
 colors = require '../../colors'
 context = require '../../context'
 config = require '../../config'
@@ -26,6 +27,7 @@ if window?
   IScroll = require 'iscroll/build/iscroll-lite-snap-zoom.js'
   require './index.styl'
 
+# TODO: if using this with entity/groupStream, get it from context
 module.exports = $navDrawer = ({entityStream, currentPath}) ->
   {model, lang, browser, router} = useContext context
 

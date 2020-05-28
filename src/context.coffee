@@ -1,3 +1,1 @@
-{createContext} = require 'zorium'
-
-module.exports = GlobalContext = createContext()
+module.exports = require 'frontend-shared/context'

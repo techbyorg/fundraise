@@ -1,7 +1,8 @@
 {z, lazy, Suspense, Boundary} = require 'zorium'
 $pie = lazy -> (`import(/* webpackChunkName: "nivo" */'@nivo/pie').then(({ResponsivePie}) => ResponsivePie)`)
 
-$spinner = require '../spinner'
+$spinner = require 'frontend-shared/components/spinner'
+
 config = require '../../config'
 
 if window?

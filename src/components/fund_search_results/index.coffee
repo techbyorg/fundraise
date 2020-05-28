@@ -3,10 +3,11 @@ _map = require 'lodash/map'
 _orderBy = require 'lodash/orderBy'
 _take = require 'lodash/take'
 
-$table = require '../table'
-$tags = require '../tags'
+$table = require 'frontend-shared/components/table'
+$tags = require 'frontend-shared/components/tags'
+FormatService = require 'frontend-shared/services/format'
+
 $fundSearchResultsMobileRow = require '../fund_search_results_mobile_row'
-FormatService = require '../../services/format'
 context = require '../../context'
 config = require '../../config'
 

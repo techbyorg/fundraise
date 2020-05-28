@@ -4,8 +4,9 @@ _orderBy = require 'lodash/orderBy'
 _maxBy = require 'lodash/maxBy'
 _map = require 'lodash/map'
 
-$table = require '../table'
-FormatService = require '../../services/format'
+$table = require 'frontend-shared/components/table'
+FormatService = require 'frontend-shared/services/format'
+
 context = require '../../context'
 
 if window?
