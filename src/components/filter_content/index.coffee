@@ -4,20 +4,20 @@ RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/observable/of'
-_map = require 'lodash/map'
-_filter = require 'lodash/filter'
-_isEmpty = require 'lodash/isEmpty'
-_zipObject = require 'lodash/zipObject'
+import _map from 'lodash/map'
+import _filter from 'lodash/filter'
+import _isEmpty from 'lodash/isEmpty'
+import _zipObject from 'lodash/zipObject'
 
-$checkbox = require 'frontend-shared/components/checkbox'
-$dropdown = require 'frontend-shared/components/dropdown'
-$input = require 'frontend-shared/components/input'
-$inputRange = require 'frontend-shared/components/input_range'
+import $checkbox from 'frontend-shared/components/checkbox'
+import $dropdown from 'frontend-shared/components/dropdown'
+import $input from 'frontend-shared/components/input'
+import $inputRange from 'frontend-shared/components/input_range'
 
-$icon = require '../icon'
-colors = require '../../colors'
+import $icon from '../icon'
+import colors from '../../colors'
 context= require '../../context'
-config = require '../../config'
+import config from '../../config'
 
 if window?
   require './index.styl'

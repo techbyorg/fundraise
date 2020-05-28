@@ -3,17 +3,17 @@ require 'rxjs/add/observable/of'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 require 'rxjs/add/operator/distinctUntilChanged'
-_defaults = require 'lodash/defaults'
-_isEmpty = require 'lodash/isEmpty'
-_isEqual = require 'lodash/isEqual'
-_filter = require 'lodash/filter'
-_groupBy = require 'lodash/groupBy'
-_map = require 'lodash/map'
-_reduce = require 'lodash/reduce'
-_some = require 'lodash/some'
-_zipWith = require 'lodash/zipWith'
+import _defaults from 'lodash/defaults'
+import _isEmpty from 'lodash/isEmpty'
+import _isEqual from 'lodash/isEqual'
+import _filter from 'lodash/filter'
+import _groupBy from 'lodash/groupBy'
+import _map from 'lodash/map'
+import _reduce from 'lodash/reduce'
+import _some from 'lodash/some'
+import _zipWith from 'lodash/zipWith'
 
-FormatService = require 'frontend-shared/services/format'
+import FormatService from 'frontend-shared/services/format'
 
 nteeMajors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']

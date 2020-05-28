@@ -1,14 +1,14 @@
 {z, useContext} = require 'zorium'
-_map = require 'lodash/map'
-_orderBy = require 'lodash/orderBy'
-_reduce = require 'lodash/reduce'
-_take = require 'lodash/take'
+import _map from 'lodash/map'
+import _orderBy from 'lodash/orderBy'
+import _reduce from 'lodash/reduce'
+import _take from 'lodash/take'
 
-FormatService = require 'frontend-shared/services/format'
+import FormatService from 'frontend-shared/services/format'
 
-$chartPie = require '../chart_pie'
-context = require '../../context'
-config = require '../../config'
+import $chartPie from '../chart_pie'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

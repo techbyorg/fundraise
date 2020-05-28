@@ -1,12 +1,12 @@
 {z, useContext, useStream} = require 'zorium'
 
-$appBar = require 'frontend-shared/components/app_bar'
-$buttonMenu = require 'frontend-shared/components/button_menu'
-$spinner = require 'frontend-shared/components/spinner'
+import $appBar from 'frontend-shared/components/app_bar'
+import $buttonMenu from 'frontend-shared/components/button_menu'
+import $spinner from 'frontend-shared/components/spinner'
 
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

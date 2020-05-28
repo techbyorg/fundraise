@@ -1,7 +1,7 @@
 {z, classKebab} = require 'zorium'
 
-icons = require './icons'
-colors = require '../../colors'
+import icons from './icons'
+import colors from '../../colors'
 
 if window?
   require './index.styl'

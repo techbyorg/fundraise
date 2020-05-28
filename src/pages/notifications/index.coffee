@@ -1,13 +1,13 @@
 {z, useContext} = require 'zorium'
 RxObservable = require('rxjs/Observable').Observable
 
-$appBar = require 'frontend-shared/components/app_bar'
-$buttonMenu = require 'frontend-shared/components/button_menu'
-$notifications = require 'frontend-shared/components/notifications'
+import $appBar from 'frontend-shared/components/app_bar'
+import $buttonMenu from 'frontend-shared/components/button_menu'
+import $notifications from 'frontend-shared/components/notifications'
 
-config = require '../../config'
-context = require '../../context'
-colors = require '../../colors'
+import config from '../../config'
+import context from '../../context'
+import colors from '../../colors'
 
 if window?
   require './index.styl'

@@ -1,16 +1,16 @@
 {z, classKebab, useContext, useMemo, useStream} = require 'zorium'
-_orderBy = require 'lodash/orderBy'
-_map = require 'lodash/map'
-_min = require 'lodash/min'
+import _orderBy from 'lodash/orderBy'
+import _map from 'lodash/map'
+import _min from 'lodash/min'
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/observable/of'
 
-$avatar = require 'frontend-shared/components/avatar'
-$dropdown = require 'frontend-shared/components/dropdown'
-FormatService = require 'frontend-shared/services/format'
-context = require '../../context'
+import $avatar from 'frontend-shared/components/avatar'
+import $dropdown from 'frontend-shared/components/dropdown'
+import FormatService from 'frontend-shared/services/format'
+import context from '../../context'
 
 if window?
   require './index.styl'

@@ -1,9 +1,9 @@
 {z, useContext, useMemo, useStream} = require 'zorium'
-_map = require 'lodash/map'
+import _map from 'lodash/map'
 
-$icon = require '../icon'
-colors = require '../../colors'
-context = require '../../context'
+import $icon from '../icon'
+import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'

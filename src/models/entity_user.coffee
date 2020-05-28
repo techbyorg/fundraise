@@ -1,8 +1,8 @@
-_every = require 'lodash/every'
-_find = require 'lodash/find'
-_defaults = require 'lodash/defaults'
+import _every from 'lodash/every'
+import _find from 'lodash/find'
+import _defaults from 'lodash/defaults'
 
-config = require '../config'
+import config from '../config'
 
 # TODO: need to convert to graphql before this will work
 

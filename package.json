@@ -9,10 +9,11 @@
     "watch": "./bin/watch.sh"
   },
   "devDependencies": {
+    "@babel/register": "^7.10.1",
     "clay-coffeescript-style-guide": "^1.1.0",
     "coffeelint": "^2.1.0",
     "coffeescript": "^2.5.1",
-    "frontend-shared-dev": "github:techbyorg/frontend-shared-dev",
+    "frontend-shared-dev": "file:frontend-shared-dev-0.0.1.tgz",
     "gulp": "^4.0.2"
   },
   "dependencies": {

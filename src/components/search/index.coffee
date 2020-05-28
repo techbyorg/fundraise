@@ -1,22 +1,22 @@
 {z, useContext, useMemo, useStream} = require 'zorium'
-_find = require 'lodash/find'
+import _find from 'lodash/find'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/observable/of'
 
-$button = require 'frontend-shared/components/button'
-$input = require 'frontend-shared/components/input'
-$table = require 'frontend-shared/components/table'
-FormatService = require 'frontend-shared/services/format'
+import $button from 'frontend-shared/components/button'
+import $input from 'frontend-shared/components/input'
+import $table from 'frontend-shared/components/table'
+import FormatService from 'frontend-shared/services/format'
 
 # $irsSearch = require '../irs_search'
-$filterBar = require '../filter_bar'
-$fundSearchResults = require '../fund_search_results'
+import $filterBar from '../filter_bar'
+import $fundSearchResults from '../fund_search_results'
 import $searchInput from '../search_input'
-$searchTags = require '../search_tags'
-SearchFiltersService = require '../../services/search_filters'
-context = require '../../context'
+import $searchTags from '../search_tags'
+import SearchFiltersService from '../../services/search_filters'
+import context from '../../context'
 
 if window?
   require './index.styl'

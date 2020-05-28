@@ -1,8 +1,8 @@
 {z, useContext} = require 'zorium'
 
-FormatService = require 'frontend-shared/services/format'
+import FormatService from 'frontend-shared/services/format'
 
-context = require '../../context'
+import context from '../../context'
 
 if window?
   require './index.styl'

@@ -1,13 +1,13 @@
 {z, useContext, useMemo, useStream} = require 'zorium'
-_defaults = require 'lodash/defaults'
-_orderBy = require 'lodash/orderBy'
-_maxBy = require 'lodash/maxBy'
-_map = require 'lodash/map'
+import _defaults from 'lodash/defaults'
+import _orderBy from 'lodash/orderBy'
+import _maxBy from 'lodash/maxBy'
+import _map from 'lodash/map'
 
-$table = require 'frontend-shared/components/table'
-FormatService = require 'frontend-shared/services/format'
+import $table from 'frontend-shared/components/table'
+import FormatService from 'frontend-shared/services/format'
 
-context = require '../../context'
+import context from '../../context'
 
 if window?
   require './index.styl'

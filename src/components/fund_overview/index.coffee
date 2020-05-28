@@ -1,9 +1,9 @@
 {z, useContext} = require 'zorium'
 
-$fundOverviewLineChart = require '../fund_overview_line_chart'
-$fundOverviewNteePie = require '../fund_overview_ntee_pie'
-$fundOverviewFundingMap = require '../fund_overview_funding_map'
-context = require '../../context'
+import $fundOverviewLineChart from '../fund_overview_line_chart'
+import $fundOverviewNteePie from '../fund_overview_ntee_pie'
+import $fundOverviewFundingMap from '../fund_overview_funding_map'
+import context from '../../context'
 
 if window?
   require './index.styl'

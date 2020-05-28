@@ -1,7 +1,7 @@
 {z, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-$filterContentDialog = require '../filter_content_dialog'
+import $filterContentDialog from '../filter_content_dialog'
 
 if window?
   require './index.styl'

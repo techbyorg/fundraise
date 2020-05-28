@@ -1,14 +1,14 @@
 {z, useContext, useMemo, useStream} = require 'zorium'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-_startCase = require 'lodash/startCase'
+import _startCase from 'lodash/startCase'
 
-$appBar = require 'frontend-shared/components/app_bar'
-$buttonBack = require 'frontend-shared/components/button_back'
+import $appBar from 'frontend-shared/components/app_bar'
+import $buttonBack from 'frontend-shared/components/button_back'
 
-$fund = require '../../components/fund'
-colors = require '../../colors'
-context = require '../../context'
+import $fund from '../../components/fund'
+import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'

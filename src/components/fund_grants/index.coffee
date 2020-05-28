@@ -1,10 +1,10 @@
 {z, useContext, useMemo, useStream} = require 'zorium'
-_map = require 'lodash/map'
+import _map from 'lodash/map'
 
-$table = require 'frontend-shared/components/table'
-FormatService = require 'frontend-shared/services/format'
+import $table from 'frontend-shared/components/table'
+import FormatService from 'frontend-shared/services/format'
 
-context = require '../../context'
+import context from '../../context'
 
 if window?
   require './index.styl'

@@ -4,13 +4,13 @@ RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
-$positionedOverlay = require 'frontend-shared/components/positioned_overlay'
-$button = require 'frontend-shared/components/button'
+import $positionedOverlay from 'frontend-shared/components/positioned_overlay'
+import $button from 'frontend-shared/components/button'
 
-$filterContent = require '../filter_content'
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import $filterContent from '../filter_content'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

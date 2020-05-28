@@ -1,8 +1,8 @@
 {z} = require 'zorium'
-_map = require 'lodash/map'
+import _map from 'lodash/map'
 
-$chartUsMap = require '../chart_us_map'
-config = require '../../config'
+import $chartUsMap from '../chart_us_map'
+import config from '../../config'
 
 if window?
   require './index.styl'

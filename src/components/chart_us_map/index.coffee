@@ -1,8 +1,8 @@
 {z, lazy, Suspense, Boundary, useRef, useMemo, useStream, useEffect} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-_map = require 'lodash/map'
-_min = require 'lodash/min'
-_max = require 'lodash/max'
+import _map from 'lodash/map'
+import _min from 'lodash/min'
+import _max from 'lodash/max'
 
 $choropleth = lazy ->
   Promise.all [
@@ -40,12 +40,12 @@ $choropleth = lazy ->
         borderWidth: 1
         borderColor: colors.getRawColor colors.$bgColor
 
-$spinner = require 'frontend-shared/components/spinner'
-FormatService = require 'frontend-shared/services/format'
-useRefSize = require 'frontend-shared/services/use_ref_size'
+import $spinner from 'frontend-shared/components/spinner'
+import FormatService from 'frontend-shared/services/format'
+import useRefSize from 'frontend-shared/services/use_ref_size'
 
-colors = require '../../colors'
-config = require '../../config'
+import colors from '../../colors'
+import config from '../../config'
 
 if window?
   require './index.styl'

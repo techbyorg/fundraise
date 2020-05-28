@@ -1,15 +1,15 @@
 {z, useContext} = require 'zorium'
-_map = require 'lodash/map'
-_orderBy = require 'lodash/orderBy'
-_take = require 'lodash/take'
+import _map from 'lodash/map'
+import _orderBy from 'lodash/orderBy'
+import _take from 'lodash/take'
 
-$table = require 'frontend-shared/components/table'
-$tags = require 'frontend-shared/components/tags'
-FormatService = require 'frontend-shared/services/format'
+import $table from 'frontend-shared/components/table'
+import $tags from 'frontend-shared/components/tags'
+import FormatService from 'frontend-shared/services/format'
 
-$fundSearchResultsMobileRow = require '../fund_search_results_mobile_row'
-context = require '../../context'
-config = require '../../config'
+import $fundSearchResultsMobileRow from '../fund_search_results_mobile_row'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

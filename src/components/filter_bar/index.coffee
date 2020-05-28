@@ -2,18 +2,18 @@
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-_defaults = require 'lodash/defaults'
-_filter = require 'lodash/filter'
-_find = require 'lodash/find'
-_map = require 'lodash/map'
-_orderBy = require 'lodash/orderBy'
-_uniqBy = require 'lodash/uniqBy'
+import _defaults from 'lodash/defaults'
+import _filter from 'lodash/filter'
+import _find from 'lodash/find'
+import _map from 'lodash/map'
+import _orderBy from 'lodash/orderBy'
+import _uniqBy from 'lodash/uniqBy'
 
-Environment = require 'frontend-shared/services/environment'
+import Environment from 'frontend-shared/services/environment'
 
-$filterContentPositionedOverlay = require '../filter_content_positioned_overlay'
-$filterContentSheet = require '../filter_content_sheet'
-colors = require '../../colors'
+import $filterContentPositionedOverlay from '../filter_content_positioned_overlay'
+import $filterContentSheet from '../filter_content_sheet'
+import colors from '../../colors'
 
 if window?
   require './index.styl'

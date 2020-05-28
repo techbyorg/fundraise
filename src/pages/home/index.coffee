@@ -1,8 +1,8 @@
-z = require 'zorium'
+import z from 'zorium'
 
-$spinner = require 'frontend-shared/components/spinner'
+import $spinner from 'frontend-shared/components/spinner'
 
-config = require '../../config'
+import config from '../../config'
 
 if window?
   require './index.styl'

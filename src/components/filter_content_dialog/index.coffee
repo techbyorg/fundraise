@@ -3,15 +3,15 @@ RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-_isEqual = require 'lodash/isEqual'
+import _isEqual from 'lodash/isEqual'
 
-$dialog = require 'frontend-shared/components/dialog'
-$button = require 'frontend-shared/components/button'
+import $dialog from 'frontend-shared/components/dialog'
+import $button from 'frontend-shared/components/button'
 
-$filterContent = require '../filter_content'
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import $filterContent from '../filter_content'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

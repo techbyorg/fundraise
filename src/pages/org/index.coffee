@@ -2,12 +2,12 @@
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
-$appBar = require 'frontend-shared/components/app_bar'
-$buttonBack = require 'frontend-shared/components/button_back'
+import $appBar from 'frontend-shared/components/app_bar'
+import $buttonBack from 'frontend-shared/components/button_back'
 
-$org = require '../../components/org'
-colors = require '../../colors'
-context = require '../../context'
+import $org from '../../components/org'
+import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'

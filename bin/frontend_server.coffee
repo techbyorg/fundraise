@@ -1,11 +1,11 @@
 #!/usr/bin/env coffee
-_map = require 'lodash/map'
-_range = require 'lodash/range'
-cluster = require 'cluster'
-os = require 'os'
+import _map from 'lodash/map'
+import _range from 'lodash/range'
+import cluster from 'cluster'
+import os from 'os'
 
-app = require '../server'
-config = require '../src/config'
+import app from '../server'
+import config from '../src/config'
 
 if cluster.isMaster
   _map _range(os.cpus().length), ->

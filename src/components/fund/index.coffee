@@ -1,15 +1,15 @@
 {z, classKebab, useContext, useMemo, useStream} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-$tapTabs = require 'frontend-shared/components/tap_tabs'
+import $tapTabs from 'frontend-shared/components/tap_tabs'
 
-$fundAtAGlance = require '../fund_at_a_glance'
-$fundOverview = require '../fund_overview'
-$fundGrants = require '../fund_grants'
-$fundPersons = require '../fund_persons'
-$fundApplicationInfo = require '../fund_application_info'
-$fund990s = require '../fund_990s'
-context = require '../../context'
+import $fundAtAGlance from '../fund_at_a_glance'
+import $fundOverview from '../fund_overview'
+import $fundGrants from '../fund_grants'
+import $fundPersons from '../fund_persons'
+import $fundApplicationInfo from '../fund_application_info'
+import $fund990s from '../fund_990s'
+import context from '../../context'
 
 if window?
   require './index.styl'

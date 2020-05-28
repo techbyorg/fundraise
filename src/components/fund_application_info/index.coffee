@@ -1,7 +1,7 @@
 {z, useContext} = require 'zorium'
 
-$icon = require '../icon'
-context = require '../../context'
+import $icon from '../icon'
+import context from '../../context'
 
 if window?
   require './index.styl'

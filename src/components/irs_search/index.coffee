@@ -1,17 +1,17 @@
 {z, classKebab, useContext, useMemo, useStream} = require 'zorium'
-_isEmpty = require 'lodash/isEmpty'
-_map = require 'lodash/map'
+import _isEmpty from 'lodash/isEmpty'
+import _map from 'lodash/map'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 require 'rxjs/add/operator/debounceTime'
 
-$primaryInput = require 'frontend-shared/components/primary_input'
-FormatService = require 'frontend-shared/components/services/format'
+import $primaryInput from 'frontend-shared/components/primary_input'
+import FormatService from 'frontend-shared/components/services/format'
 
-$icon = require '../icon'
-context = require '../../context'
-config = require '../../config'
+import $icon from '../icon'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

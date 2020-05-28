@@ -1,9 +1,9 @@
-_defaults = require 'lodash/defaults'
-_mapValues = require 'lodash/mapValues'
-_reduce = require 'lodash/reduce'
-_uniq = require 'lodash/uniq'
+import _defaults from 'lodash/defaults'
+import _mapValues from 'lodash/mapValues'
+import _reduce from 'lodash/reduce'
+import _uniq from 'lodash/uniq'
 
-config = require '../config'
+import config from '../config'
 
 files = {
   strings: null

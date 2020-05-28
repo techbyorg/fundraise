@@ -1,7 +1,7 @@
 #!/usr/bin/env coffee
 
-app = require '../server'
-config = require '../src/config'
+import app from '../server'
+import config from '../src/config'
 
 if config.DEV_USE_HTTPS
   https = require 'https'

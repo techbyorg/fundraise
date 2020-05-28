@@ -1,11 +1,11 @@
 {z} = require 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-_map = require 'lodash/map'
+import _map from 'lodash/map'
 
-$appBar = require 'frontend-shared/components/app_bar'
+import $appBar from 'frontend-shared/components/app_bar'
 
-$search = require '../../components/search'
-config = require '../../config'
+import $search from '../../components/search'
+import config from '../../config'
 
 if window?
   require './index.styl'
