@@ -1,5 +1,5 @@
 var colors = require('./colors');
-var config = require('./config')
+var config = require('./config');
 
 module.exports = function() {
   return function(style) {

@@ -1,7 +1,7 @@
 {z} = require 'zorium'
 _defaults = require 'lodash/defaults'
 
-$app = require 'frontend-shared/app'
+$sharedApp = require 'frontend-shared/app'
 
 $fundPage = require './pages/fund'
 $homePage = require './pages/home'
@@ -18,10 +18,9 @@ $unsubscribeEmailPage = require 'frontend-shared/pages/unsubscribe_email'
 $verifyEmailPage = require 'frontend-shared/pages/verify_email'
 $404Page = require './pages/404'
 
-module.exports = App = (props) ->
+module.exports = $app = (props) ->
 
-  console.log 'render app'
-  z $app, _defaults {
+  z $sharedApp, _defaults {
     routes:
       # add to lang/paths_en.json
       # <langKey>: $page
