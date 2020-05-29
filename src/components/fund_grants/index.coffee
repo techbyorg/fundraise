@@ -1,5 +1,4 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
-import _map from 'lodash/map'
 
 import $table from 'frontend-shared/components/table'
 import FormatService from 'frontend-shared/services/format'

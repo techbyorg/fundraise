@@ -1,7 +1,7 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
+import * as _ from 'lodash-es'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-import _startCase from 'lodash/startCase'
 
 import $appBar from 'frontend-shared/components/app_bar'
 import $buttonBack from 'frontend-shared/components/button_back'
@@ -20,7 +20,7 @@ export default $fundPage = ({requestsStream}) ->
     {
       # for smoother loading
       placeholderNameStream: requestsStream.map ({route}) =>
-        _startCase route.params.slug
+        _.startCase route.params.slug
       irsFundStream: requestsStream.switchMap ({route}) =>
         model.irsFund.getByEin route.params.ein
     }

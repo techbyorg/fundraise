@@ -1,7 +1,4 @@
-import _defaults from 'lodash/defaults'
-import _mapValues from 'lodash/mapValues'
-import _reduce from 'lodash/reduce'
-import _uniq from 'lodash/uniq'
+import * as _ from 'lodash-es'
 
 import config from '../config'
 
@@ -12,21 +9,21 @@ files = {
 
 class Language
   getLangFiles: (language) ->
-    _mapValues files, (val, file) ->
+    _.mapValues files, (val, file) ->
       if not language or file is 'paths'
         languages = config.LANGUAGES
       else
-        languages = _uniq([language, 'en'])
+        languages = _.uniq([language, 'en'])
 
       # always need en for fallback
-      _reduce languages, (obj, lang) ->
+      _.reduce languages, (obj, lang) ->
         obj[lang] = try require "./#{lang}/#{file}_#{lang}" \
                     catch e then null
         if file is 'strings'
           # add from frontend-shared
           sharedLang = try require "frontend-shared/lang/#{lang}/#{file}_#{lang}" \
                        catch e then null
-          obj[lang] = _defaults obj[lang], sharedLang
+          obj[lang] = _.defaults obj[lang], sharedLang
         obj
       , {}
 

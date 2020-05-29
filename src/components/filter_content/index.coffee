@@ -1,13 +1,10 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
+import * as _ from 'lodash-es'
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/observable/of'
-import _map from 'lodash/map'
-import _filter from 'lodash/filter'
-import _isEmpty from 'lodash/isEmpty'
-import _zipObject from 'lodash/zipObject'
 
 import $checkbox from 'frontend-shared/components/checkbox'
 import $dropdown from 'frontend-shared/components/dropdown'
@@ -56,7 +53,7 @@ export default $filterContent = (props) ->
 
       when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
         list = filter.items
-        items = _map list, ({key, label}) =>
+        items = _.map list, ({key, label}) =>
           valueStream = new RxBehaviorSubject(
             filterValue?[key]
           )
@@ -65,11 +62,11 @@ export default $filterContent = (props) ->
           }
 
         valueStreams.next RxObservable.combineLatest(
-          _map items, 'valueStream'
+          _.map items, 'valueStream'
           (vals...) -> vals
         ).map (vals) ->
-          unless _isEmpty _filter(vals)
-            _zipObject _map(list, 'key'), vals
+          unless _.isEmpty _.filter(vals)
+            _.zipObject _.map(list, 'key'), vals
 
         {
           custom: {items}
@@ -78,18 +75,18 @@ export default $filterContent = (props) ->
       when 'listAnd', 'listOr'
         list = filter.items
 
-        checkboxes =  _map list, ({key, label}) =>
+        checkboxes =  _.map list, ({key, label}) =>
           valueStream = new RxBehaviorSubject(
             filterValue?[key]
           )
           {valueStream, label}
 
         valueStreams.next RxObservable.combineLatest(
-          _map checkboxes, 'valueStream'
+          _.map checkboxes, 'valueStream'
           (vals...) -> vals
         ).map (vals) ->
-          unless _isEmpty _filter(vals)
-            _zipObject _map(list, 'key'), vals
+          unless _.isEmpty _.filter(vals)
+            _.zipObject _.map(list, 'key'), vals
 
         {
           custom: {checkboxes}
@@ -128,7 +125,7 @@ export default $filterContent = (props) ->
           z '.tap-items', {
             className: classKebab {isFullWidth: filter.field is 'subType'}
           },
-            _map custom.items, ({valueStream, label, key, $icon}) =>
+            _.map custom.items, ({valueStream, label, key, $icon}) =>
               isSelected = valueStream.getValue()
               z '.tap-item', {
                 className: classKebab {
@@ -141,7 +138,7 @@ export default $filterContent = (props) ->
     when 'listAnd', 'listOr', 'fieldList'
       $content =
         z '.content',
-          _map custom.checkboxes, ({valueStream, label}) ->
+          _.map custom.checkboxes, ({valueStream, label}) ->
             z 'label.label',
               z '.checkbox',
                 z $checkbox, {valueStream}

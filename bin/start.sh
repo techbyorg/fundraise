@@ -2,7 +2,7 @@
 export NODE_ENV=production
 
 # replacements necessary for serviceworker. bundle replacements are done before cdn in dist
-paths_dist=`./node_modules/coffee-script/bin/coffee -e "process.stdout.write require('./gulp_paths').dist"`
+paths_dist=`./node_modules/coffee-script/bin/coffee --transpile -e "process.stdout.write require('./gulp_paths').dist"`
 
 if [ ! -d $paths_dist ]; then
   echo "./dist directory not found. make sure to run 'npm run dist' beforehand"

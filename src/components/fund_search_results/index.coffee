@@ -1,7 +1,5 @@
 import {z, useContext} from 'zorium'
-import _map from 'lodash/map'
-import _orderBy from 'lodash/orderBy'
-import _take from 'lodash/take'
+import * as _ from 'lodash-es'
 
 import $table from 'frontend-shared/components/table'
 import $tags from 'frontend-shared/components/tags'
@@ -31,8 +29,8 @@ export default $fundSearchResults = ({rows}) ->
           key: 'focusAreas', name: lang.get 'fund.focusAreas'
           width: 400, passThroughSize: true,
           content: ({row, size}) ->
-            focusAreas = _orderBy row.fundedNteeMajors, 'count', 'desc'
-            tags = _map focusAreas, ({key}) ->
+            focusAreas = _.orderBy row.fundedNteeMajors, 'count', 'desc'
+            tags = _.map focusAreas, ({key}) ->
               {
                 text: lang.get "nteeMajor.#{key}"
                 color: config.NTEE_MAJOR_COLORS[key]

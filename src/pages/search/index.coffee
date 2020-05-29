@@ -1,6 +1,5 @@
 import {z} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-import _map from 'lodash/map'
 
 import $appBar from 'frontend-shared/components/app_bar'
 

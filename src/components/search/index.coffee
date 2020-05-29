@@ -1,5 +1,5 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
-import _find from 'lodash/find'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
@@ -65,9 +65,9 @@ export default $search = ({org}) ->
   {mode, focusAreasFilter, statesFilter, searchResults} = useStream ->
     mode: modeStream
     focusAreasFilter: filtersStream.map (filters) ->
-      _find filters, {id: 'fundedNteeMajor'}
+      _.find filters, {id: 'fundedNteeMajor'}
     statesFilter: filtersStream.map (filters) ->
-      _find filters, {id: 'state'}
+      _.find filters, {id: 'state'}
     searchResults: searchResultsStream
 
   console.log searchResults

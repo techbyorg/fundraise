@@ -1,12 +1,5 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import _map from 'lodash/map'
-import _filter from 'lodash/filter'
-import _take from 'lodash/take'
-import _isEmpty from 'lodash/isEmpty'
-import _orderBy from 'lodash/orderBy'
-import _clone from 'lodash/clone'
-import _find from 'lodash/find'
-import _some from 'lodash/some'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
@@ -69,12 +62,12 @@ export default $navDrawer = ({entityStream, currentPath}) ->
     entity: entityStream
     # myEntities: entityAndMyEntities.map (props) ->
     #   [entity, entities, me, language] = props
-    #   entities = _orderBy entities, (entity) ->
-    #     cookie.get("entity_#{entity.id}_lastVisit") or 0
+    #   entities = _.orderBy entities, (entity) ->
+    #     cookie.get("entity_#{entity.id}_.lastVisit") or 0
     #   , 'desc'
-    #   entities = _filter entities, ({id}) ->
+    #   entities = _.filter entities, ({id}) ->
     #     id isnt entity.id
-    #   myEntities = _map entities, (entity, i) ->
+    #   myEntities = _.map entities, (entity, i) ->
     #     {
     #       entity
     #       slug: entity.slug
@@ -99,7 +92,7 @@ export default $navDrawer = ({entityStream, currentPath}) ->
       isMember = Boolean me?.email
       hasStripeId = me?.flags?.hasStripeId
 
-      _filter([
+      _.filter([
         {
           path: router.get 'donate'
           title: lang.get 'general.organizations'
@@ -152,7 +145,7 @@ export default $navDrawer = ({entityStream, currentPath}) ->
     isExpanded = isExpandedByPath path
 
     if isExpanded
-      expandedItems = _clone expandedItems
+      expandedItems = _.clone expandedItems
       expandedItems.splice expandedItems.indexOf(path), 1
       expandedItemsStream.next expandedItems
     else
@@ -175,7 +168,7 @@ export default $navDrawer = ({entityStream, currentPath}) ->
     isSelected = currentPath?.indexOf(path) is 0
     isExpanded = isSelected or isExpandedByPath(path or title)
 
-    hasChildren = not _isEmpty children
+    hasChildren = not _.isEmpty children
     z 'li.menu-item',
       z 'a.menu-item-link.is-child', {
         className: classKebab {isSelected}
@@ -201,7 +194,7 @@ export default $navDrawer = ({entityStream, currentPath}) ->
               onclick: expand
       if hasChildren and isExpanded
         z "ul.children-#{depth}",
-          _map children, (child) ->
+          _.map children, (child) ->
             renderChild child, depth + 1
 
   z '.z-nav-drawer',
@@ -239,12 +232,12 @@ export default $navDrawer = ({entityStream, currentPath}) ->
                 #             model.overlay.open z $signInOverlay, {model, router, data: 'join'}
                 #     z 'li.divider'
                 #   ]
-                _map menuItems, (menuItem) ->
+                _.map menuItems, (menuItem) ->
                   {path, onclick, title, $chevronIcon, isNew,
                     iconName, isDivider, children, expandOnClick
                     color} = menuItem
 
-                  hasChildren = not _isEmpty children
+                  hasChildren = not _.isEmpty children
 
                   if isDivider
                     return z 'li.divider'
@@ -308,10 +301,10 @@ export default $navDrawer = ({entityStream, currentPath}) ->
                         z $ripple, {color: colors.$bgText54}
                     if hasChildren and isExpanded
                       z 'ul.children',
-                        _map children, (child) ->
+                        _.map children, (child) ->
                           renderChild child, 1
 
-                # unless _isEmpty myEntities
+                # unless _.isEmpty myEntities
                 #   z 'li.divider'
 
             ]

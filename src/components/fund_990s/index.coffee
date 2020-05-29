@@ -1,5 +1,5 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
-import _map from 'lodash/map'
+import * as _ from 'lodash-es'
 
 import $icon from '../icon'
 import colors from '../../colors'
@@ -25,13 +25,13 @@ export default $fund990s = ({irsFundStream}) ->
   z '.z-fund-990s',
     z '.title', lang.get 'fund990s.title'
     z '.irs-990s',
-      _map irsFund990s?.nodes, ({ein, year, taxPeriod}, i) ->
+      _.map irsFund990s?.nodes, ({ein, year, taxPeriod}, i) ->
         folder1 = ein.substr 0, 3
         if taxPeriod # TODO: rm when all loadAllYears reprocessed
           router.link z 'a.irs-990', {
             # TODO: https://www.irs.gov/charities-non-profits/tax-exempt-organization-search-bulk-data-downloads
             href: 'http://990s.foundationcenter.org/990pf_pdf_archive/' +
-                  "#{folder1}/#{ein}/#{ein}_#{taxPeriod}_990PF.pdf"
+                  "#{folder1}/#{ein}/#{ein}_#{taxPeriod}_.990PF.pdf"
           },
             z '.icon',
               z $icon,

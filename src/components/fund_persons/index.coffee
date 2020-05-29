@@ -1,8 +1,5 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
-import _defaults from 'lodash/defaults'
-import _orderBy from 'lodash/orderBy'
-import _maxBy from 'lodash/maxBy'
-import _map from 'lodash/map'
+import * as _ from 'lodash-es'
 
 import $table from 'frontend-shared/components/table'
 import FormatService from 'frontend-shared/services/format'
@@ -20,10 +17,10 @@ export default $fundPersons = ({irsFund, irsFundStream}) ->
       personsStream: irsFundStream.switchMap (irsFund) ->
         model.irsPerson.getAllByEin irsFund.ein, {limit: 100}
         .map (persons) ->
-          persons = _map persons?.nodes, (person) ->
-            maxYear = _maxBy person.years, 'year'
-            _defaults {maxYear}, person
-          persons = _orderBy persons, [
+          persons = _.map persons?.nodes, (person) ->
+            maxYear = _.maxBy person.years, 'year'
+            _.defaults {maxYear}, person
+          persons = _.orderBy persons, [
             ({maxYear}) -> maxYear.year
             ({maxYear}) -> maxYear.compensation
           ], ['desc', 'desc']
@@ -56,7 +53,7 @@ export default $fundPersons = ({irsFund, irsFundStream}) ->
             key: 'year', name: lang.get('person.years'), width: 150
             content: ({row}) ->
               z '.z-fund-persons_years',
-                FormatService.yearsArrayToEnglish _map(row.years, 'year')
+                FormatService.yearsArrayToEnglish _.map(row.years, 'year')
           }
         ]
 
@@ -73,4 +70,4 @@ $fundPersonsMobileRow = ({row}) ->
     z '.years',
       lang.get 'person.years'
       ': '
-      FormatService.yearsArrayToEnglish _map(row.years, 'year')
+      FormatService.yearsArrayToEnglish _.map(row.years, 'year')

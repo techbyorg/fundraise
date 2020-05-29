@@ -1,7 +1,5 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import _orderBy from 'lodash/orderBy'
-import _map from 'lodash/map'
-import _min from 'lodash/min'
+import * as _ from 'lodash-es'
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
@@ -48,7 +46,7 @@ export default $org = ({irsOrgStream}) ->
     metric: metricValueStreams.switch()
     graphData: irsOrg990StatsAndMetricStream.map ([stats, metric]) ->
       console.log stats, metric
-      minVal = _min(stats?[metric])
+      minVal = _.min(stats?[metric])
       low = if minVal < 0 then minVal else 0
 
       {
@@ -62,7 +60,7 @@ export default $org = ({irsOrgStream}) ->
       if irsOrg
         model.irsPerson.getAllByEin irsOrg.ein
         .map (irsPersons) ->
-          _orderBy irsPersons, 'compensation', 'desc'
+          _.orderBy irsPersons, 'compensation', 'desc'
       else
         RxObservable.of null
 
@@ -173,7 +171,7 @@ export default $org = ({irsOrgStream}) ->
           z '.header',
             lang.get 'general.people'
           z '.content',
-            _map irsPersons, (irsPerson) ->
+            _.map irsPersons, (irsPerson) ->
               z '.person',
                 z '.avatar',
                   z $avatar, {user: irsPerson}

@@ -1,17 +1,9 @@
+import * as _ from 'lodash-es'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 require 'rxjs/add/operator/distinctUntilChanged'
-import _defaults from 'lodash/defaults'
-import _isEmpty from 'lodash/isEmpty'
-import _isEqual from 'lodash/isEqual'
-import _filter from 'lodash/filter'
-import _groupBy from 'lodash/groupBy'
-import _map from 'lodash/map'
-import _reduce from 'lodash/reduce'
-import _some from 'lodash/some'
-import _zipWith from 'lodash/zipWith'
 
 import FormatService from 'frontend-shared/services/format'
 
@@ -31,7 +23,7 @@ class SearchFiltersService
         field: 'fundedNteeMajor'
         title: lang.get 'filter.fundedNteeMajor.title'
         type: 'listOr'
-        items: _map nteeMajors, (nteeMajor) ->
+        items: _.map nteeMajors, (nteeMajor) ->
           {key: nteeMajor, label: lang.get "nteeMajor.#{nteeMajor}"}
         queryFn: (value, key) ->
           {
@@ -50,7 +42,7 @@ class SearchFiltersService
         id: 'state' # used as ref/key
         field: 'state'
         type: 'listOr'
-        items: _map states, (state, stateCode) ->
+        items: _.map states, (state, stateCode) ->
           {key: stateCode, label: state}
         queryFn: (value, key) ->
           {
@@ -150,7 +142,7 @@ class SearchFiltersService
       catch
         {}
 
-      filters = _map filters, (filter) =>
+      filters = _.map filters, (filter) =>
         if filter.type is 'booleanArray'
           savedValueKey = "#{dataType}.#{filter.field}.#{filter.arrayValue}"
         else
@@ -165,24 +157,24 @@ class SearchFiltersService
           if initialValue? then initialValue else filter.defaultValue
         )
 
-        _defaults {dataType, valueStreams}, filter
+        _.defaults {dataType, valueStreams}, filter
 
-      if _isEmpty filters
+      if _.isEmpty filters
         return RxObservable.of {}
 
       RxObservable.combineLatest(
-        _map filters, ({valueStreams}) -> valueStreams.switch()
+        _.map filters, ({valueStreams}) -> valueStreams.switch()
         (vals...) -> vals
       )
       # ^^ updates a lot since $filterContent sets valueStreams on a lot
       # on load. this prevents a bunch of extra lodash loops from getting called
-      .distinctUntilChanged _isEqual
+      .distinctUntilChanged _.isEqual
       .map (values) =>
-        filtersWithValue = _zipWith filters, values, (filter, value) ->
-          _defaults {value}, filter
+        filtersWithValue = _.zipWith filters, values, (filter, value) ->
+          _.defaults {value}, filter
 
         # set cookie to persist filters
-        savedFilters = _reduce filtersWithValue, (obj, filter) ->
+        savedFilters = _.reduce filtersWithValue, (obj, filter) ->
           {dataType, field, value, type, arrayValue} = filter
           if value? and type is 'booleanArray'
             obj["#{dataType}.#{field}.#{arrayValue}"] = value
@@ -200,9 +192,9 @@ class SearchFiltersService
 
 
   getESQueryFilterFromFilters: (filters) =>
-    groupedFilters = _groupBy filters, 'field'
-    filter = _filter _map groupedFilters, (fieldFilters, field) =>
-      unless _some fieldFilters, 'value'
+    groupedFilters = _.groupBy filters, 'field'
+    filter = _.filter _.map groupedFilters, (fieldFilters, field) =>
+      unless _.some fieldFilters, 'value'
         return
 
       filter = fieldFilters[0]
@@ -249,7 +241,7 @@ class SearchFiltersService
         when 'listAnd', 'listBooleanAnd'
           {
             bool:
-              must: _filter _map filter.value, (value, key) ->
+              must: _.filter _.map filter.value, (value, key) ->
                 if value and filter.queryFn
                   filter.queryFn value, key
                 else if value
@@ -258,7 +250,7 @@ class SearchFiltersService
         when 'listBooleanOr', 'listOr'
           {
             bool:
-              should: _filter _map filter.value, (value, key) ->
+              should: _.filter _.map filter.value, (value, key) ->
                 if value and filter.queryFn
                   filter.queryFn value, key
                 else if value
@@ -267,17 +259,17 @@ class SearchFiltersService
         when 'fieldList'
           {
             bool:
-              should: _filter _map filter.value, (value, key) ->
+              should: _.filter _.map filter.value, (value, key) ->
                 if value
                   match: "#{field}": key
           }
         when 'booleanArray'
-          withValues = _filter(fieldFilters, 'value')
+          withValues = _.filter(fieldFilters, 'value')
 
           {
             # there's potentially a cleaner way to do this?
             bool:
-              should: _map withValues, ({value, arrayValue, valueFn}) ->
+              should: _.map withValues, ({value, arrayValue, valueFn}) ->
                 # if subtypes are specified
                 if typeof value is 'object'
                   bool:

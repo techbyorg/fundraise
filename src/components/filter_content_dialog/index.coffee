@@ -3,7 +3,6 @@ RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-import _isEqual from 'lodash/isEqual'
 
 import $dialog from 'frontend-shared/components/dialog'
 import $button from 'frontend-shared/components/button'

@@ -1,13 +1,8 @@
 import {z, classKebab, useRef, useMemo, useStream} from 'zorium'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-import _defaults from 'lodash/defaults'
-import _filter from 'lodash/filter'
-import _find from 'lodash/find'
-import _map from 'lodash/map'
-import _orderBy from 'lodash/orderBy'
-import _uniqBy from 'lodash/uniqBy'
 
 import Environment from 'frontend-shared/services/environment'
 
@@ -30,18 +25,18 @@ export default $filterBar = ({filtersStream}) ->
   {visibleFilterContents, filters} = useStream ->
     visibleFilterContents: visibleFilterContentsStream
     filters: filtersStream.map (filters) ->
-      filters = _map filters, (filter) ->
+      filters = _.map filters, (filter) ->
         filterRefsCache[filter.id] ?= useRef()
         filter
-      _orderBy filters, (({value}) -> value?), 'desc'
+      _.orderBy filters, (({value}) -> value?), 'desc'
 
   toggleFilterContent = ({filter, $$filterRef}) =>
-    isVisible = _find visibleFilterContents, (visibleFilter) ->
+    isVisible = _.find visibleFilterContents, (visibleFilter) ->
       visibleFilter.filter.id is filter.id
     console.log 'toggle', isVisible
     if isVisible
       visibleFilterContentsStream.next(
-        _filter visibleFilterContents, (visibleFilter) ->
+        _.filter visibleFilterContents, (visibleFilter) ->
           visibleFilter.filter.id isnt filter.id
       )
     else
@@ -57,7 +52,7 @@ export default $filterBar = ({filtersStream}) ->
 
   z '.z-filter-bar',
     z '.filters',
-      _map filters, (filter, i) =>
+      _.map filters, (filter, i) =>
         if filter.name
           z '.filter', {
             ref: filterRefsCache[filter.id]
@@ -78,13 +73,13 @@ export default $filterBar = ({filtersStream}) ->
                 }
           }, filter.name
 
-    _map visibleFilterContents, ({filter, $$filterRef}) ->
+    _.map visibleFilterContents, ({filter, $$filterRef}) ->
       id = filter.id
       z $filterContentEl, {
         filter, $$targetRef: $$filterRef
         onClose: ->
           visibleFilterContents = visibleFilterContentsStream.getValue()
-          newFilterContents = _filter visibleFilterContents, ({filter}) ->
+          newFilterContents = _.filter visibleFilterContents, ({filter}) ->
             id isnt filter.id
           visibleFilterContentsStream.next newFilterContents
       }

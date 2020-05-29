@@ -1,6 +1,5 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import _isEmpty from 'lodash/isEmpty'
-import _map from 'lodash/map'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -50,7 +49,7 @@ export default $irsSearch = ({irsType = 'irsFund', hintText}) ->
             fields: ['name', 'name._2gram']
       }
 
-  isEntitiesVisible = not selectedEntity and not _isEmpty entities
+  isEntitiesVisible = not selectedEntity and not _.isEmpty entities
 
   z '.z-irs-search', {
     className: classKebab {isEntitiesVisible}
@@ -69,7 +68,7 @@ export default $irsSearch = ({irsType = 'irsFund', hintText}) ->
       else
         z $primaryInput, {valueStream: nameValueStream, hintText}
     z '.entities',
-      _map entities?.nodes, (entity) =>
+      _.map entities?.nodes, (entity) =>
         router.link z 'a.entity', {
           href:
             if irsType is 'irsFund'

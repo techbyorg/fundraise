@@ -1,6 +1,5 @@
 #!/usr/bin/env coffee
-import _map from 'lodash/map'
-import _range from 'lodash/range'
+import * as _ from 'lodash-es'
 import cluster from 'cluster'
 import os from 'os'
 
@@ -8,7 +7,7 @@ import app from '../server'
 import config from '../src/config'
 
 if cluster.isMaster
-  _map _range(os.cpus().length), ->
+  _.map _.range(os.cpus().length), ->
     cluster.fork()
 
   cluster.on 'exit', (worker) ->

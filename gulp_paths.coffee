@@ -1,15 +1,17 @@
+path = require 'path'
+
 module.exports =
-  static: './src/static/**/*'
-  coffee: ['./*.coffee', './src/**/*.coffee']
-  root: './src/root.coffee'
+  static: path.join __dirname, './src/static/**/*'
+  coffee: [path.join(__dirname, './*.coffee'), path.join(__dirname, './src/**/*.coffee')]
+  root: path.join __dirname, './src/root.coffee'
   sw: 'frontend-shared/service_worker/index.coffee'
-  dist: './dist'
-  build: './build'
-  swBuild: './build/service_worker.js'
+  dist: path.join __dirname, './dist'
+  build: path.join __dirname, './build'
+  swBuild: path.join __dirname, './build/service_worker.js'
   manifest: [
-    './dist/**/*'
-    '!./dist/**/*.map'
-    '!./dist/robots.txt'
-    '!./dist/stats.json'
-    '!./dist/manifest.html'
+    path.join __dirname, './dist/**/*'
+    '!' + path.join __dirname, './dist/**/*.map'
+    '!' + path.join __dirname, './dist/robots.txt'
+    '!' + path.join __dirname, './dist/stats.json'
+    '!' + path.join __dirname, './dist/manifest.html'
   ]

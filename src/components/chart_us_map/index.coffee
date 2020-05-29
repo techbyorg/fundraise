@@ -1,8 +1,6 @@
 import {z, lazy, Suspense, Boundary, useRef, useMemo, useStream, useEffect} from 'zorium'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-import _map from 'lodash/map'
-import _min from 'lodash/min'
-import _max from 'lodash/max'
 
 $choropleth = lazy ->
   Promise.all [
@@ -54,10 +52,10 @@ export default $chartUsMap = ({data}) ->
   $$ref = useRef()
 
   {min, max} = useMemo ->
-    values = _map data, 'value'
+    values = _.map data, 'value'
     {
-      min: _min values
-      max: _max values
+      min: _.min values
+      max: _.max values
     }
   , [data]
 

@@ -1,5 +1,5 @@
 import {z} from 'zorium'
-import _defaults from 'lodash/defaults'
+import * as _ from 'lodash-es'
 
 import $sharedApp from 'frontend-shared/app'
 
@@ -20,7 +20,7 @@ import $404Page from './pages/404'
 
 export default $app = (props) ->
 
-  z $sharedApp, _defaults {
+  z $sharedApp, _.defaults {
     routes:
       # add to lang/paths_en.json
       # <langKey>: $page

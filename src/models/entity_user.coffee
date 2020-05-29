@@ -1,6 +1,4 @@
-import _every from 'lodash/every'
-import _find from 'lodash/find'
-import _defaults from 'lodash/defaults'
+import * as _ from 'lodash-es'
 
 import config from '../config'
 
@@ -46,11 +44,11 @@ export default class EntityUser
   hasPermission: ({meEntityUser, me, permissions, channelId, roles}) ->
     roles ?= meEntityUser?.roles
     isGlobalModerator = me?.flags?.isModerator or me?.email is 'austinhallock@gmail.com'
-    isGlobalModerator or _every permissions, (permission) ->
-      _find roles, (role) ->
+    isGlobalModerator or _.every permissions, (permission) ->
+      _.find roles, (role) ->
         channelPermissions = channelId and role.channelPermissions?[channelId]
         globalPermissions = role.globalPermissions
-        permissions = _defaults(
+        permissions = _.defaults(
           channelPermissions, globalPermissions, config.DEFAULT_PERMISSIONS
         )
         permissions[permission]
