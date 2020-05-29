@@ -1,17 +1,17 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/combineLatest'
-require 'rxjs/add/operator/map'
-require 'rxjs/add/operator/startWith'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $button from 'frontend-shared/components/button'
 import $drawer from 'frontend-shared/components/drawer'
+import $icon from 'frontend-shared/components/icon'
+import {
+  chevronUpIconPath, chevronDownIconPath
+} from 'frontend-shared/components/icon/paths'
 import $ripple from 'frontend-shared/components/ripple'
 import Environment from 'frontend-shared/services/environment'
 
-import $icon from '../icon'
 import colors from '../../colors'
 import context from '../../context'
 import config from '../../config'
@@ -28,22 +28,22 @@ export default $navDrawer = ({entityStream, currentPath}) ->
     menuItemsInfoStream, entityAndMyEntities} = useMemo ->
 
     meStream = model.user.getMe()
-    myEntitiesStream = meStream.switchMap (me) ->
-      RxObservable.of []
-    isRateLoadingStream = new RxBehaviorSubject false
+    myEntitiesStream = meStream.pipe rx.switchMap (me) ->
+      Rx.of []
+    isRateLoadingStream = new Rx.BehaviorSubject false
 
     {
       me: meStream
       isRateLoadingStream: isRateLoadingStream
-      expandedItemsStream: new RxBehaviorSubject []
+      expandedItemsStream: new Rx.BehaviorSubject []
       myEntitiesStream: myEntitiesStream
-      menuItemsInfoStream: RxObservable.combineLatest(
-        meStream.startWith(null)
-        entityStream.startWith(null)
-        lang.getLanguage().startWith(null)
-        isRateLoadingStream.startWith(null)
+      menuItemsInfoStream: Rx.combineLatest(
+        meStream.pipe rx.startWith(null)
+        entityStream.pipe rx.startWith(null)
+        lang.getLanguage().pipe rx.startWith(null)
+        isRateLoadingStream.pipe rx.startWith(null)
       )
-      entityAndMyEntities: RxObservable.combineLatest(
+      entityAndMyEntities: Rx.combineLatest(
         entityStream
         myEntitiesStream
         meStream
@@ -60,7 +60,7 @@ export default $navDrawer = ({entityStream, currentPath}) ->
     me: meStream
     expandedItems: expandedItemsStream
     entity: entityStream
-    # myEntities: entityAndMyEntities.map (props) ->
+    # myEntities: entityAndMyEntities.pipe rx.map (props) ->
     #   [entity, entities, me, language] = props
     #   entities = _.orderBy entities, (entity) ->
     #     cookie.get("entity_#{entity.id}_.lastVisit") or 0
@@ -78,7 +78,7 @@ export default $navDrawer = ({entityStream, currentPath}) ->
     drawerWidth: browser.getDrawerWidth()
     breakpoint: browser.getBreakpoint()
 
-    menuItems: menuItemsInfoStream.map (menuItemsInfo) ->
+    menuItems: menuItemsInfoStream.pipe rx.map (menuItemsInfo) ->
       [me, entity, language, isRateLoading] = menuItemsInfo
 
       meEntityUser = entity?.meEntityUser
@@ -96,13 +96,13 @@ export default $navDrawer = ({entityStream, currentPath}) ->
         {
           path: router.get 'donate'
           title: lang.get 'general.organizations'
-          iconName: 'briefcase'
+          iconName: '' # TODO icon path
           isDefault: true
         }
         {
           path: router.get 'notifications'
           title: lang.get 'general.notifications'
-          iconName: 'notifications'
+          iconName: '' # TODO icon path
         }
         # if needsApp or isNativeApp
         #   {
@@ -114,7 +114,7 @@ export default $navDrawer = ({entityStream, currentPath}) ->
         #       portal.call 'app.install', {entity}
         #       model.drawer.close()
         #     title: lang.get 'drawer.menuItemNeedsApp'
-        #     iconName: 'get'
+        #     iconName: '' # TODO icon path
         #   }
         # else if isNativeApp
         #   {
@@ -132,7 +132,7 @@ export default $navDrawer = ({entityStream, currentPath}) ->
         #     title: if isRateLoading \
         #            then lang.get 'general.loading' \
         #            else lang.get 'drawer.menuItemRate'
-        #     iconName: 'star'
+        #     iconName: '' # TODO icon path
         #   }
         ])
 
@@ -187,8 +187,8 @@ export default $navDrawer = ({entityStream, currentPath}) ->
           z '.chevron',
             z $chevronIcon,
               icon: if isExpanded \
-                    then 'chevron-up' \
-                    else 'chevron-down'
+                    then chevronUpIconPath \
+                    else chevronDownIconPath
               color: colors.$bgText70
               isAlignedRight: true
               onclick: expand
@@ -291,8 +291,8 @@ export default $navDrawer = ({entityStream, currentPath}) ->
                         z '.chevron',
                           z $chevronIcon,
                             icon: if isExpanded \
-                                  then 'chevron-up' \
-                                  else 'chevron-down'
+                                  then chevronUpIconPath \
+                                  else chevronDownIconPath
                             color: colors.$bgText70
                             isAlignedRight: true
                             touchHeight: '28px'

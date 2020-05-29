@@ -1,5 +1,5 @@
 import {z, useMemo, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
 import $filterContentDialog from '../filter_content_dialog'
 
@@ -9,7 +9,7 @@ if window?
 export default $searchTags = ({filter, title, placeholder}) ->
   {isDialogVisibleStream} = useMemo ->
     {
-      isDialogVisibleStream: new RxBehaviorSubject false
+      isDialogVisibleStream: new Rx.BehaviorSubject false
     }
   , []
 

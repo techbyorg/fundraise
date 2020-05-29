@@ -1,5 +1,4 @@
 import {z, useContext} from 'zorium'
-RxObservable = require('rxjs/Observable').Observable
 
 import $appBar from 'frontend-shared/components/app_bar'
 import $buttonMenu from 'frontend-shared/components/button_menu'

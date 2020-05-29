@@ -4,7 +4,7 @@ module.exports =
   static: path.join __dirname, './src/static/**/*'
   coffee: [path.join(__dirname, './*.coffee'), path.join(__dirname, './src/**/*.coffee')]
   root: path.join __dirname, './src/root.coffee'
-  sw: 'frontend-shared/service_worker/index.coffee'
+  sw: './src/service_worker/index.coffee'
   dist: path.join __dirname, './dist'
   build: path.join __dirname, './build'
   swBuild: path.join __dirname, './build/service_worker.js'

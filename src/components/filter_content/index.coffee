@@ -1,17 +1,17 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/combineLatest'
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $checkbox from 'frontend-shared/components/checkbox'
 import $dropdown from 'frontend-shared/components/dropdown'
+import $icon from 'frontend-shared/components/icon'
 import $input from 'frontend-shared/components/input'
 import $inputRange from 'frontend-shared/components/input_range'
+import {
+  chevronRightIconPath, chevronLeftIconPath
+} from 'frontend-shared/components/icon/paths'
 
-import $icon from '../icon'
 import colors from '../../colors'
 import context from '../../context'
 import config from '../../config'
@@ -28,22 +28,22 @@ export default $filterContent = (props) ->
   {custom} = useMemo ->
     switch filter.type
       when 'gtlt'
-        operatorStream = new RxBehaviorSubject filterValue?.operator
-        valueStream = new RxBehaviorSubject filterValue?.value or ''
-        valueStreams.next RxObservable.combineLatest(
+        operatorStream = new Rx.BehaviorSubject filterValue?.operator
+        valueStream = new Rx.BehaviorSubject filterValue?.value or ''
+        valueStreams.next Rx.combineLatest(
           operatorStream, valueStream, (vals...) -> vals
-        ).map ([operator, value]) ->
+        ).pipe rx.map ([operator, value]) ->
           if operator or value
             {operator, value}
 
         {custom: {operatorStream, valueStream}}
 
       when 'minMax'
-        minStream = new RxBehaviorSubject filterValue?.min or filter.minOptions[0].value
-        maxStream = new RxBehaviorSubject filterValue?.max or filter.maxOptions[0].value
-        valueStreams.next RxObservable.combineLatest(
+        minStream = new Rx.BehaviorSubject filterValue?.min or filter.minOptions[0].value
+        maxStream = new Rx.BehaviorSubject filterValue?.max or filter.maxOptions[0].value
+        valueStreams.next Rx.combineLatest(
           minStream, maxStream, (vals...) -> vals
-        ).map ([min, max]) ->
+        ).pipe rx.map ([min, max]) ->
           min = min and parseInt min
           max = max and parseInt max
           if min or max
@@ -54,17 +54,17 @@ export default $filterContent = (props) ->
       when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
         list = filter.items
         items = _.map list, ({key, label}) =>
-          valueStream = new RxBehaviorSubject(
+          valueStream = new Rx.BehaviorSubject(
             filterValue?[key]
           )
           {
             valueStream, label, key
           }
 
-        valueStreams.next RxObservable.combineLatest(
+        valueStreams.next Rx.combineLatest(
           _.map items, 'valueStream'
           (vals...) -> vals
-        ).map (vals) ->
+        ).pipe rx.map (vals) ->
           unless _.isEmpty _.filter(vals)
             _.zipObject _.map(list, 'key'), vals
 
@@ -76,15 +76,15 @@ export default $filterContent = (props) ->
         list = filter.items
 
         checkboxes =  _.map list, ({key, label}) =>
-          valueStream = new RxBehaviorSubject(
+          valueStream = new Rx.BehaviorSubject(
             filterValue?[key]
           )
           {valueStream, label}
 
-        valueStreams.next RxObservable.combineLatest(
+        valueStreams.next Rx.combineLatest(
           _.map checkboxes, 'valueStream'
           (vals...) -> vals
-        ).map (vals) ->
+        ).pipe rx.map (vals) ->
           unless _.isEmpty _.filter(vals)
             _.zipObject _.map(list, 'key'), vals
 
@@ -186,7 +186,7 @@ export default $filterContent = (props) ->
                   custom.operatorStream.next 'gt'
               },
                 z $icon,
-                  icon: 'chevron-right'
+                  icon: chevronRightIconPath
                   isTouchTarget: false
                   size: '20px'
                   color: if operator is 'gt' \
@@ -200,7 +200,7 @@ export default $filterContent = (props) ->
                   custom.operatorStream.next 'lt'
               },
                 z $icon,
-                  icon: 'chevron-left'
+                  icon: chevronLeftIconPath
                   isTouchTarget: false
                   size: '20px'
                   color: if operator is 'lt' \

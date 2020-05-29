@@ -1,9 +1,6 @@
 import * as _ from 'lodash-es'
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
-require 'rxjs/add/operator/distinctUntilChanged'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import FormatService from 'frontend-shared/services/format'
 
@@ -134,8 +131,8 @@ class SearchFiltersService
 
   getFiltersStream: ({cookie, filters, initialFilters, dataType = 'irsFund'}) ->
     # eg filters from custom urls
-    initialFilters ?= new RxBehaviorSubject null
-    initialFilters.switchMap (initialFilters) =>
+    initialFilters ?= new Rx.BehaviorSubject null
+    initialFilters = initialFilters.pipe rx.switchMap (initialFilters) =>
       persistentCookie = 'savedFilters'
       savedFilters = try
         JSON.parse cookie.get persistentCookie
@@ -152,43 +149,48 @@ class SearchFiltersService
                        then initialFilters[savedValueKey] \
                        else savedFilters[savedValueKey]
 
-        valueStreams = new RxReplaySubject 1
-        valueStreams.next RxObservable.of(
+        valueStreams = new Rx.ReplaySubject 1
+        valueStreams.next Rx.of(
           if initialValue? then initialValue else filter.defaultValue
         )
 
         _.defaults {dataType, valueStreams}, filter
 
       if _.isEmpty filters
-        return RxObservable.of {}
+        return Rx.of {}
 
-      RxObservable.combineLatest(
-        _.map filters, ({valueStreams}) -> valueStreams.switch()
+      Rx.combineLatest(
+        _.map filters, ({valueStreams}) -> valueStreams.pipe rx.switchAll()
         (vals...) -> vals
       )
       # ^^ updates a lot since $filterContent sets valueStreams on a lot
       # on load. this prevents a bunch of extra lodash loops from getting called
-      .distinctUntilChanged _.isEqual
-      .map (values) =>
-        filtersWithValue = _.zipWith filters, values, (filter, value) ->
-          _.defaults {value}, filter
+      .pipe(
+        rx.distinctUntilChanged _.isEqual
+        rx.map (values) =>
+          filtersWithValue = _.zipWith filters, values, (filter, value) ->
+            _.defaults {value}, filter
 
-        # set cookie to persist filters
-        savedFilters = _.reduce filtersWithValue, (obj, filter) ->
-          {dataType, field, value, type, arrayValue} = filter
-          if value? and type is 'booleanArray'
-            obj["#{dataType}.#{field}.#{arrayValue}"] = value
-          else if value?
-            obj["#{dataType}.#{field}"] = value
-          obj
-        , {}
-        cookie.set persistentCookie, JSON.stringify savedFilters
+          # set cookie to persist filters
+          savedFilters = _.reduce filtersWithValue, (obj, filter) ->
+            {dataType, field, value, type, arrayValue} = filter
+            if value? and type is 'booleanArray'
+              obj["#{dataType}.#{field}.#{arrayValue}"] = value
+            else if value?
+              obj["#{dataType}.#{field}"] = value
+            obj
+          , {}
+          cookie.set persistentCookie, JSON.stringify savedFilters
 
-        filtersWithValue
+          filtersWithValue
+      )
 
     # for whatever reason, required for stream to update, unless the
     # initialFilters switchMap is removed
-    .publishReplay(1).refCount()
+    initialFilters.pipe(
+      rx.publishReplay(1)
+      rx.refCount()
+    )
 
 
   getESQueryFilterFromFilters: (filters) =>

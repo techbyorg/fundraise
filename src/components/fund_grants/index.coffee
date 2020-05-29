@@ -1,4 +1,5 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
+import * as rx from 'rxjs/operators'
 
 import $table from 'frontend-shared/components/table'
 import FormatService from 'frontend-shared/services/format'
@@ -13,7 +14,7 @@ export default $fundGrants = ({irsFund, irsFundStream}) ->
 
   {contributionsStream} = useMemo ->
     {
-      contributionsStream: irsFundStream.switchMap (irsFund) ->
+      contributionsStream: irsFundStream.pipe rx.switchMap (irsFund) ->
         model.irsContribution.getAllByFromEin irsFund.ein, {limit: 100}
     }
   , []

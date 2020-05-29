@@ -1,14 +1,13 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
-require 'rxjs/add/operator/debounceTime'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
+import $icon from 'frontend-shared/components/icon'
+import {closeIconPath} from 'frontend-shared/components/icon/paths'
 import $primaryInput from 'frontend-shared/components/primary_input'
 import FormatService from 'frontend-shared/components/services/format'
 
-import $icon from '../icon'
 import context from '../../context'
 import config from '../../config'
 
@@ -23,12 +22,14 @@ export default $irsSearch = ({irsType = 'irsFund', hintText}) ->
   {nameValueStream, debouncedNameValueStream, isEntitiesVisibleStream,
     selectedEntityStream} = useMemo ->
 
-    nameValueStream = new RxBehaviorSubject ''
+    nameValueStream = new Rx.BehaviorSubject ''
     {
       nameValueStream
-      debouncedNameValueStream: nameValueStream.debounceTime(SEARCH_DEBOUNCE)
-      isEntitiesVisibleStream: new RxBehaviorSubject false
-      selectedEntityStream: new RxBehaviorSubject null
+      debouncedNameValueStream: nameValueStream.pipe(
+        rx.debounceTime(SEARCH_DEBOUNCE)
+      )
+      isEntitiesVisibleStream: new Rx.BehaviorSubject false
+      selectedEntityStream: new Rx.BehaviorSubject null
     }
   , []
 
@@ -36,10 +37,10 @@ export default $irsSearch = ({irsType = 'irsFund', hintText}) ->
     name: nameValueStream
     selectedEntity: selectedEntityStream
     isEntitiesVisible: isEntitiesVisibleStream
-    entities: debouncedNameValueStream.switchMap (name) =>
+    entities: debouncedNameValueStream.pipe rx.switchMap (name) =>
       isEntitiesVisibleStream.next true
       unless name
-        return RxObservable.of null
+        return Rx.of null
       model[irsType].search {
         limit: 50
         query:
@@ -60,7 +61,7 @@ export default $irsSearch = ({irsType = 'irsFund', hintText}) ->
           z '.name', selectedEntity.name
           z '.cancel',
             z $icon,
-              icon: 'close'
+              icon: closeIconPath
               isTouchTarget: false
               onclick: =>
                 nameValueStream.next ''

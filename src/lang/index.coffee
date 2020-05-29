@@ -17,11 +17,13 @@ class Language
 
       # always need en for fallback
       _.reduce languages, (obj, lang) ->
-        obj[lang] = try require "./#{lang}/#{file}_#{lang}" \
+        # be explicit about /lang/ and .json so webpack can strip from prod
+        obj[lang] = try require "../lang/#{lang}/#{file}_#{lang}.json" \
                     catch e then null
         if file is 'strings'
           # add from frontend-shared
-          sharedLang = try require "frontend-shared/lang/#{lang}/#{file}_#{lang}" \
+          # be explicit about /lang/ and .json so webpack can strip from prod
+          sharedLang = try require "frontend-shared/lang/#{lang}/#{file}_#{lang}.json" \
                        catch e then null
           obj[lang] = _.defaults obj[lang], sharedLang
         obj

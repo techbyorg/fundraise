@@ -1,9 +1,7 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/combineLatest'
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $avatar from 'frontend-shared/components/avatar'
 import $dropdown from 'frontend-shared/components/dropdown'
@@ -19,22 +17,24 @@ export default $org = ({irsOrgStream}) ->
   {irsOrg990StatsStream, metricValueStreams, contributionsStream,
     irsOrg990StatsAndMetricStream} = useMemo ->
 
-    metricValueStreams = new RxReplaySubject 1
-    metricValueStreams.next RxObservable.of 'revenue'
+    metricValueStreams = new Rx.ReplaySubject 1
+    metricValueStreams.next Rx.of 'revenue'
 
-    irsOrg990StatsStream = irsOrgStream.switchMap (irsOrg) =>
+    irsOrg990StatsStream = irsOrgStream.pipe rx.switchMap (irsOrg) =>
       if irsOrg
         model.irsOrg990.getStatsByEin irsOrg.ein
       else
-        RxObservable.of null
+        Rx.of null
 
     {
       irsOrg990StatsStream
       metricValueStreams
-      contributionsStream: irsOrgStream.switchMap (irsOrg) ->
+      contributionsStream: irsOrgStream.pipe rx.switchMap (irsOrg) ->
         model.irsContribution.getAllByToId irsOrg.ein
-      irsOrg990StatsAndMetricStream: RxObservable.combineLatest(
-        irsOrg990StatsStream, metricValueStreams.switch(), (vals...) -> vals
+      irsOrg990StatsAndMetricStream: Rx.combineLatest(
+        irsOrg990StatsStream
+        metricValueStreams.pipe rx.switchAll()
+        (vals...) -> vals
       )
     }
   , []
@@ -43,8 +43,8 @@ export default $org = ({irsOrgStream}) ->
     org} = useStream ->
     me: model.user.getMe()
     contributions: contributionsStream
-    metric: metricValueStreams.switch()
-    graphData: irsOrg990StatsAndMetricStream.map ([stats, metric]) ->
+    metric: metricValueStreams.pipe rx.switch()
+    graphData: irsOrg990StatsAndMetricStream.pipe rx.map ([stats, metric]) ->
       console.log stats, metric
       minVal = _.min(stats?[metric])
       low = if minVal < 0 then minVal else 0
@@ -56,13 +56,13 @@ export default $org = ({irsOrgStream}) ->
       }
     irsOrg: irsOrgStream
     irsOrg990Stats: irsOrg990StatsStream
-    irsPersons: irsOrgStream.switchMap (irsOrg) =>
+    irsPersons: irsOrgStream.pipe rx.switchMap (irsOrg) =>
       if irsOrg
         model.irsPerson.getAllByEin irsOrg.ein
-        .map (irsPersons) ->
+        .pipe rx.map (irsPersons) ->
           _.orderBy irsPersons, 'compensation', 'desc'
       else
-        RxObservable.of null
+        Rx.of null
 
 
   console.log 'irsOrg', metric, irsOrg, irsPersons

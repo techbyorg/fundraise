@@ -1,4 +1,4 @@
-FROM node:12.16.1-buster
+FROM node:14.3.0
 
 # package-lock.json, package.json
 COPY *.json /tmp/

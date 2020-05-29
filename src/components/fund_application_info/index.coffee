@@ -1,6 +1,8 @@
 import {z, useContext} from 'zorium'
 
-import $icon from '../icon'
+import $icon from 'frontend-shared/components/icon'
+import {infoIconPath} from 'frontend-shared/components/icon/paths'
+
 import context from '../../context'
 
 if window?
@@ -16,7 +18,7 @@ export default $fundApplicationInfo = ({irsFund}) ->
           z '.warning',
             z '.icon',
               z $icon,
-                icon: 'info'
+                icon: infoIconPath
                 isTouchTarget: false
             z '.text', lang.get 'fundApplicantInfo.noUnsolicited'
         z '.title', lang.get 'fundApplicantInfo.deadline'

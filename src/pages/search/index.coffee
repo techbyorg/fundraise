@@ -1,5 +1,4 @@
 import {z} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import $appBar from 'frontend-shared/components/app_bar'
 

@@ -1,5 +1,6 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
+import * as rx from 'rxjs/operators'
 
 import $table from 'frontend-shared/components/table'
 import FormatService from 'frontend-shared/services/format'
@@ -14,9 +15,9 @@ export default $fundPersons = ({irsFund, irsFundStream}) ->
 
   {personsStream} = useMemo ->
     {
-      personsStream: irsFundStream.switchMap (irsFund) ->
+      personsStream: irsFundStream.pipe rx.switchMap (irsFund) ->
         model.irsPerson.getAllByEin irsFund.ein, {limit: 100}
-        .map (persons) ->
+        .pipe rx.map (persons) ->
           persons = _.map persons?.nodes, (person) ->
             maxYear = _.maxBy person.years, 'year'
             _.defaults {maxYear}, person

@@ -1,8 +1,6 @@
 import {z, useContext, useMemo, useEffect, useRef, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $dialog from 'frontend-shared/components/dialog'
 import $button from 'frontend-shared/components/button'
@@ -19,17 +17,20 @@ export default $filterContentDialog = ({filter, onClose}) ->
   {lang} = useContext context
 
   {valueStreams} = useMemo ->
-    valueStreams = new RxReplaySubject 1
-    valueStreams.next filter.valueStreams.switch()
+    valueStreams = new Rx.ReplaySubject 1
+    valueStreams.next filter.valueStreams.pipe rx.switchAll()
     {
       valueStreams
     }
   , []
 
   {filterValue, hasValue} = useStream ->
-    filterValue: filter.valueStreams.switch()
-    hasValue: valueStreams.switch().map (value) -> Boolean value
-              .distinctUntilChanged((a, b) -> a is b) # don't rerender a bunch
+    filterValue: filter.valueStreams.pipe rx.switchAll()
+    hasValue: valueStreams.pipe(
+      rx.switchAll()
+      rx.map (value) -> Boolean value
+      rx.distinctUntilChanged (a, b) -> a is b # don't rerender a bunch
+    )
 
   z '.z-filter-content-dialog',
     z $dialog,
@@ -48,12 +49,12 @@ export default $filterContentDialog = ({filter, onClose}) ->
               z $button,
                 text: lang.get 'general.reset'
                 onclick: =>
-                  filter.valueStreams.next RxObservable.of null
-                  valueStreams.next RxObservable.of null
+                  filter.valueStreams.next Rx.of null
+                  valueStreams.next Rx.of null
           z '.save',
             z $button,
               text: lang.get 'general.save'
               isPrimary: true
               onclick: =>
-                filter.valueStreams.next valueStreams.switch()
+                filter.valueStreams.next valueStreams.pipe rx.switchAll()
                 onClose()

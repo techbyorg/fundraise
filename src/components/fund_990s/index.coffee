@@ -1,7 +1,10 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
+import * as rx from 'rxjs/operators'
 
-import $icon from '../icon'
+import $icon from 'frontend-shared/components/icon'
+import {pdfIconPath} from 'frontend-shared/components/icon/paths'
+
 import colors from '../../colors'
 import context from '../../context'
 
@@ -13,7 +16,7 @@ export default $fund990s = ({irsFundStream}) ->
 
   {irsFund990sStream} = useMemo ->
     {
-      irsFund990sStream: irsFundStream.switchMap (irsFund) ->
+      irsFund990sStream: irsFundStream.pipe rx.switchMap (irsFund) ->
         model.irsFund990.getAllByEin irsFund.ein
     }
   , []
@@ -35,7 +38,7 @@ export default $fund990s = ({irsFundStream}) ->
           },
             z '.icon',
               z $icon,
-                icon: 'pdf'
+                icon: pdfIconPath
                 isTouchTarget: false
                 color: colors.$red500
             if i is 0

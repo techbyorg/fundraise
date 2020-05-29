@@ -1,6 +1,5 @@
 import {z, lazy, Suspense, Boundary, useRef, useMemo, useStream, useEffect} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 $choropleth = lazy ->
   Promise.all [

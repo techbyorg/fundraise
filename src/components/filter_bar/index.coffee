@@ -1,8 +1,7 @@
 import {z, classKebab, useRef, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import Environment from 'frontend-shared/services/environment'
 
@@ -18,13 +17,13 @@ export default $filterBar = ({filtersStream}) ->
   {filterRefsCache, visibleFilterContentsStream} = useMemo ->
     {
       filterRefsCache: {}
-      visibleFilterContentsStream: new RxBehaviorSubject []
+      visibleFilterContentsStream: new Rx.BehaviorSubject []
     }
   , []
 
   {visibleFilterContents, filters} = useStream ->
     visibleFilterContents: visibleFilterContentsStream
-    filters: filtersStream.map (filters) ->
+    filters: filtersStream.pipe rx.map (filters) ->
       filters = _.map filters, (filter) ->
         filterRefsCache[filter.id] ?= useRef()
         filter
@@ -33,7 +32,6 @@ export default $filterBar = ({filtersStream}) ->
   toggleFilterContent = ({filter, $$filterRef}) =>
     isVisible = _.find visibleFilterContents, (visibleFilter) ->
       visibleFilter.filter.id is filter.id
-    console.log 'toggle', isVisible
     if isVisible
       visibleFilterContentsStream.next(
         _.filter visibleFilterContents, (visibleFilter) ->
@@ -65,7 +63,7 @@ export default $filterBar = ({filtersStream}) ->
               ga? 'send', 'event', 'map', 'filterClick', filter.field
               if filter.isBoolean
                 filter.valueStreams.next(
-                  RxObservable.of (not filter.value) or null
+                  Rx.of (not filter.value) or null
                 )
               else
                 toggleFilterContent {

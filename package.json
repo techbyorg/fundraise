@@ -1,6 +1,7 @@
 {
   "name": "free-roam",
   "private": true,
+  "sideEffects": false,
   "scripts": {
     "dist": "./bin/dist.sh",
     "sw": "./bin/sw.sh",
@@ -27,7 +28,7 @@
     "compression": "^1.6.0",
     "cookie": "^0.2.4",
     "cookie-parser": "^1.4.5",
-    "exoid": "git://github.com/claydotio/exoid.git",
+    "exoid": "github:claydotio/exoid#es",
     "express": "^4.13.3",
     "fingerprintjs": "^0.5.3",
     "frontend-shared": "github:techbyorg/frontend-shared",
@@ -38,9 +39,8 @@
     "isuuid": "^0.1.0",
     "lodash": "^4.17.2",
     "lodash-es": "^4.17.15",
-    "loga": "^0.1.4",
     "normalize-styl": "^4.1.1",
-    "portal-gun": "git://github.com/claydotio/portal-gun.git",
+    "portal-gun": "github:claydotio/portal-gun#es",
     "promiz": "^1.0.4",
     "qs": "^6.9.3",
     "remark-parse": "^6.0.3",

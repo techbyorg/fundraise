@@ -1,1 +1,2 @@
-export default require 'frontend-shared/context'
+import context from 'frontend-shared/context'
+export default context

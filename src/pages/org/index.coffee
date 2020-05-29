@@ -1,6 +1,5 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as rx from 'rxjs/operators'
 
 import $appBar from 'frontend-shared/components/app_bar'
 import $buttonBack from 'frontend-shared/components/button_back'
@@ -17,7 +16,7 @@ export default $orgPage = ({requestsStream}) ->
 
   {irsOrgStream} = useMemo ->
     {
-      irsOrgStream: requestsStream.switchMap ({route}) =>
+      irsOrgStream: requestsStream.pipe rx.switchMap ({route}) =>
         console.log 'get', route.params.ein
         model.irsOrg.getByEin route.params.ein
     }

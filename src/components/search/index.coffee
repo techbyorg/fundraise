@@ -1,13 +1,12 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/combineLatest'
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $button from 'frontend-shared/components/button'
 import $input from 'frontend-shared/components/input'
 import $table from 'frontend-shared/components/table'
+import {searchIconPath} from 'frontend-shared/components/icon/paths'
 import FormatService from 'frontend-shared/services/format'
 
 #import  $irsSearch from '../irs_search'
@@ -22,29 +21,31 @@ if window?
   require './index.styl'
 
 export default $search = ({org}) ->
-  {model, lang, cookie} = useContext context
+  c = useContext context
+  console.log 'cccccc', c
+  {model, lang, cookie} = c
 
   {filtersStream, nameStream, modeStream, searchResultsStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {
       cookie, filters: SearchFiltersService.getFundFilters(lang)
     }
-    nameStream = new RxBehaviorSubject ''
+    nameStream = new Rx.BehaviorSubject ''
 
-    esQueryFilterStream = filtersStream.map (filters) ->
+    esQueryFilterStream = filtersStream.pipe rx.map (filters) ->
       SearchFiltersService.getESQueryFilterFromFilters(
         filters
       )
 
-    esQueryFilterAndNameStream = RxObservable.combineLatest(
+    esQueryFilterAndNameStream = Rx.combineLatest(
       esQueryFilterStream, nameStream, (vals...) -> vals
     )
 
     {
       filtersStream
       nameStream
-      modeStream: new RxBehaviorSubject 'tags'
+      modeStream: new Rx.BehaviorSubject 'tags'
       searchResultsStream: esQueryFilterAndNameStream
-      .switchMap ([esQueryFilter, name]) ->
+      .pipe rx.switchMap ([esQueryFilter, name]) ->
         bool = {filter: esQueryFilter}
         if name
           bool.must =
@@ -64,9 +65,9 @@ export default $search = ({org}) ->
 
   {mode, focusAreasFilter, statesFilter, searchResults} = useStream ->
     mode: modeStream
-    focusAreasFilter: filtersStream.map (filters) ->
+    focusAreasFilter: filtersStream.pipe rx.map (filters) ->
       _.find filters, {id: 'fundedNteeMajor'}
-    statesFilter: filtersStream.map (filters) ->
+    statesFilter: filtersStream.pipe rx.map (filters) ->
       _.find filters, {id: 'state'}
     searchResults: searchResultsStream
 
@@ -94,7 +95,7 @@ export default $search = ({org}) ->
             z '.button',
               z $button,
                 isPrimary: true
-                icon: 'search'
+                icon: searchIconPath
                 text: lang.get 'general.search'
           ]
 
@@ -103,8 +104,8 @@ export default $search = ({org}) ->
           if mode is 'specific'
             modeStream.next 'tags'
           else
-            focusAreasFilter.valueStreams.next RxObservable.of null
-            statesFilter.valueStreams.next RxObservable.of null
+            focusAreasFilter.valueStreams.next Rx.of null
+            statesFilter.valueStreams.next Rx.of null
             modeStream.next 'specific'
       },
         z '.or', lang.get 'general.or'
