@@ -2,6 +2,8 @@ import Cache from 'frontend-shared/service_worker/cache'
 import Portal from 'frontend-shared/service_worker/portal'
 import Push from 'frontend-shared/service_worker/push'
 
+import config from '../config'
+
 push = new Push {cdnUrl: config.CDN_URL, host: config.HOST}
 push.listen()
 

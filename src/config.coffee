@@ -47,10 +47,8 @@ else
   API_PATH = ''
 # All keys must have values at run-time (value may be null)
 isomorphic =
-  APP_KEY: 'techby'
+  APP_KEY: 'fundraise'
   LANGUAGES: ['en']
-  # also in backend TODO: shared config file
-  BASE_NAME_COLORS: ['#2196F3', '#8BC34A', '#FFC107', '#f44336']#, '#673AB7']
 
   # ALSO IN backend
   EMPTY_UUID: '00000000-0000-0000-0000-000000000000'
@@ -71,25 +69,13 @@ isomorphic =
   GOOGLE_PLAY_APP_URL:
     'FIXME' # FIXME
   HOST: HOST
-  STRIPE_PUBLISHABLE_KEY:
-    serverEnv.STRIPE_PUBLISHABLE_KEY or
-    process.env.STRIPE_PUBLISHABLE_KEY
-  GIPHY_API_KEY: process.env.GIPHY_API_KEY
-  # FB_ID: process.env.FRONTEND_FB_ID
   API_URL: API_URL
   PUBLIC_API_URL: process.env.PUBLIC_BACKEND_API_URL
   API_HOST: API_HOST
   API_PATH: API_PATH
   # also in free-roam
-  DEFAULT_PERMISSIONS:
-    readMessage: true
-    manageChannel: false
-    sendMessage: true
-    sendLink: true
-    sendImage: true
-  DEFAULT_NOTIFICATIONS:
-    chatMessage: true
-    chatMention: true
+  DEFAULT_PERMISSIONS: {}
+  DEFAULT_NOTIFICATIONS: {}
   FIREBASE:
     API_KEY: process.env.FIREBASE_API_KEY
     AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN
@@ -133,20 +119,6 @@ isomorphic =
     X: "#ff1493"
     Y: "#ffa07a"
     Z: "#ee82ee"
-  STICKER_REGEX_STR: STICKER_REGEX_STR
-  STICKER_REGEX: new RegExp STICKER_REGEX_STR, 'g'
-  URL_REGEX_STR: URL_REGEX_STR
-  URL_REGEX: new RegExp URL_REGEX_STR, 'gi'
-  LOCAL_IMAGE_REGEX_STR: LOCAL_IMAGE_REGEX_STR
-  IMAGE_REGEX_BASE_STR: IMAGE_REGEX_BASE_STR
-  IMAGE_REGEX_STR: IMAGE_REGEX_STR
-  IMAGE_REGEX: new RegExp IMAGE_REGEX_STR, 'gi'
-  MENTION_REGEX: new RegExp MENTION_REGEX_STR, 'gi'
-  YOUTUBE_ID_REGEX: new RegExp YOUTUBE_ID_REGEX_STR, 'i'
-  IMGUR_ID_REGEX: /https?:\/\/(?:i\.)?imgur\.com(?:\/a)?\/(.*?)(?:[\.#\/].*|$)/i
-
-  MONTHS: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep',
-            'oct', 'nov', 'dec']
 
 # Server only
 # All keys must have values at run-time (value may be null)

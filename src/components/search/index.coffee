@@ -21,9 +21,7 @@ if window?
   require './index.styl'
 
 export default $search = ({org}) ->
-  c = useContext context
-  console.log 'cccccc', c
-  {model, lang, cookie} = c
+  {model, lang, cookie} = useContext context
 
   {filtersStream, nameStream, modeStream, searchResultsStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {

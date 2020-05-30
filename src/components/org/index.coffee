@@ -45,7 +45,6 @@ export default $org = ({irsOrgStream}) ->
     contributions: contributionsStream
     metric: metricValueStreams.pipe rx.switch()
     graphData: irsOrg990StatsAndMetricStream.pipe rx.map ([stats, metric]) ->
-      console.log stats, metric
       minVal = _.min(stats?[metric])
       low = if minVal < 0 then minVal else 0
 
