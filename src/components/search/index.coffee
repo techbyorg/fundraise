@@ -73,7 +73,11 @@ export default $search = ({org}) ->
 
   z '.z-search',
     z '.search',
-      z '.title', lang.get 'fundSearch.titleSpecific'
+      z '.title',
+        if mode is 'specific'
+          z '.text', lang.get 'fundSearch.titleSpecific'
+        else
+          z '.text', lang.get 'fundSearch.titleFocusArea'
       z '.search-box',
         if mode is 'specific'
           z $searchInput,
@@ -107,7 +111,10 @@ export default $search = ({org}) ->
             modeStream.next 'specific'
       },
         z '.or', lang.get 'general.or'
-        z '.text', lang.get 'fundSearch.byNameEin'
+        if mode is 'specific'
+          z '.text', lang.get 'fundSearch.byFocusArea'
+        else
+          z '.text', lang.get 'fundSearch.byNameEin'
 
     z '.results',
       z '.title',

@@ -1,13 +1,12 @@
 @require '../../vars'
 
 .z-search
-
   > .search
     shadow-1()
     padding: 32px
 
     > .title
-      font-h4()
+      font-h5()
       max-width: 1200px
       margin: 0 auto 20px auto
 
@@ -17,13 +16,6 @@
       max-width: 1200px
       margin: 0 auto
       border-radius: 12px
-      display: flex
-      align-items: center
-
-      > .divider
-        width: 1px
-        height: 56px
-        background: getColor('$bgText6')
 
       > .button
         margin: 0 20px
@@ -52,6 +44,21 @@
 
     > .filter-bar
       margin-bottom: 16px
+
+  @media (min-width: $breakPointMedium)
+    > .search
+      > .title
+        font-h4()
+
+      > .search-box
+        display: flex
+        align-items: center
+
+        > .divider
+          width: 1px
+          height: 56px
+          background: getColor('$bgText6')
+
 
 .z-search_input
   width: 100%

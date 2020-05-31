@@ -14,7 +14,6 @@ export default class IrsContribution
       '''
       variables: {fromEin, limit}
       pull: 'irsContributions'
-    , {ignoreCache: true}
 
 
   getAllByToId: (toId, {limit} = {}) =>
@@ -28,7 +27,6 @@ export default class IrsContribution
       '''
       variables: {toId, limit}
       pull: 'irsContributions'
-    , {ignoreCache: true}
 
 
   search: ({query, limit}) =>
@@ -38,4 +36,3 @@ export default class IrsContribution
       '''
       variables: {query}
       pull: 'irsContributions'
-    , {ignoreCache: true}

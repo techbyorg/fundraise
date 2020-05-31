@@ -64,11 +64,7 @@ export default $org = ({irsOrgStream}) ->
         Rx.of null
 
 
-  console.log 'irsOrg', metric, irsOrg, irsPersons
-  console.log 'ORGID', org?.id
-  console.log 'USERID', me?.id
-  console.log graphData
-  console.log 'contrib', contributions
+  console.log 'abcd'
 
   z '.z-org',
     if irsOrg990Stats and not irsOrg990Stats.has990

@@ -31,6 +31,7 @@ export default class IrsFund
       pull: 'irsFund'
 
   search: ({query, limit}) =>
+    console.log 'search'
     @auth.stream
       query: '''
         query IrsFundSearch($query: JSON!, $limit: Int) {
@@ -48,4 +49,3 @@ export default class IrsFund
       '''
       variables: {query, limit}
       pull: 'irsFunds'
-    , {ignoreCache: true}

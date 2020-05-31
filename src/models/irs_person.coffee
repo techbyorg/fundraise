@@ -14,7 +14,6 @@ export default class IrsPerson
       '''
       variables: {ein}
       pull: 'irsPersons'
-    , {ignoreCache: true}
 
 
   search: ({query, limit}) =>
@@ -30,4 +29,3 @@ export default class IrsPerson
       '''
       variables: {query}
       pull: 'irsPersons'
-    , {ignoreCache: true}
