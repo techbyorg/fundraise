@@ -139,6 +139,8 @@ class SearchFiltersService
       catch
         {}
 
+      console.log 'saved filters', savedFilters
+
       filters = _.map filters, (filter) =>
         if filter.type is 'booleanArray'
           savedValueKey = "#{dataType}.#{filter.field}.#{filter.arrayValue}"
