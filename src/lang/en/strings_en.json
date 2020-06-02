@@ -65,6 +65,8 @@
 
   "404Page.text": "Page not found!",
   "tosPage.title": "TOS",
+  "homePage.title": "Fundraise by TechBy",
+  "homePage.description": "Completely free tools to help you raise funding as a nonprofit",
 
   "filter.assets": "Assets",
   "filter.assetsTitle": "Amount foundation has in assets",
@@ -73,6 +75,7 @@
   "filter.noMin": "No min",
   "filter.noMax": "No max",
   "filter.fundedNteeMajor.title": "Focus areas",
+  "filter.fundedStates.title": "States",
 
   "metric.revenue": "Revenue",
   "metric.expenses": "Expenses",

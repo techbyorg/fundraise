@@ -9,7 +9,7 @@ import colors from './colors'
 # Don't let server environment variables leak into client code
 serverEnv = process.env
 
-HOST = process.env.FRONTEND_HOST or '127.0.0.1'
+HOST = process.env.FUNDRAISE_HOST or '127.0.0.1'
 HOSTNAME = HOST.split(':')[0]
 
 URL_REGEX_STR = '(\\bhttps?://[-A-Z0-9+&@#/%?=~_|!:,.;]*[A-Z0-9+&@#/%=~_|])'
@@ -32,8 +32,8 @@ TWO_DAYS_SECONDS = 3600 * 24 * 2
 THREE_DAYS_SECONDS = 3600 * 24 * 3
 
 API_URL =
-  serverEnv.BACKEND_API_URL or # server
-  process.env.PUBLIC_BACKEND_API_URL # client
+  serverEnv.PHIL_API_URL or # server
+  process.env.PUBLIC_PHIL_API_URL # client
 
 DEV_USE_HTTPS = process.env.DEV_USE_HTTPS and process.env.DEV_USE_HTTPS isnt '0'
 
@@ -48,6 +48,7 @@ else
 # All keys must have values at run-time (value may be null)
 isomorphic =
   APP_KEY: 'fundraise'
+  APP_NAME: 'Fundraise'
   LANGUAGES: ['en']
 
   # ALSO IN backend
@@ -70,7 +71,7 @@ isomorphic =
     'FIXME' # FIXME
   HOST: HOST
   API_URL: API_URL
-  PUBLIC_API_URL: process.env.PUBLIC_BACKEND_API_URL
+  PUBLIC_API_URL: process.env.PUBLIC_PHIL_API_URL
   API_HOST: API_HOST
   API_PATH: API_PATH
   # also in free-roam
@@ -122,7 +123,7 @@ isomorphic =
 
 # Server only
 # All keys must have values at run-time (value may be null)
-PORT = serverEnv.FRONTEND_PORT or 3000
+PORT = serverEnv.FUNDRAISE_PORT or 3000
 WEBPACK_DEV_PORT = serverEnv.WEBPACK_DEV_PORT or parseInt(PORT) + 1
 WEBPACK_DEV_PROTOCOL = if DEV_USE_HTTPS then 'https://' else 'http://'
 

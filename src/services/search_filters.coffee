@@ -38,6 +38,7 @@ class SearchFiltersService
       {
         id: 'state' # used as ref/key
         field: 'state'
+        title: lang.get 'filter.fundedStates.title'
         type: 'listOr'
         items: _.map states, (state, stateCode) ->
           {key: stateCode, label: state}
@@ -139,7 +140,7 @@ class SearchFiltersService
       catch
         {}
 
-      console.log 'saved filters', savedFilters
+      console.log 'saved filters', persistentCookie, savedFilters
 
       filters = _.map filters, (filter) =>
         if filter.type is 'booleanArray'

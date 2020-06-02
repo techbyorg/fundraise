@@ -1,3 +1,6 @@
+# react/react-dom -> preact
+import 'module-alias/register'
+
 import setup from 'frontend-shared/services/setup_server'
 
 import colors from './src/colors'

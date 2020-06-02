@@ -4,6 +4,7 @@ import * as rx from 'rxjs/operators'
 
 import $appBar from 'frontend-shared/components/app_bar'
 import $buttonBack from 'frontend-shared/components/button_back'
+import useMeta from 'frontend-shared/services/use_meta'
 
 import $fund from '../../components/fund'
 import colors from '../../colors'
@@ -27,6 +28,11 @@ export default $fundPage = ({requestsStream}) ->
 
   {irsFund} = useStream ->
     irsFund: irsFundStream
+
+  useMeta ->
+    if irsFund
+      {title: irsFund?.name}
+  , [irsFund?.name]
 
   z '.p-fund',
     z $appBar, {

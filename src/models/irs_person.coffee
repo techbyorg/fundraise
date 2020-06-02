@@ -19,7 +19,7 @@ export default class IrsPerson
   search: ({query, limit}) =>
     @auth.stream
       query: '''
-        query IrsPersonSearch($query: JSON!) {
+        query IrsPersonSearch($query: ESQuery!) {
           irsPersons(query: $query) {
             nodes {
               name

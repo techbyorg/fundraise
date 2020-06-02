@@ -18,7 +18,7 @@ export default class IrsOrg
   search: ({query, limit}) =>
     @auth.stream
       query: '''
-        query IrsOrgSearch($query: JSON!) {
+        query IrsOrgSearch($query: ESQuery!) {
           irsOrgs(query: $query) {
             nodes { name, ein }
           }

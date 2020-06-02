@@ -56,7 +56,7 @@ export default $search = ({org}) ->
           query:
             bool: bool
 
-          limit: 10
+          limit: 100
         }
     }
   , []

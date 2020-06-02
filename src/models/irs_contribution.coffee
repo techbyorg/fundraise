@@ -32,7 +32,7 @@ export default class IrsContribution
   search: ({query, limit}) =>
     @auth.stream
       query: '''
-        query IrsContributionSearch($query: JSON!) { irsContributions(query: $query) { nodes { fromEin } } }
+        query IrsContributionSearch($query: ESQuery!) { irsContributions(query: $query) { nodes { fromEin } } }
       '''
       variables: {query}
       pull: 'irsContributions'

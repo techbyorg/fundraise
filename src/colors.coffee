@@ -5,6 +5,7 @@ $black26 = 'rgba(0, 0, 0, 0.26)'
 $black54 = 'rgba(0, 0, 0, 0.54)'
 $black70 = 'rgba(0, 0, 0, 0.70)'
 $black87 = 'rgba(0, 0, 0, 0.87)'
+$black = '#000000'
 $white = '#ffffff'
 $white54 = 'rgba(255, 255, 255, 0.54)'
 
@@ -69,6 +70,7 @@ colors = _.defaults {
     '--bg-text-60': 'rgba(0, 0, 0, 0.6)'
     '--bg-text-70': $black70
     '--bg-text-87': $black87
+    '--bg-text-100': $black
 
     '--quaternary-500': '#fedf57'
     '--quaternary-500-text': $white
@@ -167,6 +169,7 @@ colors = _.defaults {
   '$bgText60': 'var(--bg-text-60)'
   '$bgText70': 'var(--bg-text-70)'
   '$bgText87': 'var(--bg-text-87)'
+  '$bgText100': 'var(--bg-text-100)'
 
   '$tabSelected': $white
   '$tabUnselected': '#1a1a1a'

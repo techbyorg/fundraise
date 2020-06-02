@@ -34,7 +34,7 @@ export default class IrsFund
     console.log 'search'
     @auth.stream
       query: '''
-        query IrsFundSearch($query: JSON!, $limit: Int) {
+        query IrsFundSearch($query: ESQuery!, $limit: Int) {
           irsFunds(query: $query, limit: $limit) {
             totalCount,
             nodes {
