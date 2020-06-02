@@ -21,7 +21,7 @@ if window?
   require './index.styl'
 
 export default $search = ({org}) ->
-  {model, lang, cookie} = useContext context
+  {model, lang, browser, cookie} = useContext context
 
   {filtersStream, nameStream, modeStream, searchResultsStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {
@@ -61,13 +61,15 @@ export default $search = ({org}) ->
     }
   , []
 
-  {mode, focusAreasFilter, statesFilter, searchResults} = useStream ->
+  {mode, focusAreasFilter, statesFilter,
+    searchResults, breakpoint} = useStream ->
     mode: modeStream
     focusAreasFilter: filtersStream.pipe rx.map (filters) ->
       _.find filters, {id: 'fundedNteeMajor'}
     statesFilter: filtersStream.pipe rx.map (filters) ->
       _.find filters, {id: 'state'}
     searchResults: searchResultsStream
+    breakpoint: browser.getBreakpoint()
 
   console.log searchResults
 
@@ -85,18 +87,20 @@ export default $search = ({org}) ->
             placeholder: lang.get 'fundSearch.byNameEinPlaceholder'
         else
           [
-            z $searchTags,
-              filter: focusAreasFilter
-              title: lang.get 'fund.focusAreas'
-              placeholder: lang.get 'fundSearch.focusAreasPlaceholder'
+            z '.search-tags',
+              z $searchTags,
+                filter: focusAreasFilter
+                title: lang.get 'fund.focusAreas'
+                placeholder: lang.get 'fundSearch.focusAreasPlaceholder'
             z '.divider'
-            z $searchTags,
-              filter: statesFilter
-              title: lang.get 'general.location'
-              placeholder: lang.get 'fundSearch.locationPlaceholder'
+            z '.search-tags',
+              z $searchTags,
+                filter: statesFilter
+                title: lang.get 'general.location'
+                placeholder: lang.get 'fundSearch.locationPlaceholder'
             z '.button',
               z $button,
-                isPrimary: true
+                isPrimary: breakpoint isnt 'mobile'
                 icon: searchIconPath
                 text: lang.get 'general.search'
           ]

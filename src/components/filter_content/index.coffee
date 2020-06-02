@@ -53,7 +53,7 @@ export default $filterContent = (props) ->
 
       when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
         list = filter.items
-        items = _.map list, ({key, label}) =>
+        items = _.map list, ({label}, key) =>
           valueStream = new Rx.BehaviorSubject(
             filterValue?[key]
           )
@@ -75,7 +75,7 @@ export default $filterContent = (props) ->
       when 'listAnd', 'listOr'
         list = filter.items
 
-        checkboxes =  _.map list, ({key, label}) =>
+        checkboxes =  _.map list, ({label}, key) =>
           valueStream = new Rx.BehaviorSubject(
             filterValue?[key]
           )
@@ -86,7 +86,7 @@ export default $filterContent = (props) ->
           (vals...) -> vals
         ).pipe rx.map (vals) ->
           unless _.isEmpty _.filter(vals)
-            _.zipObject _.map(list, 'key'), vals
+            _.zipObject _.keys(list), vals
 
         {
           custom: {checkboxes}

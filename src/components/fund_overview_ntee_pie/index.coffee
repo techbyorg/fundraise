@@ -5,7 +5,7 @@ import FormatService from 'frontend-shared/services/format'
 
 import $chartPie from '../chart_pie'
 import context from '../../context'
-import config from '../../config'
+import {nteeColors} from '../../colors'
 
 if window?
   require './index.styl'
@@ -33,8 +33,8 @@ export default $fundOverviewNteePie = ({irsFund}) ->
             else lang.get "nteeMajor.#{key}"
 
     color = if key is 'rest' \
-            then config.NTEE_MAJOR_COLORS['Z'] \
-            else config.NTEE_MAJOR_COLORS[key]
+            then nteeColors['Z'].graph \
+            else nteeColors[key].graph
     {
       id: label
       label: label
@@ -52,7 +52,7 @@ export default $fundOverviewNteePie = ({irsFund}) ->
         z '.legend-item',
           z '.color', {
             style:
-              background: config.NTEE_MAJOR_COLORS[key]
+              background: nteeColors[key].graph
           }
           z '.info',
             z '.ntee', lang.get "nteeMajor.#{key}"

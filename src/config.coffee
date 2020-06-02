@@ -69,6 +69,7 @@ isomorphic =
   IOS_APP_URL: 'FIXME' # FIXME
   GOOGLE_PLAY_APP_URL:
     'FIXME' # FIXME
+  GOOGLE_ANALYTICS_ID: 'UA-168233278-2'
   HOST: HOST
   API_URL: API_URL
   PUBLIC_API_URL: process.env.PUBLIC_PHIL_API_URL
@@ -92,34 +93,6 @@ isomorphic =
     DEV: 'development'
     PROD: 'production'
     TEST: 'test'
-
-  NTEE_MAJOR_COLORS:
-    A: "#a9a9a9"
-    B: "#2f4f4f"
-    C: "#556b2f"
-    D: "#8b4513"
-    E: "#483d8b"
-    F: "#3cb371"
-    G: "#4682b4"
-    H: "#000080"
-    I: "#9acd32"
-    J: "#8b008b"
-    K: "#ff4500"
-    L: "#00ced1"
-    M: "#ffa500"
-    N: "#ffff00"
-    O: "#7cfc00"
-    P: "#8a2be2"
-    Q: "#00ff7f"
-    R: "#dc143c"
-    S: "#0000ff"
-    T: "#ff00ff"
-    U: "#1e90ff"
-    V: "#db7093"
-    W: "#eee8aa"
-    X: "#ff1493"
-    Y: "#ffa07a"
-    Z: "#ee82ee"
 
 # Server only
 # All keys must have values at run-time (value may be null)

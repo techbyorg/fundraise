@@ -17,9 +17,6 @@
       margin: 0 auto
       border-radius: 12px
 
-      > .button
-        margin: 0 20px
-
     > .alt
       max-width: 1200px
       margin: 24px auto 0 auto
@@ -51,13 +48,26 @@
         font-h4()
 
       > .search-box
-        display: flex
+        // display: flex
+        // align-items: center
+        display: grid
+        grid-template-columns: 1fr 1px 1fr 165px
+        grid-column-gap: 0
+        grid-row-gap: 0
         align-items: center
+
+        > .search-tags
+          height: 100%
+          min-width: 0
+          display: flex
 
         > .divider
           width: 1px
           height: 56px
           background: getColor('$bgText6')
+
+        > .button
+          margin: 0 20px
 
 
 .z-search_input

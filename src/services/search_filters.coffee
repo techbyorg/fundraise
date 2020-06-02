@@ -20,8 +20,12 @@ class SearchFiltersService
         field: 'fundedNteeMajor'
         title: lang.get 'filter.fundedNteeMajor.title'
         type: 'listOr'
-        items: _.map nteeMajors, (nteeMajor) ->
-          {key: nteeMajor, label: lang.get "nteeMajor.#{nteeMajor}"}
+        items: _.reduce nteeMajors, (obj, nteeMajor) ->
+          obj[nteeMajor] = {
+            label: lang.get "nteeMajor.#{nteeMajor}"
+          }
+          obj
+        , {}
         queryFn: (value, key) ->
           {
             nested:
@@ -40,8 +44,8 @@ class SearchFiltersService
         field: 'state'
         title: lang.get 'filter.fundedStates.title'
         type: 'listOr'
-        items: _.map states, (state, stateCode) ->
-          {key: stateCode, label: state}
+        items: _.mapValues states, (state, stateCode) ->
+          {label: state}
         queryFn: (value, key) ->
           {
             nested:

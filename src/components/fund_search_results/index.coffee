@@ -7,7 +7,7 @@ import FormatService from 'frontend-shared/services/format'
 
 import $fundSearchResultsMobileRow from '../fund_search_results_mobile_row'
 import context from '../../context'
-import config from '../../config'
+import {nteeColors} from '../../colors'
 
 if window?
   require './index.styl'
@@ -27,15 +27,16 @@ export default $fundSearchResults = ({rows}) ->
         {key: 'name', name: lang.get('general.name'), width: 240, isFlex: true}
         {
           key: 'focusAreas', name: lang.get 'fund.focusAreas'
-          width: 400, passThroughSize: true,
-          content: ({row, size}) ->
+          width: 400 # , passThroughSize: true,
+          content: ({row}) ->
             focusAreas = _.orderBy row.fundedNteeMajors, 'count', 'desc'
             tags = _.map focusAreas, ({key}) ->
               {
                 text: lang.get "nteeMajor.#{key}"
-                color: config.NTEE_MAJOR_COLORS[key]
+                background: nteeColors[key].bg
+                color: nteeColors[key].fg
               }
-            z $tags, {tags, size, maxVisibleCount: VISIBLE_FOCUS_AREAS_COUNT}
+            z $tags, {tags, maxVisibleCount: VISIBLE_FOCUS_AREAS_COUNT}
         }
         {
           key: 'assets', name: lang.get('org.assets')

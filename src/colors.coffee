@@ -16,16 +16,16 @@ colors = _.defaults {
     '--header-500-text-54': $black54
     '--header-500-icon': '#757575'
 
-    '--primary-50': 'rgba(63, 113, 222, 0.04)'
-    '--primary-100': '#C5D4F5'
-    '--primary-200': '#9FB8EF'
-    '--primary-300': '#799CE8'
-    '--primary-400': '#5C86E3'
-    '--primary-500': '#3F71DE'
-    '--primary-600': '#3969DA'
-    '--primary-700': '#315ED5'
-    '--primary-800': '#2954D1'
-    '--primary-900': '#1B42C8'
+    '--primary-50': '#E8E4F1'
+    '--primary-100': '#C5BDDD'
+    '--primary-200': '#9E91C7'
+    '--primary-300': '#7764B0'
+    '--primary-400': '#59439F'
+    '--primary-500': '#3C228E'
+    '--primary-600': '#361E86'
+    '--primary-700': '#2E197B'
+    '--primary-800': '#271471'
+    '--primary-900': '#1c0b51'
     '--primary-100-text': $black87
     '--primary-200-text': $black87
     '--primary-300-text': '#FAFAFA'
@@ -37,16 +37,16 @@ colors = _.defaults {
     '--primary-900-text': '#FAFAFA'
     '--primary-900-text-54': 'rgba(250, 250, 250, 0.54)'
 
-    '--secondary-50': '#E0F7F7'
-    '--secondary-100': '#B3ECEC'
-    '--secondary-200': '#80E0DF'
-    '--secondary-300': '#4DD3D2'
-    '--secondary-400': '#26C9C8'
-    '--secondary-500': '#00C0BE'
-    '--secondary-600': '#00BAB8'
-    '--secondary-700': '#00B2AF'
-    '--secondary-800': '#00AAA7'
-    '--secondary-900': '#009C99'
+    '--secondary-50': '#FFE5F0'
+    '--secondary-100': '#FFBFD8'
+    '--secondary-200': '#FF94BF'
+    '--secondary-300': '#FF69A5'
+    '--secondary-400': '#FF4991'
+    '--secondary-500': '#FF297E'
+    '--secondary-600': '#FF2476'
+    '--secondary-700': '#FF1F6B'
+    '--secondary-800': '#FF1961'
+    '--secondary-900': '#FF0F4E'
     '--secondary-100-text': $black87
     '--secondary-200-text': $black87
     '--secondary-300-text': $black87
@@ -201,3 +201,31 @@ if window?
       colors.getRawColor color
 
 export default colors
+
+export nteeColors =
+  A: {bg: '#e0e1ee', fg: '#1a2380', graph: '#1a2380'}
+  B: {bg: '#fee6dc', fg: '#e84200', graph: '#fd6326'}
+  C: {bg: '#edf3e1', fg: '#6d9a1a', graph: '#b1ce4d'}
+  D: {bg: '#ece2f6', fg: '#7d3ac0', graph: '#7d3ac0'}
+  E: {bg: '#ddf6f6', fg: '#039593', graph: '#1ce5bd'}
+  F: {bg: '#def0f6', fg: '#1395c3', graph: '#1aabdd'}
+  G: {bg: '#fde3f0', fg: '#dc3789', graph: '#f954a6'}
+  H: {bg: '#fddddd', fg: '#ed0d10', graph: '#ed425c'}
+  I: {bg: '#faf1e2', fg: '#d39218', graph: '#ffbf48'}
+  J: {bg: '#e0e1ee', fg: '#1a2380', graph: '#1a2380'}
+  K: {bg: '#fee6dc', fg: '#e84200', graph: '#fd6326'}
+  L: {bg: '#edf3e1', fg: '#6d9a1a', graph: '#b1ce4d'}
+  M: {bg: '#ece2f6', fg: '#7d3ac0', graph: '#7d3ac0'}
+  N: {bg: '#ddf6f6', fg: '#039593', graph: '#1ce5bd'}
+  O: {bg: '#def0f6', fg: '#1395c3', graph: '#1aabdd'}
+  P: {bg: '#fde3f0', fg: '#dc3789', graph: '#f954a6'}
+  Q: {bg: '#fddddd', fg: '#ed0d10', graph: '#ed425c'}
+  R: {bg: '#faf1e2', fg: '#d39218', graph: '#ffbf48'}
+  S: {bg: '#e0e1ee', fg: '#1a2380', graph: '#1a2380'}
+  T: {bg: '#fee6dc', fg: '#e84200', graph: '#fd6326'}
+  U: {bg: '#edf3e1', fg: '#6d9a1a', graph: '#b1ce4d'}
+  V: {bg: '#ece2f6', fg: '#7d3ac0', graph: '#7d3ac0'}
+  W: {bg: '#ddf6f6', fg: '#039593', graph: '#1ce5bd'}
+  X: {bg: '#def0f6', fg: '#1395c3', graph: '#1aabdd'}
+  Y: {bg: '#fde3f0', fg: '#dc3789', graph: '#f954a6'}
+  Z: {bg: '#fddddd', fg: '#ed0d10', graph: '#ed425c'}
