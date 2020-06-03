@@ -39,7 +39,6 @@ export default $fund990s = ({irsFundStream}) ->
             z '.icon',
               z $icon,
                 icon: pdfIconPath
-                isTouchTarget: false
                 color: colors.$red500
             if i is 0
               "#{year} #{lang.get 'fund990s.latestFiling'}"

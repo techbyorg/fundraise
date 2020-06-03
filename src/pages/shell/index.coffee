@@ -4,9 +4,8 @@ import $appBar from 'frontend-shared/components/app_bar'
 import $buttonMenu from 'frontend-shared/components/button_menu'
 import $spinner from 'frontend-shared/components/spinner'
 
-import colors from '../../colors'
+# import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'
@@ -22,8 +21,8 @@ export default $shellPage = ({requestsStream}) ->
     z $appBar, {
       title: ''
       style: 'primary'
-      $topLeftButton:
-        z $buttonMenu, {color: colors.$header500Icon}
+      # $topLeftButton:
+      #   z $buttonMenu, {color: colors.$header500Icon}
     }
     z '.spinner',
-      $spinner
+      z $spinner

@@ -187,7 +187,6 @@ export default $filterContent = (props) ->
               },
                 z $icon,
                   icon: chevronRightIconPath
-                  isTouchTarget: false
                   size: '20px'
                   color: if operator is 'gt' \
                          then colors.$secondaryMainText \
@@ -201,7 +200,6 @@ export default $filterContent = (props) ->
               },
                 z $icon,
                   icon: chevronLeftIconPath
-                  isTouchTarget: false
                   size: '20px'
                   color: if operator is 'lt' \
                          then colors.$secondaryMainText \

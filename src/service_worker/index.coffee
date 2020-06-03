@@ -7,7 +7,7 @@ import config from '../config'
 push = new Push {cdnUrl: config.CDN_URL, host: config.HOST}
 push.listen()
 
-cache = new Cache()
+cache = new Cache {host: config.HOST}
 cache.listen()
 
 portal = new Portal {cache}

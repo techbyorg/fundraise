@@ -7,7 +7,7 @@ import $fundPage from './pages/fund'
 import $homePage from './pages/home'
 import $orgPage from './pages/org'
 import $loginLinkPage from 'frontend-shared/pages/login_link'
-import $notificationsPage from './pages/notifications'
+# import $notificationsPage from './pages/notifications'
 import $policiesPage from 'frontend-shared/pages/policies'
 import $privacyPage from 'frontend-shared/pages/privacy'
 import $shellPage from './pages/shell'
@@ -26,7 +26,7 @@ export default $app = (props) ->
       # <langKey>: $page
       fundByEin: $fundPage
       loginLink: $loginLinkPage
-      notifications: $notificationsPage
+      # notifications: $notificationsPage
       orgByEin: $orgPage
       policies: $policiesPage
       privacy: $privacyPage

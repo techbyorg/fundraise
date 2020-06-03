@@ -275,7 +275,6 @@ export default $navDrawer = ({entityStream, currentPath}) ->
                     },
                       z '.icon',
                         z $icon,
-                          isTouchTarget: false
                           icon: iconName
                           size: '26px'
                           color: if isSelected \

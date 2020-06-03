@@ -19,7 +19,6 @@ export default $fundApplicationInfo = ({irsFund}) ->
             z '.icon',
               z $icon,
                 icon: infoIconPath
-                isTouchTarget: false
             z '.text', lang.get 'fundApplicantInfo.noUnsolicited'
         z '.title', lang.get 'fundApplicantInfo.deadline'
         z '.block', irsFund.applicantInfo.deadlines

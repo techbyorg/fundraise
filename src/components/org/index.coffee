@@ -20,22 +20,10 @@ export default $org = ({irsOrgStream}) ->
     metricValueStreams = new Rx.ReplaySubject 1
     metricValueStreams.next Rx.of 'revenue'
 
-    irsOrg990StatsStream = irsOrgStream.pipe rx.switchMap (irsOrg) =>
-      if irsOrg
-        model.irsOrg990.getStatsByEin irsOrg.ein
-      else
-        Rx.of null
-
     {
-      irsOrg990StatsStream
       metricValueStreams
       contributionsStream: irsOrgStream.pipe rx.switchMap (irsOrg) ->
         model.irsContribution.getAllByToId irsOrg.ein
-      irsOrg990StatsAndMetricStream: Rx.combineLatest(
-        irsOrg990StatsStream
-        metricValueStreams.pipe rx.switchAll()
-        (vals...) -> vals
-      )
     }
   , []
 
@@ -54,7 +42,7 @@ export default $org = ({irsOrgStream}) ->
         low: low
       }
     irsOrg: irsOrgStream
-    irsOrg990Stats: irsOrg990StatsStream
+    irsOrg990Stats: null
     irsPersons: irsOrgStream.pipe rx.switchMap (irsOrg) =>
       if irsOrg
         model.irsPerson.getAllByEin irsOrg.ein

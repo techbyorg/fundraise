@@ -62,7 +62,6 @@ export default $irsSearch = ({irsType = 'irsFund', hintText}) ->
           z '.cancel',
             z $icon,
               icon: closeIconPath
-              isTouchTarget: false
               onclick: =>
                 nameValueStream.next ''
 
