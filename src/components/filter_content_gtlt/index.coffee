@@ -13,7 +13,7 @@ import colors from '../../colors'
 if window?
   require './index.styl'
 
-export default $filterContent = ({valueStreams, filterValue}) ->
+export default $filterContent = ({filterValueStr, valueStreams, filterValue}) ->
   {operatorStream, valueStream} = useMemo ->
     operatorStream = new Rx.BehaviorSubject filterValue?.operator
     valueStream = new Rx.BehaviorSubject filterValue?.value or ''
@@ -24,7 +24,7 @@ export default $filterContent = ({valueStreams, filterValue}) ->
         {operator, value}
 
     {operatorStream, valueStream}
-  , []
+  , [filterValueStr] # need to recreate valueStreams when resetting
 
   operator = filterValue?.operator
 

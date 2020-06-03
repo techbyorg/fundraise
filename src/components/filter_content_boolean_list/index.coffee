@@ -8,7 +8,7 @@ import $checkbox from 'frontend-shared/components/checkbox'
 if window?
   require './index.styl'
 
-export default $filterContent = ({valueStreams, filterValue}) ->
+export default $filterContent = ({filterValueStr, valueStreams, filterValue}) ->
   {items} = useMemo ->
     list = filter.items
     items = _.map list, ({label}, key) =>
@@ -27,7 +27,7 @@ export default $filterContent = ({valueStreams, filterValue}) ->
         _.zipObject _.map(list, 'key'), vals
 
     {items}
-  , []
+  , [filterValueStr] # need to recreate valueStreams when resetting
 
   z '.z-filter-content-boolean-list',
     z '.tap-items', {

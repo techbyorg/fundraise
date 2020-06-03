@@ -10,7 +10,8 @@ if window?
   require './index.styl'
 
 export default $filterContent = (props) ->
-  {filter, valueStreams, filterValue, overlayAnchor, $$parentRef} = props
+  {filterValueStr, filter, valueStreams, filterValue,
+    overlayAnchor, $$parentRef} = props
 
   {minStream, maxStream} = useMemo ->
     minStream = new Rx.BehaviorSubject filterValue?.min or filter.minOptions[0].value
@@ -24,7 +25,7 @@ export default $filterContent = (props) ->
         {min, max}
 
     {minStream, maxStream}
-  , []
+  , [filterValueStr] # need to recreate valueStreams when resetting
 
   z '.z-filter-content-min-max',
     z '.flex',

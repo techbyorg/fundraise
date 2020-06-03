@@ -22,12 +22,17 @@ export default $filterContent = (props) ->
   },
     switch filter.type
       when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
-        z $filterContentBooleanList, {filter, valueStreams, filterValue}
+        z $filterContentBooleanList, {
+          filterValueStr, filter, valueStreams, filterValue
+        }
       when 'listAnd', 'listOr', 'fieldList'
-        z $filterContentList, {filter, valueStreams, filterValue}
+        z $filterContentList, {
+          filterValueStr, filter, valueStreams, filterValue
+        }
       when 'minMax'
         z $filterContentMinMax, {
-          filter, valueStreams, filterValue, overlayAnchor, $$parentRef
+          filterValueStr, filter, valueStreams, filterValue,
+          overlayAnchor, $$parentRef
         }
       # when 'gtlt'
-      #   z $filterContentGtlt, {valueStream, filterValue}
+      #   z $filterContentGtlt, {filterValueStr, valueStream, filterValue}
