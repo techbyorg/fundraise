@@ -1,6 +1,10 @@
 @require '../../vars'
 
 .z-search
+  flex1()
+  overflow: auto
+  -webkit-overflow-scrolling: touch
+
   > .search
     shadow-1()
     padding: 32px
@@ -68,10 +72,3 @@
 
         > .button
           margin: 0 20px
-
-
-.z-search_input
-  width: 100%
-
-  > .input
-    width: 100%

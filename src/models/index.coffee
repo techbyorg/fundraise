@@ -18,6 +18,7 @@ import IrsPerson from './irs_person'
 export default class Model extends SharedModel
   constructor: ->
     super arguments...
+    # TODO: rename entity to team or organization (organization might be confusing)
     # @entity = new Entity {@auth}
     # @entityUser = new EntityUser {@auth}
     @experiment = new Experiment {@cookie}

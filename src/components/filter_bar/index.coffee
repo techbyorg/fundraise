@@ -5,8 +5,8 @@ import * as rx from 'rxjs/operators'
 
 import Environment from 'frontend-shared/services/environment'
 
-import $filterContentPositionedOverlay from '../filter_content_positioned_overlay'
-import $filterContentSheet from '../filter_content_sheet'
+import $filterPositionedOverlay from '../filter_positioned_overlay'
+import $filterSheet from '../filter_sheet'
 import colors from '../../colors'
 
 if window?
@@ -45,8 +45,8 @@ export default $filterBar = ({filtersStream}) ->
 
   isMobile = Environment.isMobile()
   $filterContentEl = if isMobile \
-                     then $filterContentSheet \
-                     else $filterContentPositionedOverlay
+                     then $filterSheet \
+                     else $filterPositionedOverlay
 
   z '.z-filter-bar',
     z '.filters',

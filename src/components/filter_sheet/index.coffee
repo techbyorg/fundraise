@@ -13,7 +13,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-export default $filterContentSheet = ({id, filter, onClose}) ->
+export default $filterSheet = ({id, filter, onClose}) ->
   {lang} = useContext context
 
   {valueStreams} = useMemo ->
@@ -32,13 +32,13 @@ export default $filterContentSheet = ({id, filter, onClose}) ->
       rx.distinctUntilChanged (a, b) -> a is b # don't rerender a bunch
     )
 
-  z '.z-filter-content-sheet',
+  z '.z-filter-sheet',
     key: filter.id
     z $sheet,
       id: filter.id
       onClose: onClose
       $content:
-        z '.z-filter-content-sheet_sheet',
+        z '.z-filter-sheet_sheet',
           z '.actions',
             z '.reset',
               if hasValue

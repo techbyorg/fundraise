@@ -1,0 +1,30 @@
+@require '../../vars'
+
+.z-filter-content-gtlt
+  > .label
+    font-body2()
+    margin-top: 16px
+    display: flex
+    align-items: center
+
+    > .text
+      font-subtitle1()
+      cursor: pointer
+
+  > .operators
+    margin-left: auto
+    display: flex
+
+    > .operator
+      border: 1px solid getColor('$bgText38')
+      border-radius: 50%
+      width: 24px
+      height: 24px
+      margin-right: 8px
+
+      &.is-selected
+        border: 1px solid getColor('$secondaryMain')
+        background: getColor('$secondaryMain')
+
+    > .operator-input-wide
+      width: 50px

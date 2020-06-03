@@ -10,7 +10,7 @@ if window?
   require './index.styl'
 
 export default $fundGrants = ({irsFund, irsFundStream}) ->
-  {model, lang} = useContext context
+  {model, browser, lang} = useContext context
 
   {contributionsStream} = useMemo ->
     {
@@ -19,12 +19,14 @@ export default $fundGrants = ({irsFund, irsFundStream}) ->
     }
   , []
 
-  {contributions} = useStream ->
+  {contributions, breakpoint} = useStream ->
     contributions: contributionsStream
+    breakpoint: browser.getBreakpoint()
 
   z '.z-fund-grants',
     z '.grants',
       z $table,
+        breakpoint: breakpoint
         data: contributions?.nodes
         mobileRowRenderer: $fundGrantsMobileRow
         columns: [
@@ -61,7 +63,7 @@ $fundGrantName = ({row}) ->
   nameTag = if hasEin then 'a' else 'div'
   nameFn = if hasEin then router.link else ((n) -> n)
   nameFn z "#{nameTag}.name", {
-    href: router.get 'orgByEin', {ein: row.toId}
+    href: if hasEin then router.get 'orgByEin', {ein: row.toId}
   }, row.toName
 
 $fundGrantsMobileRow = ({row}) ->

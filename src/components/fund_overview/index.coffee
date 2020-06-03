@@ -15,7 +15,7 @@ export default $fundOverview = ({irsFund}) ->
     z '.analytics',
       z '.block',
         z '.head',
-          z '.title', lang.get 'fund.grantsPerYear'
+          z '.title', lang.get 'metric.assets'
         z $fundOverviewLineChart, {irsFund}
     z '.grid',
       z '.block.pie',

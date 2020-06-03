@@ -4,7 +4,7 @@ import * as Rx from 'rxjs'
 
 import $tags from 'frontend-shared/components/tags'
 
-import $filterContentDialog from '../filter_content_dialog'
+import $filterDialog from '../filter_dialog'
 import {nteeColors} from '../../colors'
 import context from '../../context'
 
@@ -39,12 +39,12 @@ export default $searchTags = ({filter, title, placeholder}) ->
           tags: _.filter _.map filter.value, (val, key) ->
             if val
               {
-                text: filter.items[key].label
+                text: filter.items[key]?.label
                 background: nteeColors[key]?.bg
                 color: nteeColors[key]?.fg
               }
         }
     if filter and isDialogVisible
-      z $filterContentDialog, {
+      z $filterDialog, {
         filter, onClose: -> isDialogVisibleStream.next false
       }

@@ -13,7 +13,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-export default $filterContentDialog = ({filter, onClose}) ->
+export default $filterDialog = ({filter, onClose}) ->
   {lang} = useContext context
 
   {valueStreams} = useMemo ->
@@ -32,18 +32,18 @@ export default $filterContentDialog = ({filter, onClose}) ->
       rx.distinctUntilChanged (a, b) -> a is b # don't rerender a bunch
     )
 
-  z '.z-filter-content-dialog',
+  z '.z-filter-dialog',
     z $dialog,
       onClose: onClose
       $title: filter?.title or filter?.name
       $content:
-        z '.z-filter-content-dialog_content',
+        z '.z-filter-dialog_content',
           z '.content',
             z $filterContent, {
               filter, filterValue, valueStreams
             }
       $actions:
-        z '.z-filter-content-dialog_actions',
+        z '.z-filter-dialog_actions',
           z '.reset',
             if hasValue
               z $button,

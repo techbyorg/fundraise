@@ -1,4 +1,4 @@
-import {z, useContext} from 'zorium'
+import {z, useContext, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 
 import $table from 'frontend-shared/components/table'
@@ -15,10 +15,14 @@ if window?
 VISIBLE_FOCUS_AREAS_COUNT = 2
 
 export default $fundSearchResults = ({rows}) ->
-  {lang, router} = useContext context
+  {browser, lang, router} = useContext context
+
+  {breakpoint} = useStream ->
+    breakpoint: browser.getBreakpoint()
 
   z '.z-fund-search-results',
     z $table,
+      breakpoint: breakpoint
       data: rows
       onRowClick: (e, i) ->
         router.goFund rows[i]

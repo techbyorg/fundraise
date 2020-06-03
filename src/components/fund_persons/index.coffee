@@ -11,7 +11,7 @@ if window?
   require './index.styl'
 
 export default $fundPersons = ({irsFund, irsFundStream}) ->
-  {model, lang} = useContext context
+  {model, browser, lang} = useContext context
 
   {personsStream} = useMemo ->
     {
@@ -28,12 +28,14 @@ export default $fundPersons = ({irsFund, irsFundStream}) ->
     }
   , []
 
-  {persons} = useStream ->
+  {persons, breakpoint} = useStream ->
     persons: personsStream
+    breakpoint: browser.getBreakpoint()
 
   z '.z-fund-persons',
     z '.persons',
       z $table,
+        breakpoint: breakpoint
         data: persons
         mobileRowRenderer: $fundPersonsMobileRow
         columns: [

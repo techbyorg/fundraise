@@ -13,7 +13,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-export default $filterContentPositionedOverlay = (props) ->
+export default $filterPositionedOverlay = (props) ->
   {filter, onClose, $$targetRef} = props
   {lang} = useContext context
 
@@ -40,7 +40,7 @@ export default $filterContentPositionedOverlay = (props) ->
       rx.distinctUntilChanged (a, b) -> a is b # don't rerender a bunch
     )
 
-  z '.z-filter-content-positioned-overlay',
+  z '.z-filter-positioned-overlay',
     z $positionedOverlay,
       onClose: onClose
       $$targetRef: $$targetRef
@@ -50,7 +50,7 @@ export default $filterContentPositionedOverlay = (props) ->
       offset:
         y: 8
       $content:
-        z '.z-filter-content-positioned-overlay_content', {
+        z '.z-filter-positioned-overlay_content', {
           ref: $$ref
         },
           z '.content',
