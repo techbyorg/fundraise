@@ -1,4 +1,4 @@
-import {z, useContext, useMemo, useStream} from 'zorium'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
@@ -9,7 +9,6 @@ import $table from 'frontend-shared/components/table'
 import {searchIconPath} from 'frontend-shared/components/icon/paths'
 import FormatService from 'frontend-shared/services/format'
 
-#import  $irsSearch from '../irs_search'
 import $filterBar from '../filter_bar'
 import $fundSearchResults from '../fund_search_results'
 import $searchInput from '../search_input'
@@ -23,7 +22,8 @@ if window?
 export default $search = ({org}) ->
   {model, lang, browser, cookie} = useContext context
 
-  {filtersStream, nameStream, modeStream, searchResultsStream} = useMemo ->
+  {filtersStream, hasSearchedStream, hasHitSearchStream, nameStream,
+    modeStream, searchResultsStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {
       cookie, filters: SearchFiltersService.getFundFilters(lang)
     }
@@ -38,9 +38,18 @@ export default $search = ({org}) ->
       esQueryFilterStream, nameStream, (vals...) -> vals
     )
 
+    hasHitSearchStream = new Rx.BehaviorSubject false
+
     {
       filtersStream
       nameStream
+      hasHitSearchStream
+      hasSearchedStream: Rx.combineLatest(
+        esQueryFilterStream, nameStream, hasHitSearchStream, (vals...) -> vals
+      ).pipe rx.map ([esQueryFilter, name, hasHitSearch]) ->
+        hasSearchedBefore = cookie.get 'hasSearched'
+        hasFilters = not _.isEmpty(esQueryFilter) or name
+        (hasSearchedBefore and hasFilters) or hasHitSearch
       modeStream: new Rx.BehaviorSubject 'tags'
       searchResultsStream: esQueryFilterAndNameStream
       .pipe rx.switchMap ([esQueryFilter, name]) ->
@@ -61,9 +70,10 @@ export default $search = ({org}) ->
     }
   , []
 
-  {mode, focusAreasFilter, statesFilter,
+  {mode, hasSearched, focusAreasFilter, statesFilter,
     searchResults, breakpoint} = useStream ->
     mode: modeStream
+    hasSearched: hasSearchedStream
     focusAreasFilter: filtersStream.pipe rx.map (filters) ->
       _.find filters, {id: 'fundedNteeMajor'}
     statesFilter: filtersStream.pipe rx.map (filters) ->
@@ -71,16 +81,21 @@ export default $search = ({org}) ->
     searchResults: searchResultsStream
     breakpoint: browser.getBreakpoint()
 
-  console.log searchResults
-
-  z '.z-search',
+  z '.z-search', {
+      className: classKebab {hasSearched}
+  },
     z '.search',
       z '.title',
         if mode is 'specific'
           z '.text', lang.get 'fundSearch.titleSpecific'
         else
           z '.text', lang.get 'fundSearch.titleFocusArea'
-      z '.search-box',
+      z "form.search-box.#{mode}", {
+        onsubmit: (e) ->
+          e.preventDefault()
+          cookie.set 'hasSearched', true
+          hasHitSearchStream.next true
+      }, [
         if mode is 'specific'
           z $searchInput,
             valueStream: nameStream
@@ -98,12 +113,16 @@ export default $search = ({org}) ->
                 filter: statesFilter
                 title: lang.get 'general.location'
                 placeholder: lang.get 'fundSearch.locationPlaceholder'
-            z '.button',
-              z $button,
-                isPrimary: breakpoint isnt 'mobile'
-                icon: searchIconPath
-                text: lang.get 'general.search'
           ]
+
+        z '.button',
+          z $button,
+            type: 'submit'
+            isPrimary: breakpoint isnt 'mobile'
+            icon: searchIconPath
+            text: lang.get 'general.search'
+        ]
+
 
       z '.alt', {
         onclick: ->
@@ -120,30 +139,15 @@ export default $search = ({org}) ->
         else
           z '.text', lang.get 'fundSearch.byNameEin'
 
-    z '.results',
-      z '.title',
-        lang.get 'fundSearch.resultsTitle', {
-          replacements:
-            count: FormatService.number searchResults?.totalCount
-        }
-      z '.filter-bar',
-        z $filterBar, {filtersStream}
+    if hasSearched
+      z '.results',
+        z '.container',
+          z '.title',
+            lang.get 'fundSearch.resultsTitle', {
+              replacements:
+                count: FormatService.number searchResults?.totalCount
+            }
+          z '.filter-bar',
+            z $filterBar, {filtersStream}
 
-      z $fundSearchResults, {rows: searchResults?.nodes}
-
-
-    # z '.title', 'Search foundations'
-    # z '.input',
-    #   z $irsSearch, {
-    #     model, router, irsType: 'irsFund', hintText: 'Foundation name'
-    #   }
-    # z '.title', 'Search organizations'
-    # z '.input',
-    #   z $irsSearch, {
-    #     model, router, irsType: 'irsOrg', hintText: 'Organization name'
-    #   }
-    # z '.title', 'Search people'
-    # z '.input',
-    #   z $irsSearch, {
-    #     model, router, irsType: 'irsPerson', hintText: 'Person name'
-    #   }
+          z $fundSearchResults, {rows: searchResults?.nodes}

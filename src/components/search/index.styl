@@ -6,7 +6,6 @@
   -webkit-overflow-scrolling: touch
 
   > .search
-    shadow-1()
     padding: 32px
 
     > .title
@@ -37,16 +36,26 @@
 
   > .results
     padding: 48px 32px
-    container()
+    shadow-upper-1()
 
-    > .title
-      font-h5()
-      margin-bottom: 20px
+    > .container
+      container()
 
-    > .filter-bar
-      margin-bottom: 16px
+      > .title
+        font-h5()
+        margin-bottom: 20px
+
+      > .filter-bar
+        margin-bottom: 16px
 
   @media (min-width: $breakPointMedium)
+    &.has-searched
+      > .search > .search-box
+        grid-template-columns: 1fr 1px 1fr
+
+        > .button
+          display: none
+
     > .search
       > .title
         font-h4()
@@ -60,6 +69,10 @@
         grid-row-gap: 0
         align-items: center
 
+        &.specific
+          grid-template-columns: 1fr 165px
+
+
         > .search-tags
           height: 100%
           min-width: 0
@@ -71,4 +84,4 @@
           background: getColor('$bgText6')
 
         > .button
-          margin: 0 20px
+          padding: 20px

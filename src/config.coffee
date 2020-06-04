@@ -45,6 +45,9 @@ if isUrl
 else
   API_HOST = API_URL
   API_PATH = ''
+
+CDN_URL = 'https://fdn.uno/d/images' # FIXME
+
 # All keys must have values at run-time (value may be null)
 isomorphic =
   APP_KEY: 'fundraise'
@@ -62,10 +65,13 @@ isomorphic =
   DEFAULT_NOTIFICATIONS:
     conversationMessage: true
     conversationMention: true
-  CDN_URL: 'https://fdn.uno/d/images' # FIXME
+  CDN_URL: CDN_URL
   # d folder has longer cache
   SCRIPTS_CDN_URL: 'https://fdn.uno/d/scripts' # FIXME
   USER_CDN_URL: 'https://fdn.uno/images' # FIXME
+  FAVICON_URL: "#{CDN_URL}/techby/fundraise/favicon.png"
+  ICON_256_URL: "#{CDN_URL}/techby/fundraise/web_icon_256.png"
+  HAS_MANIFEST: true
   IOS_APP_URL: 'FIXME' # FIXME
   GOOGLE_PLAY_APP_URL:
     'FIXME' # FIXME

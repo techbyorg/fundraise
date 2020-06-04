@@ -9,7 +9,7 @@ import colors from '../../colors'
 if window?
   require './index.styl'
 
-export default $filterContent = (props) ->
+export default $filterContentMinMax = (props) ->
   {filterValueStr, filter, valueStreams, filterValue,
     overlayAnchor, $$parentRef} = props
 

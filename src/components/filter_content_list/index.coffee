@@ -1,5 +1,5 @@
 import {z, useMemo} from 'zorium'
-import * as _ from 'lodash'
+import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
@@ -8,7 +8,9 @@ import $checkbox from 'frontend-shared/components/checkbox'
 if window?
   require './index.styl'
 
-export default $filterContent = ({filterValueStr, filter, valueStreams, filterValue}) ->
+export default $filterContentList = (props) ->
+  {filterValueStr, filter, valueStreams, filterValue} = props
+
   {checkboxes} = useMemo ->
     list = filter.items
 

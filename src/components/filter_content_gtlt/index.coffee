@@ -13,7 +13,9 @@ import colors from '../../colors'
 if window?
   require './index.styl'
 
-export default $filterContent = ({filterValueStr, valueStreams, filterValue}) ->
+export default $filterContentGtlt = () ->
+  {filterValueStr, valueStreams, filterValue} = props
+
   {operatorStream, valueStream} = useMemo ->
     operatorStream = new Rx.BehaviorSubject filterValue?.operator
     valueStream = new Rx.BehaviorSubject filterValue?.value or ''
