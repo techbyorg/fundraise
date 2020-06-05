@@ -30,12 +30,12 @@ export default class IrsFund
       variables: {ein}
       pull: 'irsFund'
 
-  search: ({query, limit}) =>
+  search: ({query, sort, limit}) =>
     console.log 'search'
     @auth.stream
       query: '''
-        query IrsFundSearch($query: ESQuery!, $limit: Int) {
-          irsFunds(query: $query, limit: $limit) {
+        query IrsFundSearch($query: ESQuery!, $sort: JSON, $limit: Int) {
+          irsFunds(query: $query, sort: $sort, limit: $limit) {
             totalCount,
             nodes {
               ein, name, city, state, assets,
@@ -47,5 +47,5 @@ export default class IrsFund
           }
         }
       '''
-      variables: {query, limit}
+      variables: {query, sort, limit}
       pull: 'irsFunds'

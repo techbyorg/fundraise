@@ -37,6 +37,9 @@ export default $fundPage = ({requestsStream}) ->
   z '.p-fund',
     z $appBar, {
       # title: irsFund?.name
+      hasLogo: true
+      isRaised: true
+      isContained: false
       $topLeftButton: z $buttonBack, {
         color: colors.$header500Icon
       }

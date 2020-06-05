@@ -6,6 +6,7 @@ import * as rx from 'rxjs/operators'
 import $button from 'frontend-shared/components/button'
 import $input from 'frontend-shared/components/input'
 import $table from 'frontend-shared/components/table'
+import $spinner from 'frontend-shared/components/spinner'
 import {searchIconPath} from 'frontend-shared/components/icon/paths'
 import FormatService from 'frontend-shared/services/format'
 
@@ -22,8 +23,8 @@ if window?
 export default $search = ({org}) ->
   {model, lang, browser, cookie} = useContext context
 
-  {filtersStream, hasSearchedStream, hasHitSearchStream, nameStream,
-    modeStream, searchResultsStream} = useMemo ->
+  {filtersStream, hasSearchedStream, hasHitSearchStream, isLoadingStream,
+    nameStream, modeStream, searchResultsStream} = useMemo ->
     filtersStream = SearchFiltersService.getFiltersStream {
       cookie, filters: SearchFiltersService.getFundFilters(lang)
     }
@@ -39,11 +40,13 @@ export default $search = ({org}) ->
     )
 
     hasHitSearchStream = new Rx.BehaviorSubject false
+    isLoadingStream = new Rx.BehaviorSubject false
 
     {
       filtersStream
       nameStream
       hasHitSearchStream
+      isLoadingStream
       hasSearchedStream: Rx.combineLatest(
         esQueryFilterStream, nameStream, hasHitSearchStream, (vals...) -> vals
       ).pipe rx.map ([esQueryFilter, name, hasHitSearch]) ->
@@ -52,28 +55,35 @@ export default $search = ({org}) ->
         (hasSearchedBefore and hasFilters) or hasHitSearch
       modeStream: new Rx.BehaviorSubject 'tags'
       searchResultsStream: esQueryFilterAndNameStream
-      .pipe rx.switchMap ([esQueryFilter, name]) ->
-        bool = {filter: esQueryFilter}
-        if name
-          bool.must =
-            multi_match:
-              query: name
-              type: 'bool_prefix'
-              fields: ['name', 'name._2gram', 'ein']
+      .pipe(
+        rx.tap -> isLoadingStream.next true
+        rx.switchMap ([esQueryFilter, name]) ->
+          bool = {filter: esQueryFilter}
+          if name
+            bool.must =
+              multi_match:
+                query: name
+                type: 'bool_prefix'
+                fields: ['name', 'name._2gram', 'ein']
 
-        model.irsFund.search {
-          query:
-            bool: bool
-
-          limit: 100
-        }
+          model.irsFund.search {
+            query:
+              bool: bool
+            sort: [
+              {'lastYearStats.grants': {order: 'desc'}}
+            ]
+            limit: 100
+          }
+        rx.tap -> isLoadingStream.next false
+      )
     }
   , []
 
-  {mode, hasSearched, focusAreasFilter, statesFilter,
+  {mode, hasSearched, isLoading, focusAreasFilter, statesFilter,
     searchResults, breakpoint} = useStream ->
     mode: modeStream
     hasSearched: hasSearchedStream
+    isLoading: isLoadingStream
     focusAreasFilter: filtersStream.pipe rx.map (filters) ->
       _.find filters, {id: 'fundedNteeMajor'}
     statesFilter: filtersStream.pipe rx.map (filters) ->
@@ -147,6 +157,10 @@ export default $search = ({org}) ->
               replacements:
                 count: FormatService.number searchResults?.totalCount
             }
+            z '.loading', {
+              className: classKebab {isLoading: searchResults and isLoading}
+            },
+              z $spinner, {size: 30}
           z '.filter-bar',
             z $filterBar, {filtersStream}
 

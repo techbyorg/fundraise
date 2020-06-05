@@ -13,30 +13,25 @@
       min-height: auto
 
   > .quick-info
-    padding: 48px 32px
+    shadow-1()
+    padding: 16px
     box-sizing: border-box
     background: getColor('$bgColor')
     flex-shrink: 0
+    position: relative
 
   > .content
-    // flex1()
-    // display: flex
-    // min-width: 0
-    background: getColor('$bgColorAlt1')
-    padding: 36px 32px
     min-width: 0
     min-height: 0
 
     > .inner
-      container()
       height: 100%
-      // flex1()
-      // display: flex
-      // min-width: 0
-      // flex-direction: column
 
   @media (min-width: $breakPointMedium)
     display: grid
-    grid-template-columns: 428px 1fr
+    grid-template-columns: 396px 1fr
     grid-column-gap: 0
     grid-row-gap: 0
+
+    > .quick-info
+      padding: 48px 32px

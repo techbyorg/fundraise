@@ -12,7 +12,8 @@ if window?
   require './index.styl'
 
 export default $filterContent = (props) ->
-  {filter, valueStreams, filterValue, isGrouped, overlayAnchor, $$parentRef} = props
+  {filter, valueStreams, filterValue, isGrouped,
+    overlayAnchor, $$parentRef} = props
 
   filterValueStr = JSON.stringify filterValue # for "deep" compare
 

@@ -45,7 +45,7 @@ export default $filterPositionedOverlay = (props) ->
       onClose: onClose
       $$targetRef: $$targetRef
       $$ref: $$overlayRef
-      repositionOnChangeStr: filter.value
+      repositionOnChangeStr: filterValue
       anchor: 'top-left'
       offset:
         y: 8

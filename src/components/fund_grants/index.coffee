@@ -60,10 +60,14 @@ export default $fundGrants = ({irsFund, irsFundStream}) ->
 $fundGrantName = ({row}) ->
   {model, router} = useContext context
   hasEin = model.irsOrg.isEin row.toId
+  hasEin = false # FIXME: add org page
   nameTag = if hasEin then 'a' else 'div'
   nameFn = if hasEin then router.link else ((n) -> n)
   nameFn z "#{nameTag}.name", {
-    href: if hasEin then router.get 'orgByEin', {ein: row.toId}
+    href: if hasEin then router.get 'orgByEin', {
+      ein: row.toId
+      slug: _.kebabCase row.toName
+    }
   }, row.toName
 
 $fundGrantsMobileRow = ({row}) ->

@@ -35,7 +35,7 @@ export default $searchTags = ({filter, title, placeholder}) ->
         z $tags, {
           maxVisibleCount: 6
           fitToContent: true
-          isWrapped: false
+          isNoWrap: false
           tags: _.filter _.map filter.value, (val, key) ->
             if val
               {

@@ -69,7 +69,7 @@ isomorphic =
   # d folder has longer cache
   SCRIPTS_CDN_URL: 'https://fdn.uno/d/scripts' # FIXME
   USER_CDN_URL: 'https://fdn.uno/images' # FIXME
-  FAVICON_URL: "#{CDN_URL}/techby/fundraise/favicon.png"
+  FAVICON_URL: "#{CDN_URL}/techby/fundraise/favicon.png?1"
   ICON_256_URL: "#{CDN_URL}/techby/fundraise/web_icon_256.png"
   HAS_MANIFEST: true
   IOS_APP_URL: 'FIXME' # FIXME

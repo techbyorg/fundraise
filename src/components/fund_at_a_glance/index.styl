@@ -2,27 +2,8 @@
 
 .z-fund-at-a-glance
   > .name
-    font-h4()
+    font-h5()
     margin-bottom: 24px
-
-  > .top-metrics
-    display: flex
-    margin-bottom: 42px
-
-    > .metric
-      flex1()
-      text-align: center
-
-      &:first-child
-        border-right: 2px solid getColor('$bgText6')
-
-      > .value
-        font-h5()
-        color: getColor('$primaryMain')
-        margin-bottom: 2px
-
-      > .name
-        font-subtitle1()
 
   > .block
     margin-top: 20px
@@ -36,22 +17,6 @@
 
     > .link
       color: getColor('$primary500')
-
-    > .metrics
-      display: flex
-
-      > .metric
-        flex1()
-        background: getColor('$primary100')
-        text-align: center
-        padding: 10px 0
-        border-radius: 4px
-
-        > .value
-          font-h6()
-
-        &:first-child
-          margin-right: 16px
 
     > .mission
         &.is-truncated
@@ -67,3 +32,28 @@
             width: 100%
             height: 100%
             background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), getColor('$bgColor'))
+
+  > .divider
+    width: 100%
+    height: 1px
+    background: getColor('$bgText12')
+    margin: 28px 0
+
+  > .grant-summary
+    > .title
+      font-h6()
+      margin-bottom: 24px
+      display: flex
+      align-items: center
+
+      > .icon
+        margin-right: 10px
+
+    > .metric
+      margin-bottom: 20px
+
+      > .name
+        font-caption(high)
+
+      > .value
+        font-h5()
