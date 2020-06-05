@@ -4,8 +4,7 @@ import * as rx from 'rxjs/operators'
 
 import FormatService from 'frontend-shared/services/format'
 
-nteeMajors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
-'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+import {nteeColors} from '../colors'
 
 states = {
   AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming'
@@ -19,24 +18,20 @@ class SearchFiltersService
         id: 'fundedNteeMajor' # used as ref/key
         field: 'fundedNteeMajor'
         title: lang.get 'filter.fundedNteeMajor.title'
-        type: 'listOr'
-        items: _.reduce nteeMajors, (obj, nteeMajor) ->
-          obj[nteeMajor] = {
-            label: lang.get "nteeMajor.#{nteeMajor}"
-          }
-          obj
-        , {}
-        queryFn: (value, key) ->
-          {
-            nested:
-              path: 'fundedNteeMajors'
-              query:
-                bool:
-                  must: [
-                    {match: {'fundedNteeMajors.key': key}}
-                    {range: {'fundedNteeMajors.percent': {gte: 2}}}
-                  ]
-          }
+        type: 'ntee'
+        getTagsFn: (value = {}) ->
+          {nteeMajors, ntees} = value
+          nteeMajorsGroups = _.countBy _.keys(ntees), (ntee) -> ntee.substr 0, 1
+          allNteeMajors = _.defaults _.clone(nteeMajors), nteeMajorsGroups
+          _.map allNteeMajors, (count, nteeMajor) ->
+            text = lang.get "nteeMajor.#{nteeMajor}"
+            if count isnt true
+              text = "(#{count}) #{text}"
+            {
+              text
+              background: nteeColors[nteeMajor]?.bg
+              color: nteeColors[nteeMajor]?.fg
+            }
       }
       # search-tags, not in filter bar
       {
@@ -46,6 +41,12 @@ class SearchFiltersService
         type: 'listOr'
         items: _.mapValues states, (state, stateCode) ->
           {label: state}
+        getTagsFn: (value) ->
+          _.filter _.map value, (val, key) ->
+            if val
+              {
+                text: states[key]
+              }
         queryFn: (value, key) ->
           {
             nested:
@@ -264,6 +265,33 @@ class SearchFiltersService
                   filter.queryFn value, key
                 else if value
                   match: "#{field}.#{key}": value
+          }
+        when 'ntee'
+          {
+            bool:
+              should:
+                _.map(filter.value.nteeMajors, (value, key) ->
+                  {
+                    nested:
+                      path: 'fundedNteeMajors'
+                      query:
+                        bool:
+                          must: [
+                            {match: {'fundedNteeMajors.key': key}}
+                            {range: {'fundedNteeMajors.percent': {gte: 2}}}
+                          ]
+                  }
+                ).concat _.map filter.value.ntees, (value, key) ->
+                  {
+                    nested:
+                      path: 'fundedNtees'
+                      query:
+                        bool:
+                          must: [
+                            {match: {'fundedNtees.key': key}}
+                            {range: {'fundedNtees.percent': {gte: 2}}}
+                          ]
+                  }
           }
         when 'fieldList'
           {

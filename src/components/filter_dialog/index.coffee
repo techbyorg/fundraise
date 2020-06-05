@@ -16,15 +16,17 @@ if window?
 export default $filterDialog = ({filter, onClose}) ->
   {lang} = useContext context
 
-  {valueStreams} = useMemo ->
+  {valueStreams, resetValueStream} = useMemo ->
     valueStreams = new Rx.ReplaySubject 1
     valueStreams.next filter.valueStreams.pipe rx.switchAll()
     {
       valueStreams
+      resetValueStream: new Rx.BehaviorSubject ''
     }
   , []
 
-  {filterValue, hasValue} = useStream ->
+  {resetValue, filterValue, hasValue} = useStream ->
+    resetValue: resetValueStream
     filterValue: filter.valueStreams.pipe rx.switchAll()
     hasValue: valueStreams.pipe(
       rx.switchAll()
@@ -40,7 +42,7 @@ export default $filterDialog = ({filter, onClose}) ->
         z '.z-filter-dialog_content',
           z '.content',
             z $filterContent, {
-              filter, filterValue, valueStreams
+              filter, filterValue, valueStreams, resetValue
             }
       $actions:
         z '.z-filter-dialog_actions',
@@ -51,10 +53,12 @@ export default $filterDialog = ({filter, onClose}) ->
                 onclick: =>
                   filter.valueStreams.next Rx.of null
                   valueStreams.next Rx.of null
+                  resetValueStream.next Date.now()
           z '.save',
             z $button,
               text: lang.get 'general.save'
               isPrimary: true
               onclick: =>
                 filter.valueStreams.next valueStreams.pipe rx.switchAll()
+                resetValueStream.next Date.now()
                 onClose()

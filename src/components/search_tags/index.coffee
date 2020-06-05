@@ -5,7 +5,6 @@ import * as Rx from 'rxjs'
 import $tags from 'frontend-shared/components/tags'
 
 import $filterDialog from '../filter_dialog'
-import {nteeColors} from '../../colors'
 import context from '../../context'
 
 if window?
@@ -36,13 +35,7 @@ export default $searchTags = ({filter, title, placeholder}) ->
           maxVisibleCount: 6
           fitToContent: true
           isNoWrap: false
-          tags: _.filter _.map filter.value, (val, key) ->
-            if val
-              {
-                text: filter.items[key]?.label
-                background: nteeColors[key]?.bg
-                color: nteeColors[key]?.fg
-              }
+          tags: filter.getTagsFn filter.value
         }
     if filter and isDialogVisible
       z $filterDialog, {

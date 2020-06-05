@@ -1,4 +1,4 @@
-import {z, classKebab, useMemo} from 'zorium'
+import {z, classKebab, useEffect, useMemo} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
@@ -9,7 +9,7 @@ if window?
   require './index.styl'
 
 export default $filterContentBooleanList = (props) ->
-  {filterValueStr, valueStreams, filterValue} = props
+  {filterValueStr, resetValue, valueStreams, filterValue} = props
 
   {items} = useMemo ->
     list = filter.items
@@ -29,7 +29,12 @@ export default $filterContentBooleanList = (props) ->
         _.zipObject _.map(list, 'key'), vals
 
     {items}
-  , [filterValueStr] # need to recreate valueStreams when resetting
+  , []
+
+  useEffect ->
+    _.forEach items, ({valueStream}, key) =>
+      valueStream.next filterValue?[key]
+  , [filterValueStr, resetValue] # need to recreate valueStreams when resetting
 
   z '.z-filter-content-boolean-list',
     z '.tap-items', {

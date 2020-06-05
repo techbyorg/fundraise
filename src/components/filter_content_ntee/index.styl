@@ -1,18 +1,38 @@
 @require '../../vars'
 
 .z-filter-content-ntee
-  > .label
-    font-body2()
-    margin-top: 16px
-    display: flex
-    align-items: center
+  min-height: 500px // always take up full height of dialog
 
-    &:first
-      margin-top: 0
+  > .search
+    margin-bottom: 24px
 
-    > .checkbox
-      margin-right: 20px
+  > .group
+    &.is-visible > .label
+      display: flex
 
-    > .text
-      font-subtitle1()
-      cursor: pointer
+    > .label, > .children > .label
+      font-body2()
+      margin-top: 16px
+      display: none
+      align-items: center
+
+      &.is-visible
+        display: flex
+
+      &:first
+        margin-top: 0
+
+      > .checkbox
+        margin-right: 20px
+
+      > .text
+        font-subtitle1()
+        cursor: pointer
+
+      > .open
+        margin-left: auto
+        cursor: pointer
+
+    > .children
+      margin-left: 32px
+      display: block

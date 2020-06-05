@@ -1,4 +1,4 @@
-import {z, useMemo} from 'zorium'
+import {z, useEffect,  useMemo} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
@@ -9,7 +9,7 @@ if window?
   require './index.styl'
 
 export default $filterContentList = (props) ->
-  {filterValueStr, filter, valueStreams, filterValue} = props
+  {filterValueStr, resetValue, filter, valueStreams, filterValue} = props
 
   {checkboxes} = useMemo ->
     list = filter.items
@@ -18,7 +18,7 @@ export default $filterContentList = (props) ->
       valueStream = new Rx.BehaviorSubject(
         filterValue?[key]
       )
-      {valueStream, label}
+      {key, valueStream, label}
 
     valueStreams.next Rx.combineLatest(
       _.map checkboxes, 'valueStream'
@@ -28,7 +28,12 @@ export default $filterContentList = (props) ->
         _.zipObject _.keys(list), vals
 
     {checkboxes}
-  , [filterValueStr] # need to recreate valueStreams when resetting
+  , []
+
+  useEffect ->
+    _.forEach checkboxes, ({key, valueStream}) =>
+      valueStream.next filterValue?[key]
+  , [filterValueStr, resetValue] # need to recreate valueStreams when resetting
 
   z '.z-filter-content-list',
     _.map checkboxes, ({valueStream, label}) ->

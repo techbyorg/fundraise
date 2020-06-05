@@ -1,4 +1,4 @@
-import {z, classKebab, useMemo} from 'zorium'
+import {z, classKebab, useEffect, useMemo} from 'zorium'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
@@ -10,7 +10,7 @@ if window?
   require './index.styl'
 
 export default $filterContentMinMax = (props) ->
-  {filterValueStr, filter, valueStreams, filterValue,
+  {filterValueStr, resetValue, filter, valueStreams, filterValue,
     overlayAnchor, $$parentRef} = props
 
   {minStream, maxStream} = useMemo ->
@@ -25,7 +25,12 @@ export default $filterContentMinMax = (props) ->
         {min, max}
 
     {minStream, maxStream}
-  , [filterValueStr] # need to recreate valueStreams when resetting
+  , []
+
+  useEffect ->
+    minStream.next filterValue?.min or filter.minOptions[0].value
+    maxStream.next filterValue?.max or filter.maxOptions[0].value
+  , [filterValueStr, resetValue] # need to recreate valueStreams when resetting
 
   z '.z-filter-content-min-max',
     z '.flex',

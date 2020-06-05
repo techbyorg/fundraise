@@ -1,9 +1,9 @@
-import {z, classKebab, useMemo} from 'zorium'
+import {z, classKebab, useEffect, useMemo} from 'zorium'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $icon from 'frontend-shared/components/icon'
-import $input from 'frontend-shared/components/input'
+import $inputOld from 'frontend-shared/components/input_old'
 import {
   chevronRightIconPath, chevronLeftIconPath
 } from 'frontend-shared/components/icon/paths'
@@ -14,7 +14,7 @@ if window?
   require './index.styl'
 
 export default $filterContentGtlt = () ->
-  {filterValueStr, valueStreams, filterValue} = props
+  {filterValueStr, resetValue, valueStreams, filterValue} = props
 
   {operatorStream, valueStream} = useMemo ->
     operatorStream = new Rx.BehaviorSubject filterValue?.operator
@@ -26,7 +26,12 @@ export default $filterContentGtlt = () ->
         {operator, value}
 
     {operatorStream, valueStream}
-  , [filterValueStr] # need to recreate valueStreams when resetting
+  , []
+
+  useEffect ->
+    operatorStream.next filterValue?.operator
+    valueStream.next filterValue?.value or ''
+  , [filterValueStr, resetValue] # need to recreate valueStreams when resetting
 
   operator = filterValue?.operator
 
@@ -61,7 +66,7 @@ export default $filterContentGtlt = () ->
                     then colors.$secondaryMainText \
                     else colors.$bgText38
       z '.operator-input-wide',
-        z $input, {
+        z $inputOld, {
           valueStream: valueStream
           type: 'number'
           height: '24px'

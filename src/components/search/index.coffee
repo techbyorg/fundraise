@@ -4,7 +4,6 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $button from 'frontend-shared/components/button'
-import $input from 'frontend-shared/components/input'
 import $table from 'frontend-shared/components/table'
 import $spinner from 'frontend-shared/components/spinner'
 import {searchIconPath} from 'frontend-shared/components/icon/paths'
@@ -58,6 +57,7 @@ export default $search = ({org}) ->
       .pipe(
         rx.tap -> isLoadingStream.next true
         rx.switchMap ([esQueryFilter, name]) ->
+          console.log 'es', esQueryFilter
           bool = {filter: esQueryFilter}
           if name
             bool.must =

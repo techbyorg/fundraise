@@ -5,6 +5,7 @@ import * as rx from 'rxjs/operators'
 
 import $filterContentBooleanList from '../filter_content_boolean_list'
 import $filterContentList from '../filter_content_list'
+import $filterContentNtee from '../filter_content_ntee'
 # import $filterContentGtlt from '../filter_content_gtlt'
 import $filterContentMinMax from '../filter_content_min_max'
 
@@ -12,28 +13,32 @@ if window?
   require './index.styl'
 
 export default $filterContent = (props) ->
-  {filter, valueStreams, filterValue, isGrouped,
+  {filter, valueStreams, filterValue, resetValue, isGrouped, resetValue,
     overlayAnchor, $$parentRef} = props
 
-  filterValueStr = JSON.stringify filterValue # for "deep" compare
+  filterValueStr = filterValue and JSON.stringify filterValue # "deep" compare
+  filterValueStr or= ''
 
-  z '.z-filter-content', {
-    # we want all inputs, etc... to restart w/ new valueStreams
-    key: "#{filterValueStr}"
-  },
+  z '.z-filter-content',
     switch filter.type
       when 'listBooleanAnd', 'listBooleanOr', 'fieldList', 'booleanArraySubTypes'
         z $filterContentBooleanList, {
-          filterValueStr, filter, valueStreams, filterValue
+          filterValueStr, resetValue, filter, valueStreams, filterValue
         }
       when 'listAnd', 'listOr', 'fieldList'
         z $filterContentList, {
-          filterValueStr, filter, valueStreams, filterValue
+          filterValueStr, resetValue, filter, valueStreams, filterValue
+        }
+      when 'ntee'
+        z $filterContentNtee, {
+          filterValueStr, resetValue, filter, valueStreams, filterValue
         }
       when 'minMax'
         z $filterContentMinMax, {
-          filterValueStr, filter, valueStreams, filterValue,
+          filterValueStr, resetValue, filter, valueStreams, filterValue,
           overlayAnchor, $$parentRef
         }
       # when 'gtlt'
-      #   z $filterContentGtlt, {filterValueStr, valueStream, filterValue}
+        # z $filterContentGtlt, {
+        #   filterValueStr, resetValue, valueStream, filterValue
+        # }
