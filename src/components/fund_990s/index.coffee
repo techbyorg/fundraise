@@ -34,7 +34,7 @@ export default $fund990s = ({irsFundStream}) ->
           router.link z 'a.irs-990', {
             # TODO: https://www.irs.gov/charities-non-profits/tax-exempt-organization-search-bulk-data-downloads
             href: 'http://990s.foundationcenter.org/990pf_pdf_archive/' +
-                  "#{folder1}/#{ein}/#{ein}_#{taxPeriod}_.990PF.pdf"
+                  "#{folder1}/#{ein}/#{ein}_#{taxPeriod}_990PF.pdf"
           },
             z '.icon',
               z $icon,
