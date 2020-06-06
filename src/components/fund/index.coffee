@@ -1,5 +1,7 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
+import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $tapTabs from 'frontend-shared/components/tap_tabs'
 
@@ -14,42 +16,65 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-export default $fund = ({placeholderNameStream, irsFundStream}) ->
-  {lang} = useContext context
+TABS = [
+  {
+    slug: 'overview'
+    langKey: 'fund.tabOverview'
+    $el: $fundOverview
+  }
+  {
+    slug: 'grants'
+    langKey: 'fund.tabGrants'
+    $el: $fundGrants
+  }
+  {
+    slug: 'persons'
+    langKey: 'fund.tabPersons'
+    $el: $fundPersons
+  }
+  {
+    slug: 'application-info'
+    langKey: 'fund.tabApplicationInfo'
+    $el: $fundApplicationInfo
+  }
+  {
+    slug: '990s'
+    langKey: 'fund.tab990s'
+    $el: $fund990s
+  }
+]
 
-  {selectedIndexStream} = useMemo ->
-    {selectedIndexStream: new Rx.BehaviorSubject 0}
+export default $fund = ({placeholderNameStream, irsFundStream, tabStream}) ->
+  {lang, router} = useContext context
+
+  {selectedIndexStreams} = useMemo ->
+    selectedIndexStreams = new Rx.ReplaySubject 1
+    selectedIndexStreams.next tabStream.pipe rx.map (tab) ->
+      index = _.findIndex TABS, {slug: tab}
+      if index is -1
+        index = 0
+      index
+    {selectedIndexStreams}
   , []
 
   {irsFund, selectedIndex} = useStream ->
     irsFund: irsFundStream
-    selectedIndex: selectedIndexStream
+    selectedIndex: selectedIndexStreams.pipe rx.switchAll()
 
-  tabs = [
-    {
-      name: lang.get 'fund.tabOverview'
-      $el: $fundOverview
-    }
-    {
-      name: lang.get 'fund.tabGrants'
-      $el: $fundGrants
-    }
-    {
-      name: lang.get 'fund.tabPersons'
-      $el: $fundPersons
-    }
-    {
-      name: lang.get 'fund.tabApplicationInfo'
-      $el: $fundApplicationInfo
-    }
-    {
-      name: lang.get 'fund.tab990s'
-      $el: $fund990s
-    }
-  ]
+  tabs = _.map TABS, (tab) ->
+    _.defaults {
+      name: lang.get tab.langKey
+      route: router.getFund irsFund, tab.slug
+    }, tab
+
+  selectedIndex ?= 0
+
+  selectedTab = tabs[selectedIndex]
 
   z '.z-fund', {
-    className: classKebab {scrollFitContent: not (selectedIndex in [1, 2])}
+    className: classKebab {
+      scrollFitContent: not (selectedTab.slug in ['grants', 'persons'])
+    }
   },
     z '.quick-info',
       z $fundAtAGlance, {placeholderNameStream, irsFund}
@@ -57,7 +82,7 @@ export default $fund = ({placeholderNameStream, irsFundStream}) ->
     z '.content',
       z '.inner',
         z $tapTabs, {
-          selectedIndexStream, tabs, tabProps: {
+          selectedIndexStreams, tabs, tabProps: {
             irsFund, irsFundStream
           }
         }

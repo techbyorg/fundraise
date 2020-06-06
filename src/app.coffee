@@ -25,6 +25,7 @@ export default $app = (props) ->
       # add to lang/paths_en.json
       # <langKey>: $page
       fundByEin: $fundPage
+      fundByEinWithTab: $fundPage
       loginLink: $loginLinkPage
       # notifications: $notificationsPage
       orgByEin: $orgPage

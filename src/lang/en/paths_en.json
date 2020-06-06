@@ -10,6 +10,7 @@
 
   "home": "/",
   "fundByEin": "/fund/:slug/:ein",
+  "fundByEinWithTab": "/fund/:slug/:ein/:tab",
   "orgByEin": "/org/:slug/:ein",
   "policies": "/policies",
   "privacy": "/privacy",

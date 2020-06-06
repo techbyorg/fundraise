@@ -16,13 +16,15 @@ if window?
 export default $fundPage = ({requestsStream}) ->
   {model} = useContext context
 
-  {placeholderNameStream, irsFundStream} = useMemo ->
+  {placeholderNameStream, irsFundStream, tabStream} = useMemo ->
     {
       # for smoother loading
-      placeholderNameStream: requestsStream.pipe rx.map ({route}) =>
+      placeholderNameStream: requestsStream.pipe rx.map ({route}) ->
         _.startCase route.params.slug
-      irsFundStream: requestsStream.pipe rx.switchMap ({route}) =>
+      irsFundStream: requestsStream.pipe rx.switchMap ({route}) ->
         model.irsFund.getByEin route.params.ein
+      tabStream: requestsStream.pipe rx.map ({route}) ->
+        route.params.tab
     }
   , []
 
@@ -44,4 +46,4 @@ export default $fundPage = ({requestsStream}) ->
         color: colors.$header500Icon
       }
     }
-    z $fund, {placeholderNameStream, irsFundStream}
+    z $fund, {placeholderNameStream, irsFundStream, tabStream}
