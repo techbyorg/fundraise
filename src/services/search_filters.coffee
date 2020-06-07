@@ -135,10 +135,12 @@ class SearchFiltersService
       }
   ]
 
-  getFiltersStream: ({cookie, filters, initialFilters, dataType = 'irsFund'}) ->
+  getFiltersStream: (props) ->
+    {cookie, filters, initialFiltersStream, dataType = 'irsFund'} = props
+
     # eg filters from custom urls
-    initialFilters ?= new Rx.BehaviorSubject null
-    initialFilters = initialFilters.pipe rx.switchMap (initialFilters) =>
+    initialFiltersStream ?= new Rx.BehaviorSubject null
+    initialFiltersStream = initialFiltersStream.pipe rx.switchMap (initialFilters) =>
       persistentCookie = 'savedFilters'
       savedFilters = try
         JSON.parse cookie.get persistentCookie
@@ -153,9 +155,12 @@ class SearchFiltersService
         else
           savedValueKey = "#{dataType}.#{filter.field}"
 
-        initialValue = if initialFilters \
+
+        initialValue = if not _.isEmpty initialFilters \
                        then initialFilters[savedValueKey] \
                        else savedFilters[savedValueKey]
+
+        console.log 'initial', initialValue, savedValueKey, initialFilters
 
         valueStreams = new Rx.ReplaySubject 1
         valueStreams.next Rx.of(
@@ -194,8 +199,8 @@ class SearchFiltersService
       )
 
     # for whatever reason, required for stream to update, unless the
-    # initialFilters switchMap is removed
-    initialFilters.pipe(
+    # initialFiltersStream switchMap is removed
+    initialFiltersStream.pipe(
       rx.publishReplay(1)
       rx.refCount()
     )

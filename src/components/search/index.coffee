@@ -19,13 +19,28 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-export default $search = ({org}) ->
+export default $search = ({nteeStream, locationStream}) ->
   {model, lang, browser, cookie} = useContext context
 
   {filtersStream, hasSearchedStream, hasHitSearchStream, isLoadingStream,
     nameStream, modeStream, searchResultsStream} = useMemo ->
+
+    initialFiltersStream = Rx.combineLatest(
+      nteeStream, locationStream
+      (ntee, location) ->
+        filters = {}
+        if ntee
+          filters['irsFund.fundedNteeMajor'] =
+            {nteeMajors: {}, ntees: {"#{ntee.toUpperCase()}": true}}
+        if location
+          filters['irsFund.state'] = {"#{location.toUpperCase()}": true}
+        filters
+    )
+
     filtersStream = SearchFiltersService.getFiltersStream {
-      cookie, filters: SearchFiltersService.getFundFilters(lang)
+      cookie
+      initialFiltersStream
+      filters: SearchFiltersService.getFundFilters(lang)
     }
     nameStream = new Rx.BehaviorSubject ''
 

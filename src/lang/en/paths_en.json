@@ -15,6 +15,7 @@
   "policies": "/policies",
   "privacy": "/privacy",
   "search": "/search",
+  "searchWithFocusAreaAndLocation": "/search/focus/:focusAreaSlug/:ntee/location/:location",
   "shell": "/cache-shell",
   "termsOfService": "/tos"
 }

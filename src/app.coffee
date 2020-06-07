@@ -34,6 +34,7 @@ export default $app = (props) ->
       # settings: $settingsPage
       home: $searchPage
       search: $searchPage
+      searchWithFocusAreaAndLocation: $searchPage
       shell: $shellPage
       signIn: $signInPage
       termsOfService: $tosPage
