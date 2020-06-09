@@ -47,6 +47,7 @@
   "fundGrants.purpose": "Purpose",
   "fundOverview.fundedNtee": "Top funded categories",
   "fundOverview.fundingMap": "Funding Map",
+  "fundOverview.changeMetric": "Change metric",
   "fundSearch.byNameEin": "search by foundation name/EIN",
   "fundSearch.byNameEinPlaceholder": "Search foundation by name or EIN",
   "fundSearch.byFocusArea": "search by focus areas and location",
@@ -87,6 +88,8 @@
   "metric.assets": "Assets",
   "metric.employeeCount": "Employee count",
   "metric.volunteerCount": "Volunteer count",
+  "metric.grantSum": "Total grant amount",
+  "metric.officerSalaries": "Officer salaries",
 
   "nteeMajor.A": "Arts, Culture, and Humanities",
   "nteeMajor.B": "Education",

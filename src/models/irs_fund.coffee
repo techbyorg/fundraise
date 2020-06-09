@@ -10,7 +10,7 @@ export default class IrsFund
           irsFund(ein: $ein) {
             ein, name, city, state, assets, mission, website,
             yearlyStats {
-              years { year, assets }
+              years { year, assets, grantSum, officerSalaries }
             },
             lastYearStats {
               grants, grantMedian, grantSum, revenue, expenses

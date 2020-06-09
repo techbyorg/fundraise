@@ -58,6 +58,7 @@ colors = _.defaults {
     '--secondary-900-text': $white
 
     '--bg-color': '#ffffff'
+    '--bg-color-26': 'rgba(255, 255, 255, 0.26)'
     '--bg-color-alt-1': '#F8F8F8' # changed from f5f5f5
     '--bg-color-alt-2': '#EEEEEE'
     '--bg-backdrop': 'rgba(250, 250, 250, 0.73)'
@@ -133,6 +134,7 @@ colors = _.defaults {
   '$secondaryMainText': 'var(--secondary-700-text)'
 
   '$bgColor': 'var(--bg-color)'
+  '$bgColor26': 'var(--bg-color-26)'
   '$bgColorAlt1': 'var(--bg-color-alt-1)'
   '$bgColorAlt2': 'var(--bg-color-alt-2)'
   '$bgBackdrop': 'var(--bg-backdrop)'
