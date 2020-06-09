@@ -8,6 +8,7 @@ if window?
   require './index.styl'
 
 export default $fundOverviewlineChart = ({irsFund}) ->
+  # TODO: metric dropdown: assets, grant median, grant sum, grants made
   data = [{
     id: 'main'
     data: _.filter _.map irsFund?.yearlyStats?.years, ({year, assets}) ->

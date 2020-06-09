@@ -133,6 +133,13 @@ class SearchFiltersService
           {value: '100000000', text: FormatService.abbreviateDollar 100000000} # 100m
         ]
       }
+      {
+        id: 'acceptsUnsolicitedReqs' # used as ref/key
+        field: 'applicantInfo.acceptsUnsolicitedRequests'
+        name: lang.get 'filter.acceptsUnsolicitedReqs.title'
+        type: 'boolean'
+        isBoolean: true
+      }
   ]
 
   getFiltersStream: (props) ->
@@ -304,6 +311,10 @@ class SearchFiltersService
               should: _.filter _.map filter.value, (value, key) ->
                 if value
                   match: "#{field}": key
+          }
+        when 'boolean'
+          {
+            match: "#{field}": true
           }
         when 'booleanArray'
           withValues = _.filter(fieldFilters, 'value')

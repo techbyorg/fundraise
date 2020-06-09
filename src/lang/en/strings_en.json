@@ -79,6 +79,7 @@
   "filter.noMax": "No max",
   "filter.fundedNteeMajor.title": "Focus areas",
   "filter.fundedStates.title": "States",
+  "filter.acceptsUnsolicitedReqs.title": "Accepts unsolicted reqs",
 
   "metric.revenue": "Revenue",
   "metric.expenses": "Expenses",
