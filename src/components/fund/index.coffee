@@ -82,7 +82,5 @@ export default $fund = ({placeholderNameStream, irsFundStream, tabStream}) ->
     z '.content',
       z '.inner',
         z $tapTabs, {
-          selectedIndexStreams, tabs, tabProps: {
-            irsFund, irsFundStream
-          }
+          selectedIndexStreams, tabs, tabProps: {irsFund, irsFundStream}
         }

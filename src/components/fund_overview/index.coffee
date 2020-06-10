@@ -1,5 +1,4 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
-import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
 import $dropdown from 'frontend-shared/components/dropdown'

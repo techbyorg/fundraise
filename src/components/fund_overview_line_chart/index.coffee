@@ -1,4 +1,5 @@
 import {z} from 'zorium'
+import * as _ from 'lodash-es'
 
 import $chartLine from '../chart_line'
 

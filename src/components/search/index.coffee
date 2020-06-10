@@ -72,7 +72,6 @@ export default $search = ({nteeStream, locationStream}) ->
       .pipe(
         rx.tap -> isLoadingStream.next true
         rx.switchMap ([esQueryFilter, name]) ->
-          console.log 'es', esQueryFilter
           bool = {filter: esQueryFilter}
           if name
             bool.must =

@@ -30,17 +30,16 @@ export default $fund990s = ({irsFundStream}) ->
     z '.irs-990s',
       _.map irsFund990s?.nodes, ({ein, year, taxPeriod}, i) ->
         folder1 = ein.substr 0, 3
-        if taxPeriod # TODO: rm when all loadAllYears reprocessed
-          router.link z 'a.irs-990', {
-            # TODO: https://www.irs.gov/charities-non-profits/tax-exempt-organization-search-bulk-data-downloads
-            href: 'http://990s.foundationcenter.org/990pf_pdf_archive/' +
-                  "#{folder1}/#{ein}/#{ein}_#{taxPeriod}_990PF.pdf"
-          },
-            z '.icon',
-              z $icon,
-                icon: pdfIconPath
-                color: colors.$red500
-            if i is 0
-              "#{year} #{lang.get 'fund990s.latestFiling'}"
-            else
-              "#{year}"
+        router.link z 'a.irs-990', {
+          # TODO: https://www.irs.gov/charities-non-profits/tax-exempt-organization-search-bulk-data-downloads
+          href: 'http://990s.foundationcenter.org/990pf_pdf_archive/' +
+                "#{folder1}/#{ein}/#{ein}_#{taxPeriod}_990PF.pdf"
+        },
+          z '.icon',
+            z $icon,
+              icon: pdfIconPath
+              color: colors.$red500
+          if i is 0
+            "#{year} #{lang.get 'fund990s.latestFiling'}"
+          else
+            "#{year}"
