@@ -7,11 +7,19 @@
     "sw": "./bin/sw.sh",
     "start": "./bin/start.sh",
     "dev": "./bin/dev.sh",
-    "watch": "./bin/watch.sh"
+    "watch": "./bin/watch.sh",
+    "postinstall": "sh -c \"./node_modules/are-you-es5/dist/cli.js check -r ./frontend-shared | tail -n 2 | head -n 1 > ./.non_es5 \""
   },
   "devDependencies": {
-    "clay-coffeescript-style-guide": "^1.1.0",
-    "coffeelint": "^2.1.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.10.1",
+    "are-you-es5": "^2.1.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.2.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "frontend-shared-dev": "github:techbyorg/frontend-shared-dev",
     "gulp": "^4.0.2",
     "gulp-gcloud-publish": "github:aaaton/gulp-gcloud-publish"

@@ -2,7 +2,7 @@
 export NODE_ENV=production
 
 # replacements necessary for serviceworker. bundle replacements are done before cdn in dist
-paths_dist=`./node_modules/coffee-script/bin/coffee --transpile -e "process.stdout.write require('./gulp_paths').dist"`
+paths_dist=`node -r ./node_modules/@babel/register -e "process.stdout.write(require('./gulp_paths').dist)"`
 
 if [ ! -d $paths_dist ]; then
   echo "./dist directory not found. make sure to run 'npm run dist' beforehand"
@@ -39,4 +39,4 @@ while read -d $'\0' -r file; do
   done < <(grep -o "process\.env\.[A-Z0-9_]\+" $file | uniq)
 done < <(find $paths_dist -maxdepth 1 -iname '*.js' -print0)
 
-node ./bin/frontend_server.js
+node -r ./babel.register.config.js ./bin/frontend_server.js

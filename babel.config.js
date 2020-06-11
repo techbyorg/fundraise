@@ -1,16 +1,12 @@
 const presets = [
-  ['@babel/preset-env', {
-    useBuiltIns: false
-  }]
+  // ['@babel/preset-env', {
+  //   useBuiltIns: false
+  // }]
 ]
 
 const plugins = [
   '@babel/plugin-transform-runtime',
-  // lodash-es doesn't really work on node.js w/o type module
-  ['babel-plugin-replace-imports', {
-    test: /lodash-es/i,
-    replacer: 'lodash'
-  }]
+  '@babel/plugin-proposal-optional-chaining'
 ]
 
-module.exports = { presets, plugins };
+module.exports = { presets, plugins }

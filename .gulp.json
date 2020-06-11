@@ -1,5 +1,5 @@
 {
   "flags": {
-    "nodeFlags": ["-r", "@babel/register", "-r", "./coffee.config.js"]
+    "nodeFlags": ["-r", "@babel/register", "-r", "./babel.register.config.js"]
   }
 }
