@@ -1,60 +1,68 @@
-import {z, useContext} from 'zorium'
-import * as _ from 'lodash-es'
+let $fundOverviewNteePie;
+import {z, useContext} from 'zorium';
+import * as _ from 'lodash-es';
 
-import FormatService from 'frontend-shared/services/format'
+import FormatService from 'frontend-shared/services/format';
 
-import $chartPie from '../chart_pie'
-import context from '../../context'
-import {nteeColors} from '../../colors'
+import $chartPie from '../chart_pie';
+import context from '../../context';
+import {nteeColors} from '../../colors';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-LEGEND_COUNT = 5
+const LEGEND_COUNT = 5;
 
-export default $fundOverviewNteePie = ({irsFund}) ->
-  {lang} = useContext context
+export default $fundOverviewNteePie = function({irsFund}) {
+  const {lang} = useContext(context);
 
-  # TODO: useMemo?
-  nteeMajors = _.orderBy irsFund?.fundedNteeMajors, 'count', 'desc'
-  pieNteeMajors = _.reduce nteeMajors, (obj, {count, percent, key}) ->
-    if percent > 7
-      obj[key] = {count, percent, key}
-    else
-      obj.rest ?= {count: 0, percent: 0, key: 'rest'}
-       # FIXME: find and add to 'rest'
-      obj.rest.count += count
-      obj.rest.percent += percent
-    obj
-  , {}
-  data = _.map pieNteeMajors, ({count, percent, key}) ->
-    label = if key is 'rest' \
-            then lang.get 'general.other' \
-            else lang.get "nteeMajor.#{key}"
-
-    color = if key is 'rest' \
-            then nteeColors['Z'].graph \
-            else nteeColors[key].graph
-    {
-      id: label
-      label: label
-      value: count
-      percent: percent
-      color: color
+  // TODO: useMemo?
+  const nteeMajors = _.orderBy(irsFund?.fundedNteeMajors, 'count', 'desc');
+  const pieNteeMajors = _.reduce(nteeMajors, function(obj, {count, percent, key}) {
+    if (percent > 7) {
+      obj[key] = {count, percent, key};
+    } else {
+      if (obj.rest == null) { obj.rest = {count: 0, percent: 0, key: 'rest'}; }
+       // FIXME: find and add to 'rest'
+      obj.rest.count += count;
+      obj.rest.percent += percent;
     }
+    return obj;
+  }
+  , {});
+  const data = _.map(pieNteeMajors, function({count, percent, key}) {
+    const label = key === 'rest' 
+            ? lang.get('general.other') 
+            : lang.get(`nteeMajor.${key}`);
 
-  colors = _.map data, 'color'
+    const color = key === 'rest' 
+            ? nteeColors['Z'].graph 
+            : nteeColors[key].graph;
+    return {
+      id: label,
+      label,
+      value: count,
+      percent,
+      color
+    };
+});
 
-  z '.z-fund-overview-ntee-pie',
-    z $chartPie, {data, colors}
-    z '.legend',
-      _.map _.take(nteeMajors, LEGEND_COUNT), ({count, percent, key}) ->
-        z '.legend-item',
-          z '.color', {
-            style:
-              background: nteeColors[key].graph
+  const colors = _.map(data, 'color');
+
+  return z('.z-fund-overview-ntee-pie',
+    z($chartPie, {data, colors}),
+    z('.legend',
+      _.map(_.take(nteeMajors, LEGEND_COUNT), ({count, percent, key}) => z('.legend-item',
+        z('.color', {
+          style: {
+            background: nteeColors[key].graph
           }
-          z '.info',
-            z '.ntee', lang.get "nteeMajor.#{key}"
-            # z '.dollars', FormatService.abbreviateDollar value
-          z '.percent', "#{Math.round(percent)}%"
+        }),
+        z('.info',
+          z('.ntee', lang.get(`nteeMajor.${key}`))),
+          // z '.dollars', FormatService.abbreviateDollar value
+        z('.percent', `${Math.round(percent)}%`)))
+    )
+  );
+};

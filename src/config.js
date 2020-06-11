@@ -1,132 +1,141 @@
-# process.env.* is replaced at run-time with * environment variable
-# Note that simply env.* is not replaced, and thus suitible for private config
+// process.env.* is replaced at run-time with * environment variable
+// Note that simply env.* is not replaced, and thus suitible for private config
 
-import * as _ from 'lodash-es'
-import assertNoneMissing from 'assert-none-missing'
+let API_HOST, API_PATH, config;
+import * as _ from 'lodash-es';
+import assertNoneMissing from 'assert-none-missing';
 
-import colors from './colors'
+import colors from './colors';
 
-# Don't let server environment variables leak into client code
-serverEnv = process.env
+// Don't let server environment variables leak into client code
+const serverEnv = process.env;
 
-HOST = process.env.FUNDRAISE_HOST or '127.0.0.1'
-HOSTNAME = HOST.split(':')[0]
+const HOST = process.env.FUNDRAISE_HOST || '127.0.0.1';
+const HOSTNAME = HOST.split(':')[0];
 
-URL_REGEX_STR = '(\\bhttps?://[-A-Z0-9+&@#/%?=~_|!:,.;]*[A-Z0-9+&@#/%=~_|])'
-STICKER_REGEX_STR = '(:[a-z_]+:)'
-IMAGE_REGEX_STR = '(\\!\\[(.*?)\\]\\((.*?)\\=([0-9.]+)x([0-9.]+)\\))'
-IMAGE_REGEX_BASE_STR = '(\\!\\[(?:.*?)\\]\\((?:.*?)\\))'
-LOCAL_IMAGE_REGEX_STR =
-  '(\\!\\[(.*?)\\]\\(local://(.*?) \\=([0-9.]+)x([0-9.]+)\\))'
-MENTION_REGEX_STR = '\\@[a-zA-Z0-9_-]+'
-YOUTUBE_ID_REGEX_STR =
-  '(?:youtube\\.com\\/(?:[^\\/]+\\/.+\\/|(?:v|e(?:mbed)?)\\/|.*[?&]v=)|youtu\\.be\\/)([^"&?\\/ ]{11})'
+const URL_REGEX_STR = '(\\bhttps?://[-A-Z0-9+&@#/%?=~_|!:,.;]*[A-Z0-9+&@#/%=~_|])';
+const STICKER_REGEX_STR = '(:[a-z_]+:)';
+const IMAGE_REGEX_STR = '(\\!\\[(.*?)\\]\\((.*?)\\=([0-9.]+)x([0-9.]+)\\))';
+const IMAGE_REGEX_BASE_STR = '(\\!\\[(?:.*?)\\]\\((?:.*?)\\))';
+const LOCAL_IMAGE_REGEX_STR =
+  '(\\!\\[(.*?)\\]\\(local://(.*?) \\=([0-9.]+)x([0-9.]+)\\))';
+const MENTION_REGEX_STR = '\\@[a-zA-Z0-9_-]+';
+const YOUTUBE_ID_REGEX_STR =
+  '(?:youtube\\.com\\/(?:[^\\/]+\\/.+\\/|(?:v|e(?:mbed)?)\\/|.*[?&]v=)|youtu\\.be\\/)([^"&?\\/ ]{11})';
 
-ONE_HOUR_SECONDS = 3600 * 1
-TWO_HOURS_SECONDS = 3600 * 2
-THREE_HOURS_SECONDS = 3600 * 3
-FOUR_HOURS_SECONDS = 3600 * 4
-EIGHT_HOURS_SECONDS = 3600 * 8
-ONE_DAY_SECONDS = 3600 * 24 * 1
-TWO_DAYS_SECONDS = 3600 * 24 * 2
-THREE_DAYS_SECONDS = 3600 * 24 * 3
+const ONE_HOUR_SECONDS = 3600 * 1;
+const TWO_HOURS_SECONDS = 3600 * 2;
+const THREE_HOURS_SECONDS = 3600 * 3;
+const FOUR_HOURS_SECONDS = 3600 * 4;
+const EIGHT_HOURS_SECONDS = 3600 * 8;
+const ONE_DAY_SECONDS = 3600 * 24 * 1;
+const TWO_DAYS_SECONDS = 3600 * 24 * 2;
+const THREE_DAYS_SECONDS = 3600 * 24 * 3;
 
-API_URL =
-  serverEnv.PHIL_API_URL or # server
-  process.env.PUBLIC_PHIL_API_URL # client
+const API_URL =
+  serverEnv.PHIL_API_URL || // server
+  process.env.PUBLIC_PHIL_API_URL; // client
 
-DEV_USE_HTTPS = process.env.DEV_USE_HTTPS and process.env.DEV_USE_HTTPS isnt '0'
+const DEV_USE_HTTPS = process.env.DEV_USE_HTTPS && (process.env.DEV_USE_HTTPS !== '0');
 
-isUrl = API_URL.indexOf('/') isnt -1
-if isUrl
-  API_HOST_ARRAY = API_URL.split('/')
-  API_HOST = API_HOST_ARRAY[0] + '//' + API_HOST_ARRAY[2]
-  API_PATH = API_URL.replace API_HOST, ''
-else
-  API_HOST = API_URL
-  API_PATH = ''
+const isUrl = API_URL.indexOf('/') !== -1;
+if (isUrl) {
+  const API_HOST_ARRAY = API_URL.split('/');
+  API_HOST = API_HOST_ARRAY[0] + '//' + API_HOST_ARRAY[2];
+  API_PATH = API_URL.replace(API_HOST, '');
+} else {
+  API_HOST = API_URL;
+  API_PATH = '';
+}
 
-CDN_URL = 'https://fdn.uno/d/images' # FIXME
+const CDN_URL = 'https://fdn.uno/d/images'; // FIXME
 
-# All keys must have values at run-time (value may be null)
-isomorphic =
-  APP_KEY: 'fundraise'
-  APP_NAME: 'Fundraise'
-  LANGUAGES: ['en']
+// All keys must have values at run-time (value may be null)
+const isomorphic = {
+  APP_KEY: 'fundraise',
+  APP_NAME: 'Fundraise',
+  LANGUAGES: ['en'],
 
-  # ALSO IN backend
-  EMPTY_UUID: '00000000-0000-0000-0000-000000000000'
-  DEFAULT_PERMISSIONS:
-    readMessage: true
-    manageChannel: false
-    sendMessage: true
-    sendLink: true
+  // ALSO IN backend
+  EMPTY_UUID: '00000000-0000-0000-0000-000000000000',
+  DEFAULT_PERMISSIONS: {
+    readMessage: true,
+    manageChannel: false,
+    sendMessage: true,
+    sendLink: true,
     sendImage: true
-  DEFAULT_NOTIFICATIONS:
-    conversationMessage: true
+  },
+  DEFAULT_NOTIFICATIONS: {
+    conversationMessage: true,
     conversationMention: true
-  CDN_URL: CDN_URL
-  # d folder has longer cache
-  SCRIPTS_CDN_URL: 'https://fdn.uno/d/scripts' # FIXME
-  USER_CDN_URL: 'https://fdn.uno/images' # FIXME
-  FAVICON_URL: "#{CDN_URL}/techby/fundraise/favicon.png?1"
-  ICON_256_URL: "#{CDN_URL}/techby/fundraise/web_icon_256.png"
-  HAS_MANIFEST: true
-  IOS_APP_URL: 'FIXME' # FIXME
+  },
+  CDN_URL,
+  // d folder has longer cache
+  SCRIPTS_CDN_URL: 'https://fdn.uno/d/scripts', // FIXME
+  USER_CDN_URL: 'https://fdn.uno/images', // FIXME
+  FAVICON_URL: `${CDN_URL}/techby/fundraise/favicon.png?1`,
+  ICON_256_URL: `${CDN_URL}/techby/fundraise/web_icon_256.png`,
+  HAS_MANIFEST: true,
+  IOS_APP_URL: 'FIXME', // FIXME
   GOOGLE_PLAY_APP_URL:
-    'FIXME' # FIXME
-  GOOGLE_ANALYTICS_ID: 'UA-168233278-2'
-  HOST: HOST
-  API_URL: API_URL
-  PUBLIC_API_URL: process.env.PUBLIC_PHIL_API_URL
-  API_HOST: API_HOST
-  API_PATH: API_PATH
-  # also in free-roam
-  DEFAULT_PERMISSIONS: {}
-  DEFAULT_NOTIFICATIONS: {}
-  FIREBASE:
-    API_KEY: process.env.FIREBASE_API_KEY
-    AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN
-    DATABASE_URL: process.env.FIREBASE_DATABASE_URL
-    PROJECT_ID: process.env.FIREBASE_PROJECT_ID
+    'FIXME', // FIXME
+  GOOGLE_ANALYTICS_ID: 'UA-168233278-2',
+  HOST,
+  API_URL,
+  PUBLIC_API_URL: process.env.PUBLIC_PHIL_API_URL,
+  API_HOST,
+  API_PATH,
+  // also in free-roam
+  DEFAULT_PERMISSIONS: {},
+  DEFAULT_NOTIFICATIONS: {},
+  FIREBASE: {
+    API_KEY: process.env.FIREBASE_API_KEY,
+    AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+    DATABASE_URL: process.env.FIREBASE_DATABASE_URL,
+    PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
     MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID
-  DEV_USE_HTTPS: DEV_USE_HTTPS
-  AUTH_COOKIE: 'accessToken'
+  },
+  DEV_USE_HTTPS,
+  AUTH_COOKIE: 'accessToken',
   ENV:
-    serverEnv.NODE_ENV or
-    process.env.NODE_ENV
-  ENVS:
-    DEV: 'development'
-    PROD: 'production'
+    serverEnv.NODE_ENV ||
+    process.env.NODE_ENV,
+  ENVS: {
+    DEV: 'development',
+    PROD: 'production',
     TEST: 'test'
+  }
+};
 
-# Server only
-# All keys must have values at run-time (value may be null)
-PORT = serverEnv.FUNDRAISE_PORT or 3000
-WEBPACK_DEV_PORT = serverEnv.WEBPACK_DEV_PORT or parseInt(PORT) + 1
-WEBPACK_DEV_PROTOCOL = if DEV_USE_HTTPS then 'https://' else 'http://'
+// Server only
+// All keys must have values at run-time (value may be null)
+const PORT = serverEnv.FUNDRAISE_PORT || 3000;
+const WEBPACK_DEV_PORT = serverEnv.WEBPACK_DEV_PORT || (parseInt(PORT) + 1);
+const WEBPACK_DEV_PROTOCOL = DEV_USE_HTTPS ? 'https://' : 'http://';
 
-server =
-  PORT: PORT
+const server = {
+  PORT,
 
-  # Development
-  WEBPACK_DEV_PORT: WEBPACK_DEV_PORT
-  WEBPACK_DEV_PROTOCOL: WEBPACK_DEV_PROTOCOL
-  WEBPACK_DEV_URL: serverEnv.WEBPACK_DEV_URL or
-    "#{WEBPACK_DEV_PROTOCOL}#{HOSTNAME}:#{WEBPACK_DEV_PORT}"
-  SELENIUM_TARGET_URL: serverEnv.SELENIUM_TARGET_URL or null
-  REMOTE_SELENIUM: serverEnv.REMOTE_SELENIUM is '1'
-  SELENIUM_BROWSER: serverEnv.SELENIUM_BROWSER or 'chrome'
-  SAUCE_USERNAME: serverEnv.SAUCE_USERNAME or null
-  SAUCE_ACCESS_KEY: serverEnv.SAUCE_ACCESS_KEY or null
+  // Development
+  WEBPACK_DEV_PORT,
+  WEBPACK_DEV_PROTOCOL,
+  WEBPACK_DEV_URL: serverEnv.WEBPACK_DEV_URL ||
+    `${WEBPACK_DEV_PROTOCOL}${HOSTNAME}:${WEBPACK_DEV_PORT}`,
+  SELENIUM_TARGET_URL: serverEnv.SELENIUM_TARGET_URL || null,
+  REMOTE_SELENIUM: serverEnv.REMOTE_SELENIUM === '1',
+  SELENIUM_BROWSER: serverEnv.SELENIUM_BROWSER || 'chrome',
+  SAUCE_USERNAME: serverEnv.SAUCE_USERNAME || null,
+  SAUCE_ACCESS_KEY: serverEnv.SAUCE_ACCESS_KEY || null
+};
 
-assertNoneMissing isomorphic
-if window?
-  # TODO: esm?
-  config = isomorphic
-else
-  assertNoneMissing server
-  # TODO: esm?
-  config = _.merge isomorphic, server
+assertNoneMissing(isomorphic);
+if (typeof window !== 'undefined' && window !== null) {
+  // TODO: esm?
+  config = isomorphic;
+} else {
+  assertNoneMissing(server);
+  // TODO: esm?
+  config = _.merge(isomorphic, server);
+}
 
-export default config
+export default config;

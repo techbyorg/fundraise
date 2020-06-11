@@ -1,20 +1,25 @@
-import {z, useRef, useLayoutEffect} from 'zorium'
+let $searchInput;
+import {z, useRef, useLayoutEffect} from 'zorium';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $searchInput = ({placeholder, valueStream}) ->
-  # {value} = useStream ->
-  #   value: valueStream
+export default $searchInput = function({placeholder, valueStream}) {
+  // {value} = useStream ->
+  //   value: valueStream
 
-  $$ref = useRef()
+  const $$ref = useRef();
 
-  useLayoutEffect ->
-    $$ref.current.focus()
-  , []
+  useLayoutEffect(() => $$ref.current.focus()
+  , []);
 
-  z 'input.z-search-input',
-    ref: $$ref
-    placeholder: placeholder
-    oninput: (e) ->
-      valueStream.next e.target.value
+  return z('input.z-search-input', {
+    ref: $$ref,
+    placeholder,
+    oninput(e) {
+      return valueStream.next(e.target.value);
+    }
+  }
+  );
+};

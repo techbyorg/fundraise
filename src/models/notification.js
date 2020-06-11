@@ -1,18 +1,29 @@
-# TODO: need to convert to graphql before this will work
+// TODO: need to convert to graphql before this will work
 
-export default class Notification
-  namespace: 'notifications'
+let Notification;
+export default Notification = (function() {
+  Notification = class Notification {
+    static initClass() {
+      this.prototype.namespace = 'notifications';
+  
+      this.prototype.ICON_MAP = {
+        social: 'friends',
+        privateMessage: 'chat',
+        channelMessage: 'chat',
+        channelMention: 'chat'
+      };
+    }
 
-  constructor: ({@auth}) -> null
+    constructor({auth}) { this.getAll = this.getAll.bind(this);     this.getUnreadCount = this.getUnreadCount.bind(this);     this.auth = auth; null; }
 
-  ICON_MAP:
-    social: 'friends'
-    privateMessage: 'chat'
-    channelMessage: 'chat'
-    channelMention: 'chat'
+    getAll() {
+      return this.auth.stream(`${this.namespace}.getAll`, {});
+    }
 
-  getAll: =>
-    @auth.stream "#{@namespace}.getAll", {}
-
-  getUnreadCount: =>
-    @auth.stream "#{@namespace}.getUnreadCount", {}
+    getUnreadCount() {
+      return this.auth.stream(`${this.namespace}.getUnreadCount`, {});
+    }
+  };
+  Notification.initClass();
+  return Notification;
+})();

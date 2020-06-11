@@ -1,12 +1,13 @@
-import z from 'zorium'
+let $homePage;
+import z from 'zorium';
 
-import $spinner from 'frontend-shared/components/spinner'
+import $spinner from 'frontend-shared/components/spinner';
 
-import config from '../../config'
+import config from '../../config';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $homePage = ({requestsStream, serverData, entity}) ->
-  z '.p-home',
-    $spinner
+export default $homePage = ({requestsStream, serverData, entity}) => z('.p-home',
+  $spinner);

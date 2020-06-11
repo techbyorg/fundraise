@@ -1,2 +1,2 @@
-import context from 'frontend-shared/context'
-export default context
+import context from 'frontend-shared/context';
+export default context;

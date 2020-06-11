@@ -1,10 +1,13 @@
-import config from '../config'
+import config from '../config';
 
-export default class IrsOrg990
-  constructor: ({@auth}) -> null
+export default class IrsOrg990 {
+  constructor({auth}) { this.getAllByEin = this.getAllByEin.bind(this);   this.getStatsByEin = this.getStatsByEin.bind(this);   this.auth = auth; null; }
 
-  getAllByEin: (ein) =>
-    @auth.stream "#{@namespace}.getAllByEin", {ein}
+  getAllByEin(ein) {
+    return this.auth.stream(`${this.namespace}.getAllByEin`, {ein});
+  }
 
-  getStatsByEin: (ein) =>
-    @auth.stream "#{@namespace}.getStatsByEin", {ein}
+  getStatsByEin(ein) {
+    return this.auth.stream(`${this.namespace}.getStatsByEin`, {ein});
+  }
+}

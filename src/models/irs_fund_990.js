@@ -1,16 +1,19 @@
-import config from '../config'
+import config from '../config';
 
-export default class IrsFund990
-  constructor: ({@auth}) -> null
+export default class IrsFund990 {
+  constructor({auth}) { this.auth = auth; null; }
 
-  getAllByEin: (ein) ->
-    @auth.stream
-      query: '''
-        query IrsFund990GetAllByEin($ein: String!) {
-          irsFund990s(ein: $ein) {
-            nodes { ein, year, taxPeriod }
-          }
-        }
-      '''
-      variables: {ein}
+  getAllByEin(ein) {
+    return this.auth.stream({
+      query: `\
+query IrsFund990GetAllByEin($ein: String!) {
+  irsFund990s(ein: $ein) {
+    nodes { ein, year, taxPeriod }
+  }
+}\
+`,
+      variables: {ein},
       pull: 'irsFund990s'
+    });
+  }
+}

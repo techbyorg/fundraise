@@ -1,19 +1,30 @@
-# TODO: need to convert to graphql before this will work
+// TODO: need to convert to graphql before this will work
 
-export default class Subscription
-  namespace: 'subscriptions'
-
-  constructor: ({@auth}) -> null
-
-  subscribe: ({entityId, sourceType, sourceId, isTopic}) =>
-    @auth.call "#{@namespace}.subscribe", {
-      entityId, sourceType, sourceId, isTopic
+let Subscription;
+export default Subscription = (function() {
+  Subscription = class Subscription {
+    static initClass() {
+      this.prototype.namespace = 'subscriptions';
     }
 
-  unsubscribe: ({entityId, sourceType, sourceId, isTopic}) =>
-    @auth.call "#{@namespace}.unsubscribe", {
-      entityId, sourceType, sourceId, isTopic
-    }, {invalidateAll: true}
+    constructor({auth}) { this.subscribe = this.subscribe.bind(this);     this.unsubscribe = this.unsubscribe.bind(this);     this.getAllByEntityId = this.getAllByEntityId.bind(this);     this.auth = auth; null; }
 
-  getAllByEntityId: (entityId) =>
-    @auth.stream "#{@namespace}.getAllByEntityId", {entityId}
+    subscribe({entityId, sourceType, sourceId, isTopic}) {
+      return this.auth.call(`${this.namespace}.subscribe`, {
+        entityId, sourceType, sourceId, isTopic
+      });
+    }
+
+    unsubscribe({entityId, sourceType, sourceId, isTopic}) {
+      return this.auth.call(`${this.namespace}.unsubscribe`, {
+        entityId, sourceType, sourceId, isTopic
+      }, {invalidateAll: true});
+    }
+
+    getAllByEntityId(entityId) {
+      return this.auth.stream(`${this.namespace}.getAllByEntityId`, {entityId});
+    }
+  };
+  Subscription.initClass();
+  return Subscription;
+})();

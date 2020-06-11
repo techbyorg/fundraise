@@ -1,13 +1,17 @@
-# TODO: need to convert to graphql before this will work
+// TODO: need to convert to graphql before this will work
 
-export default class PushToken
-  constructor: ({@auth, @token}) -> null
+export default class PushToken {
+  constructor({auth, token}) { this.upsert = this.upsert.bind(this);   this.setCurrentPushToken = this.setCurrentPushToken.bind(this);   this.getCurrentPushToken = this.getCurrentPushToken.bind(this);   this.auth = auth; this.token = token; null; }
 
-  upsert: ({tokenStr, sourceType, deviceId} = {}) =>
-    @auth.call "#{@namespace}.upsert", {tokenStr, sourceType, deviceId}
+  upsert({tokenStr, sourceType, deviceId} = {}) {
+    return this.auth.call(`${this.namespace}.upsert`, {tokenStr, sourceType, deviceId});
+  }
 
-  setCurrentPushToken: (token) =>
-    @token.next token
+  setCurrentPushToken(token) {
+    return this.token.next(token);
+  }
 
-  getCurrentPushToken: =>
-    @token
+  getCurrentPushToken() {
+    return this.token;
+  }
+}

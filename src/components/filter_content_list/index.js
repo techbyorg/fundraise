@@ -1,43 +1,51 @@
-import {z, useEffect,  useMemo} from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+let $filterContentList;
+import {z, useEffect,  useMemo} from 'zorium';
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import $checkbox from 'frontend-shared/components/checkbox'
+import $checkbox from 'frontend-shared/components/checkbox';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $filterContentList = (props) ->
-  {filterValueStr, resetValue, filter, valueStreams, filterValue} = props
+export default $filterContentList = function(props) {
+  const {filterValueStr, resetValue, filter, valueStreams, filterValue} = props;
 
-  {checkboxes} = useMemo ->
-    list = filter.items
+  var {checkboxes} = useMemo(function() {
+    const list = filter.items;
 
-    checkboxes =  _.map list, ({label}, key) =>
-      valueStream = new Rx.BehaviorSubject(
-        filterValue?[key]
-      )
-      {key, valueStream, label}
+    checkboxes =  _.map(list, ({label}, key) => {
+      const valueStream = new Rx.BehaviorSubject(
+        filterValue?.[key]
+      );
+      return {key, valueStream, label};
+  });
 
-    valueStreams.next Rx.combineLatest(
-      _.map checkboxes, 'valueStream'
-      (vals...) -> vals
-    ).pipe rx.map (vals) ->
-      unless _.isEmpty _.filter(vals)
-        _.zipObject _.keys(list), vals
+    valueStreams.next(Rx.combineLatest(
+      _.map(checkboxes, 'valueStream'),
+      (...vals) => vals).pipe(rx.map(function(vals) {
+      if (!_.isEmpty(_.filter(vals))) {
+        return _.zipObject(_.keys(list), vals);
+      }
+    })
+    )
+    );
 
-    {checkboxes}
-  , []
+    return {checkboxes};
+  }
+  , []);
 
-  useEffect ->
-    _.forEach checkboxes, ({key, valueStream}) =>
-      valueStream.next filterValue?[key]
-  , [filterValueStr, resetValue] # need to recreate valueStreams when resetting
+  useEffect(() => _.forEach(checkboxes, ({key, valueStream}) => {
+    return valueStream.next(filterValue?.[key]);
+})
+  , [filterValueStr, resetValue]); // need to recreate valueStreams when resetting
 
-  z '.z-filter-content-list',
-    _.map checkboxes, ({valueStream, label}) ->
-      z 'label.label',
-        z '.checkbox',
-          z $checkbox, {valueStream}
-        z '.text', label or 'fixme'
+  return z('.z-filter-content-list',
+    _.map(checkboxes, ({valueStream, label}) => z('label.label',
+      z('.checkbox',
+        z($checkbox, {valueStream})),
+      z('.text', label || 'fixme')))
+  );
+};

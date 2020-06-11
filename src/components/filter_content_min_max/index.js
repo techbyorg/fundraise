@@ -1,52 +1,58 @@
-import {z, classKebab, useEffect, useMemo} from 'zorium'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+let $filterContentMinMax;
+import {z, classKebab, useEffect, useMemo} from 'zorium';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import $dropdown from 'frontend-shared/components/dropdown'
+import $dropdown from 'frontend-shared/components/dropdown';
 
-import colors from '../../colors'
+import colors from '../../colors';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $filterContentMinMax = (props) ->
-  {filterValueStr, resetValue, filter, valueStreams, filterValue,
-    overlayAnchor, $$parentRef} = props
+export default $filterContentMinMax = function(props) {
+  const {filterValueStr, resetValue, filter, valueStreams, filterValue,
+    overlayAnchor, $$parentRef} = props;
 
-  {minStream, maxStream} = useMemo ->
-    minStream = new Rx.BehaviorSubject filterValue?.min or filter.minOptions[0].value
-    maxStream = new Rx.BehaviorSubject filterValue?.max or filter.maxOptions[0].value
-    valueStreams.next Rx.combineLatest(
-      minStream, maxStream, (vals...) -> vals
-    ).pipe rx.map ([min, max]) ->
-      min = min and parseInt min
-      max = max and parseInt max
-      if min or max
-        {min, max}
+  var {minStream, maxStream} = useMemo(function() {
+    minStream = new Rx.BehaviorSubject(filterValue?.min || filter.minOptions[0].value);
+    maxStream = new Rx.BehaviorSubject(filterValue?.max || filter.maxOptions[0].value);
+    valueStreams.next(Rx.combineLatest(
+      minStream, maxStream, (...vals) => vals).pipe(rx.map(function(...args) {
+      let [min, max] = Array.from(args[0]);
+      min = min && parseInt(min);
+      max = max && parseInt(max);
+      if (min || max) {
+        return {min, max};
+      }})));
 
-    {minStream, maxStream}
-  , []
+    return {minStream, maxStream};
+  }
+  , []);
 
-  useEffect ->
-    minStream.next filterValue?.min or filter.minOptions[0].value
-    maxStream.next filterValue?.max or filter.maxOptions[0].value
-  , [filterValueStr, resetValue] # need to recreate valueStreams when resetting
+  useEffect(function() {
+    minStream.next(filterValue?.min || filter.minOptions[0].value);
+    return maxStream.next(filterValue?.max || filter.maxOptions[0].value);
+  }
+  , [filterValueStr, resetValue]); // need to recreate valueStreams when resetting
 
-  z '.z-filter-content-min-max',
-    z '.flex',
-      z '.block',
-        z $dropdown, {
-          $$parentRef
-          valueStream: minStream
-          options: filter.minOptions
+  return z('.z-filter-content-min-max',
+    z('.flex',
+      z('.block',
+        z($dropdown, {
+          $$parentRef,
+          valueStream: minStream,
+          options: filter.minOptions,
           anchor: overlayAnchor
-        }
-      z '.dash', '-'
-      z '.block',
-        z $dropdown, {
-          $$parentRef
-          valueStream: maxStream
-          options: filter.maxOptions
+        })),
+      z('.dash', '-'),
+      z('.block',
+        z($dropdown, {
+          $$parentRef,
+          valueStream: maxStream,
+          options: filter.maxOptions,
           anchor: overlayAnchor
-        }
+        }))));
+};
 

@@ -1,43 +1,47 @@
-import {z, useContext, useMemo, useStream} from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
+let $searchTags;
+import {z, useContext, useMemo, useStream} from 'zorium';
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
 
-import $tags from 'frontend-shared/components/tags'
+import $tags from 'frontend-shared/components/tags';
 
-import $filterDialog from '../filter_dialog'
-import context from '../../context'
+import $filterDialog from '../filter_dialog';
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $searchTags = ({filter, title, placeholder}) ->
-  {lang} = useContext context
+export default $searchTags = function({filter, title, placeholder}) {
+  const {lang} = useContext(context);
 
-  {isDialogVisibleStream} = useMemo ->
-    {
-      isDialogVisibleStream: new Rx.BehaviorSubject false
-    }
-  , []
+  const {isDialogVisibleStream} = useMemo(() => ({
+    isDialogVisibleStream: new Rx.BehaviorSubject(false)
+  })
+  , []);
 
-  {isDialogVisible} = useStream ->
+  const {isDialogVisible} = useStream(() => ({
     isDialogVisible: isDialogVisibleStream
+  }));
 
-  z '.z-search-tags', {
-    onclick: ->
-      isDialogVisibleStream.next true
+  return z('.z-search-tags', {
+    onclick() {
+      return isDialogVisibleStream.next(true);
+    }
   },
-    z '.title', title
-    z '.tags',
-      if _.isEmpty filter?.value
+    z('.title', title),
+    z('.tags',
+      _.isEmpty(filter?.value) ?
         placeholder
-      else
-        z $tags, {
-          maxVisibleCount: 6
-          fitToContent: true
-          isNoWrap: false
-          tags: filter.getTagsFn filter.value
-        }
-    if filter and isDialogVisible
-      z $filterDialog, {
-        filter, onClose: -> isDialogVisibleStream.next false
-      }
+      :
+        z($tags, {
+          maxVisibleCount: 6,
+          fitToContent: true,
+          isNoWrap: false,
+          tags: filter.getTagsFn(filter.value)
+        })),
+    filter && isDialogVisible ?
+      z($filterDialog, {
+        filter, onClose() { return isDialogVisibleStream.next(false); }
+      }) : undefined);
+};

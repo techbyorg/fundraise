@@ -1,24 +1,27 @@
-import {z, useContext} from 'zorium'
+let $notificationsPage;
+import {z, useContext} from 'zorium';
 
-import $appBar from 'frontend-shared/components/app_bar'
-import $buttonMenu from 'frontend-shared/components/button_menu'
-import $notifications from 'frontend-shared/components/notifications'
+import $appBar from 'frontend-shared/components/app_bar';
+import $buttonMenu from 'frontend-shared/components/button_menu';
+import $notifications from 'frontend-shared/components/notifications';
 
-import config from '../../config'
-import context from '../../context'
-import colors from '../../colors'
+import config from '../../config';
+import context from '../../context';
+import colors from '../../colors';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $notificationsPage = ->
-  {lang} = useContext context
+export default $notificationsPage = function() {
+  const {lang} = useContext(context);
 
-  z '.p-notifications',
-    z $appBar, {
-      title: lang.get 'general.notifications'
-      style: 'primary'
+  return z('.p-notifications',
+    z($appBar, {
+      title: lang.get('general.notifications'),
+      style: 'primary',
       $topLeftButton:
-        z $buttonMenu, {color: colors.$header500Icon}
-    }
-    z $notifications
+        z($buttonMenu, {color: colors.$header500Icon})
+    }),
+    z($notifications));
+};

@@ -1,87 +1,114 @@
-import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+let $irsSearch;
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium';
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import $icon from 'frontend-shared/components/icon'
-import {closeIconPath} from 'frontend-shared/components/icon/paths'
-import $primaryInput from 'frontend-shared/components/primary_input'
-import FormatService from 'frontend-shared/components/services/format'
+import $icon from 'frontend-shared/components/icon';
+import {closeIconPath} from 'frontend-shared/components/icon/paths';
+import $primaryInput from 'frontend-shared/components/primary_input';
+import FormatService from 'frontend-shared/components/services/format';
 
-import context from '../../context'
-import config from '../../config'
+import context from '../../context';
+import config from '../../config';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-SEARCH_DEBOUNCE = 300
+const SEARCH_DEBOUNCE = 300;
 
-export default $irsSearch = ({irsType = 'irsFund', hintText}) ->
-  {model, router} = useContext context
+export default $irsSearch = function(...args) {
+  const obj = args[0],
+        val = obj.irsType,
+        irsType = val != null ? val : 'irsFund',
+        {
+          hintText
+        } = obj;
+  const {model, router} = useContext(context);
 
-  {nameValueStream, debouncedNameValueStream, isEntitiesVisibleStream,
-    selectedEntityStream} = useMemo ->
+  var {nameValueStream, debouncedNameValueStream, isEntitiesVisibleStream,
+    selectedEntityStream} = useMemo(function() {
 
-    nameValueStream = new Rx.BehaviorSubject ''
-    {
-      nameValueStream
+    nameValueStream = new Rx.BehaviorSubject('');
+    return {
+      nameValueStream,
       debouncedNameValueStream: nameValueStream.pipe(
         rx.debounceTime(SEARCH_DEBOUNCE)
-      )
-      isEntitiesVisibleStream: new Rx.BehaviorSubject false
-      selectedEntityStream: new Rx.BehaviorSubject null
-    }
-  , []
+      ),
+      isEntitiesVisibleStream: new Rx.BehaviorSubject(false),
+      selectedEntityStream: new Rx.BehaviorSubject(null)
+    };
+  }
+  , []);
 
-  {name, selectedEntity, isEntitiesVisible, entities} = useStream ->
-    name: nameValueStream
-    selectedEntity: selectedEntityStream
-    isEntitiesVisible: isEntitiesVisibleStream
-    entities: debouncedNameValueStream.pipe rx.switchMap (name) =>
-      isEntitiesVisibleStream.next true
-      unless name
-        return Rx.of null
-      model[irsType].search {
-        limit: 50
-        query:
-          multi_match:
-            query: name
-            type: 'bool_prefix'
-            fields: ['name', 'name._2gram']
+  let {name, selectedEntity, isEntitiesVisible, entities} = useStream(() => ({
+    name: nameValueStream,
+    selectedEntity: selectedEntityStream,
+    isEntitiesVisible: isEntitiesVisibleStream,
+
+    entities: debouncedNameValueStream.pipe(rx.switchMap(name => {
+      isEntitiesVisibleStream.next(true);
+      if (!name) {
+        return Rx.of(null);
       }
-
-  isEntitiesVisible = not selectedEntity and not _.isEmpty entities
-
-  z '.z-irs-search', {
-    className: classKebab {isEntitiesVisible}
-  },
-    z '.input',
-      if selectedEntity
-        z '.selected',
-          z '.name', selectedEntity.name
-          z '.cancel',
-            z $icon,
-              icon: closeIconPath
-              onclick: =>
-                nameValueStream.next ''
-
-      else
-        z $primaryInput, {valueStream: nameValueStream, hintText}
-    z '.entities',
-      _.map entities?.nodes, (entity) =>
-        router.link z 'a.entity', {
-          href:
-            if irsType is 'irsFund'
-              router.getFund entity
-            else
-              router.getOrg entity
-          className: classKebab {
-            isSelected: selectedEntity?.id is entity.id
+      return model[irsType].search({
+        limit: 50,
+        query: {
+          multi_match: {
+            query: name,
+            type: 'bool_prefix',
+            fields: ['name', 'name._2gram']
           }
+        }
+      });
+  }))
+  }));
+
+  isEntitiesVisible = !selectedEntity && !_.isEmpty(entities);
+
+  return z('.z-irs-search', {
+    className: classKebab({isEntitiesVisible})
+  },
+    z('.input',
+      selectedEntity ?
+        z('.selected',
+          z('.name', selectedEntity.name),
+          z('.cancel',
+            z($icon, {
+              icon: closeIconPath,
+              onclick: () => {
+                return nameValueStream.next('');
+              }
+            }
+            )
+          )
+        )
+
+      :
+        z($primaryInput, {valueStream: nameValueStream, hintText})),
+    z('.entities',
+      _.map(entities?.nodes, entity => {
+        return router.link(z('a.entity', {
+          href:
+            irsType === 'irsFund' ?
+              router.getFund(entity)
+            :
+              router.getOrg(entity),
+          className: classKebab({
+            isSelected: selectedEntity?.id === entity.id
+          })
         },
-          z '.info',
-            z '.name',
-              entity.name
-            if irsType is 'irsPerson'
-              z '.sub',
-                entity.irsName
+          z('.info',
+            z('.name',
+              entity.name),
+            irsType === 'irsPerson' ?
+              z('.sub',
+                entity.irsName) : undefined
+          )
+        )
+        );
+      })
+    )
+  );
+};

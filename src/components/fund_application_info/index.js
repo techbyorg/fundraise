@@ -1,44 +1,48 @@
-import {z, useContext} from 'zorium'
+let $fundApplicationInfo;
+import {z, useContext} from 'zorium';
 
-import $icon from 'frontend-shared/components/icon'
-import {infoIconPath} from 'frontend-shared/components/icon/paths'
+import $icon from 'frontend-shared/components/icon';
+import {infoIconPath} from 'frontend-shared/components/icon/paths';
 
-import context from '../../context'
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $fundApplicationInfo = ({irsFund}) ->
-  {lang} = useContext context
+export default $fundApplicationInfo = function({irsFund}) {
+  const {lang} = useContext(context);
 
-  z '.z-fund-application-info',
-    if irsFund?.applicantInfo
+  return z('.z-fund-application-info',
+    irsFund?.applicantInfo ?
       [
-        unless irsFund.applicantInfo.acceptsUnsolicitedRequests
-          z '.warning',
-            z '.icon',
-              z $icon,
-                icon: infoIconPath
-            z '.text', lang.get 'fundApplicantInfo.noUnsolicited'
-        z '.title', lang.get 'fundApplicantInfo.deadline'
-        z '.block', irsFund.applicantInfo.deadlines
+        !irsFund.applicantInfo.acceptsUnsolicitedRequests ?
+          z('.warning',
+            z('.icon',
+              z($icon,
+                {icon: infoIconPath})
+            ),
+            z('.text', lang.get('fundApplicantInfo.noUnsolicited'))) : undefined,
+        z('.title', lang.get('fundApplicantInfo.deadline')),
+        z('.block', irsFund.applicantInfo.deadlines),
 
-        z '.title', lang.get 'fundApplicantInfo.instructions'
-        z '.block', irsFund.applicantInfo.requirements
+        z('.title', lang.get('fundApplicantInfo.instructions')),
+        z('.block', irsFund.applicantInfo.requirements),
 
-        z '.title', lang.get 'fundApplicantInfo.restrictions'
-        z '.block', irsFund.applicantInfo.restrictions
+        z('.title', lang.get('fundApplicantInfo.restrictions')),
+        z('.block', irsFund.applicantInfo.restrictions),
 
-        z '.title', lang.get 'general.contact'
-        z '.name', irsFund.applicantInfo.recipientName
-        if irsFund.applicantInfo.address
+        z('.title', lang.get('general.contact')),
+        z('.name', irsFund.applicantInfo.recipientName),
+        irsFund.applicantInfo.address ?
           [
-            z '.address-line', irsFund.applicantInfo.address.street1
-            if irsFund.applicantInfo.address.street2
-              z '.address-line', irsFund.applicantInfo.address.street2
-            z '.address-line',
-              "#{irsFund.applicantInfo.address.city}, "
-              irsFund.applicantInfo.address.state
-              " #{irsFund.applicantInfo.address.postalCode}"
-          ]
-      ]
+            z('.address-line', irsFund.applicantInfo.address.street1),
+            irsFund.applicantInfo.address.street2 ?
+              z('.address-line', irsFund.applicantInfo.address.street2) : undefined,
+            z('.address-line',
+              `${irsFund.applicantInfo.address.city}, `,
+              irsFund.applicantInfo.address.state,
+              ` ${irsFund.applicantInfo.address.postalCode}`)
+          ] : undefined
+      ] : undefined);
+};

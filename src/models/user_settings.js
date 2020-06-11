@@ -1,12 +1,22 @@
-# TODO: need to convert to graphql before this will work
+// TODO: need to convert to graphql before this will work
 
-export default class UserSettings
-  namespace: 'userSettings'
+let UserSettings;
+export default UserSettings = (function() {
+  UserSettings = class UserSettings {
+    static initClass() {
+      this.prototype.namespace = 'userSettings';
+    }
 
-  constructor: ({@auth}) -> null
+    constructor({auth}) { this.getByMe = this.getByMe.bind(this);     this.upsert = this.upsert.bind(this);     this.auth = auth; null; }
 
-  getByMe: =>
-    @auth.stream "#{@namespace}.getByMe", {}
+    getByMe() {
+      return this.auth.stream(`${this.namespace}.getByMe`, {});
+    }
 
-  upsert: (userSettings) =>
-    @auth.call "#{@namespace}.upsert", userSettings, {invalidateAll: true}
+    upsert(userSettings) {
+      return this.auth.call(`${this.namespace}.upsert`, userSettings, {invalidateAll: true});
+    }
+  };
+  UserSettings.initClass();
+  return UserSettings;
+})();

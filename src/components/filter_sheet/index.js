@@ -1,61 +1,77 @@
-import {z, useContext, useMemo, useStream} from 'zorium'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+let $filterSheet;
+import {z, useContext, useMemo, useStream} from 'zorium';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import $sheet from 'frontend-shared/components/sheet'
-import $button from 'frontend-shared/components/button'
+import $sheet from 'frontend-shared/components/sheet';
+import $button from 'frontend-shared/components/button';
 
-import $filterContent from '../filter_content'
-import colors from '../../colors'
-import context from '../../context'
-import config from '../../config'
+import $filterContent from '../filter_content';
+import colors from '../../colors';
+import context from '../../context';
+import config from '../../config';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $filterSheet = ({id, filter, onClose}) ->
-  {lang} = useContext context
+export default $filterSheet = function({id, filter, onClose}) {
+  const {lang} = useContext(context);
 
-  {valueStreams} = useMemo ->
-    valueStreams = new Rx.ReplaySubject 1
-    valueStreams.next filter.valueStreams.pipe rx.switchAll()
-    {
+  var {valueStreams} = useMemo(function() {
+    valueStreams = new Rx.ReplaySubject(1);
+    valueStreams.next(filter.valueStreams.pipe(rx.switchAll()));
+    return {
       valueStreams
-    }
-  , []
+    };
+  }
+  , []);
 
-  {filterValue, hasValue} = useStream ->
-    filterValue: filter.valueStreams.pipe rx.switchAll()
+  const {filterValue, hasValue} = useStream(() => ({
+    filterValue: filter.valueStreams.pipe(rx.switchAll()),
+
     hasValue: valueStreams.pipe(
-      rx.switchAll()
-      rx.map (value) -> Boolean value
-      rx.distinctUntilChanged (a, b) -> a is b # don't rerender a bunch
+      rx.switchAll(),
+      rx.map(value => Boolean(value)),
+      rx.distinctUntilChanged((a, b) => a === b) // don't rerender a bunch
     )
+  }));
 
-  z '.z-filter-sheet',
-    key: filter.id
-    z $sheet,
-      id: filter.id
-      onClose: onClose
+  return z('.z-filter-sheet',
+    {key: filter.id},
+    z($sheet, {
+      id: filter.id,
+      onClose,
       $content:
-        z '.z-filter-sheet_sheet',
-          z '.actions',
-            z '.reset',
-              if hasValue
-                z $button,
-                  text: lang.get 'general.reset'
-                  onclick: ->
-                    filter.valueStreams.next Rx.of null
-                    valueStreams.next Rx.of null
-            z '.save',
-              z $button,
-                text: lang.get 'general.save'
-                isPrimary: true
-                onclick: ->
-                  filter.valueStreams.next valueStreams.pipe rx.switchAll()
-                  onClose()
-          z '.title',
-            filter?.title or filter?.name
-          z $filterContent, {
+        z('.z-filter-sheet_sheet',
+          z('.actions',
+            z('.reset',
+              hasValue ?
+                z($button, {
+                  text: lang.get('general.reset'),
+                  onclick() {
+                    filter.valueStreams.next(Rx.of(null));
+                    return valueStreams.next(Rx.of(null));
+                  }
+                }
+                ) : undefined
+            ),
+            z('.save',
+              z($button, {
+                text: lang.get('general.save'),
+                isPrimary: true,
+                onclick() {
+                  filter.valueStreams.next(valueStreams.pipe(rx.switchAll()));
+                  return onClose();
+                }
+              }
+              )
+            )
+          ),
+          z('.title',
+            filter?.title || filter?.name),
+          z($filterContent, {
             filter, filterValue, valueStreams, overlayAnchor: 'bottom-left'
-          }
+          }))
+    }));
+};
