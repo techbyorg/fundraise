@@ -3,16 +3,14 @@
 */
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
-import z from 'zorium'
+import { z } from 'zorium'
 
 import $spinner from 'frontend-shared/components/spinner'
 
 import config from '../../config'
-let $homePage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
+if (typeof window !== 'undefined') { require('./index.styl') }
+
+export default function $homePage ({ requestsStream, serverData, entity }) {
+  return z('.p-home', $spinner)
 }
-
-export default $homePage = ({ requestsStream, serverData, entity }) => z('.p-home',
-  $spinner)

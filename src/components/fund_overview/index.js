@@ -12,13 +12,10 @@ import $fundOverviewLineChart from '../fund_overview_line_chart'
 import $fundOverviewNteePie from '../fund_overview_ntee_pie'
 import $fundOverviewFundingMap from '../fund_overview_funding_map'
 import context from '../../context'
-let $fundOverview
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $fundOverview = function ({ irsFund }) {
+export default function $fundOverview ({ irsFund }) {
   const { lang } = useContext(context)
 
   var { metricStream } = useMemo(function () {

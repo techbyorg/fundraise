@@ -11,13 +11,10 @@ import useMeta from 'frontend-shared/services/use_meta'
 
 import $search from '../../components/search'
 import config from '../../config'
-let $searchPage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $searchPage = function ({ requestsStream }) {
+export default function $searchPage ({ requestsStream }) {
   const { nteeStream, locationStream } = useMemo(() => ({
     nteeStream: requestsStream.pipe(rx.map(({ route }) => route.params.ntee)
     ),

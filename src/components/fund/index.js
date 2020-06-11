@@ -17,11 +17,8 @@ import $fundPersons from '../fund_persons'
 import $fundApplicationInfo from '../fund_application_info'
 import $fund990s from '../fund_990s'
 import context from '../../context'
-let $fund
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 const TABS = [
   {
@@ -51,7 +48,7 @@ const TABS = [
   }
 ]
 
-export default $fund = function ({ placeholderNameStream, irsFundStream, tabStream }) {
+export default function $fund ({ placeholderNameStream, irsFundStream, tabStream }) {
   const { lang, router } = useContext(context)
 
   var { selectedIndexStreams } = useMemo(function () {

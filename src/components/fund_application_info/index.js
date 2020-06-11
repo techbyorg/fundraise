@@ -1,28 +1,27 @@
 // TODO: This file was created by bulk-decaffeinate.
 // Sanity-check the conversion and remove this comment.
-let $fundApplicationInfo;
-import {z, useContext} from 'zorium';
+import { z, useContext } from 'zorium'
 
-import $icon from 'frontend-shared/components/icon';
-import {infoIconPath} from 'frontend-shared/components/icon/paths';
+import $icon from 'frontend-shared/components/icon'
+import { infoIconPath } from 'frontend-shared/components/icon/paths'
 
-import context from '../../context';
+import context from '../../context'
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $fundApplicationInfo = function({irsFund}) {
-  const {lang} = useContext(context);
+export default function $fundApplicationInfo ({ irsFund }) {
+  const { lang } = useContext(context)
 
   return z('.z-fund-application-info',
-    irsFund?.applicantInfo ?
-      [
-        !irsFund.applicantInfo.acceptsUnsolicitedRequests ?
-          z('.warning',
+    irsFund?.applicantInfo
+      ? [
+        !irsFund.applicantInfo.acceptsUnsolicitedRequests
+          ? z('.warning',
             z('.icon',
               z($icon,
-                {icon: infoIconPath})
+                { icon: infoIconPath })
             ),
             z('.text', lang.get('fundApplicantInfo.noUnsolicited'))) : undefined,
         z('.title', lang.get('fundApplicantInfo.deadline')),
@@ -36,15 +35,15 @@ export default $fundApplicationInfo = function({irsFund}) {
 
         z('.title', lang.get('general.contact')),
         z('.name', irsFund.applicantInfo.recipientName),
-        irsFund.applicantInfo.address ?
-          [
+        irsFund.applicantInfo.address
+          ? [
             z('.address-line', irsFund.applicantInfo.address.street1),
-            irsFund.applicantInfo.address.street2 ?
-              z('.address-line', irsFund.applicantInfo.address.street2) : undefined,
+            irsFund.applicantInfo.address.street2
+              ? z('.address-line', irsFund.applicantInfo.address.street2) : undefined,
             z('.address-line',
               `${irsFund.applicantInfo.address.city}, `,
               irsFund.applicantInfo.address.state,
               ` ${irsFund.applicantInfo.address.postalCode}`)
           ] : undefined
-      ] : undefined);
+      ] : undefined)
 };

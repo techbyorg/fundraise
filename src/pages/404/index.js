@@ -12,9 +12,8 @@ import $button from 'frontend-shared/components/button'
 import colors from '../../colors'
 import context from '../../context'
 import config from '../../config'
-let $404Page
 
-export default $404Page = function (props) {
+export default function $404Page (props) {
   const { requestsStream, serverData, entity } = props
   const { lang, router } = useContext(context)
 

@@ -4,13 +4,10 @@
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 import { z, useRef, useLayoutEffect } from 'zorium'
-let $searchInput
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $searchInput = function ({ placeholder, valueStream }) {
+export default function $searchInput ({ placeholder, valueStream }) {
   // {value} = useStream ->
   //   value: valueStream
 

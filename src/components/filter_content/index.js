@@ -14,13 +14,10 @@ import $filterContentList from '../filter_content_list'
 import $filterContentNtee from '../filter_content_ntee'
 // import $filterContentGtlt from '../filter_content_gtlt'
 import $filterContentMinMax from '../filter_content_min_max'
-let $filterContent
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $filterContent = function (props) {
+export default function $filterContent (props) {
   let $$parentRef, filter, filterValue, isGrouped, overlayAnchor, resetValue, valueStreams;
   ({
     filter, valueStreams, filterValue, resetValue, isGrouped, resetValue,

@@ -1,35 +1,32 @@
 // TODO: This file was created by bulk-decaffeinate.
 // Sanity-check the conversion and remove this comment.
-let $filterSheet;
-import {z, useContext, useMemo, useStream} from 'zorium';
-import * as Rx from 'rxjs';
-import * as rx from 'rxjs/operators';
+import { z, useContext, useMemo, useStream } from 'zorium'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
-import $sheet from 'frontend-shared/components/sheet';
-import $button from 'frontend-shared/components/button';
+import $sheet from 'frontend-shared/components/sheet'
+import $button from 'frontend-shared/components/button'
 
-import $filterContent from '../filter_content';
-import colors from '../../colors';
-import context from '../../context';
-import config from '../../config';
+import $filterContent from '../filter_content'
+import context from '../../context'
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $filterSheet = function({id, filter, onClose}) {
-  const {lang} = useContext(context);
+export default function $filterSheet ({ id, filter, onClose }) {
+  const { lang } = useContext(context)
 
-  var {valueStreams} = useMemo(function() {
-    valueStreams = new Rx.ReplaySubject(1);
-    valueStreams.next(filter.valueStreams.pipe(rx.switchAll()));
+  var { valueStreams } = useMemo(function () {
+    valueStreams = new Rx.ReplaySubject(1)
+    valueStreams.next(filter.valueStreams.pipe(rx.switchAll()))
     return {
       valueStreams
-    };
+    }
   }
-  , []);
+  , [])
 
-  const {filterValue, hasValue} = useStream(() => ({
+  const { filterValue, hasValue } = useStream(() => ({
     filterValue: filter.valueStreams.pipe(rx.switchAll()),
 
     hasValue: valueStreams.pipe(
@@ -37,10 +34,10 @@ export default $filterSheet = function({id, filter, onClose}) {
       rx.map(value => Boolean(value)),
       rx.distinctUntilChanged((a, b) => a === b) // don't rerender a bunch
     )
-  }));
+  }))
 
   return z('.z-filter-sheet',
-    {key: filter.id},
+    { key: filter.id },
     z($sheet, {
       id: filter.id,
       onClose,
@@ -48,12 +45,12 @@ export default $filterSheet = function({id, filter, onClose}) {
         z('.z-filter-sheet_sheet',
           z('.actions',
             z('.reset',
-              hasValue ?
-                z($button, {
+              hasValue
+                ? z($button, {
                   text: lang.get('general.reset'),
-                  onclick() {
-                    filter.valueStreams.next(Rx.of(null));
-                    return valueStreams.next(Rx.of(null));
+                  onclick () {
+                    filter.valueStreams.next(Rx.of(null))
+                    return valueStreams.next(Rx.of(null))
                   }
                 }
                 ) : undefined
@@ -62,9 +59,9 @@ export default $filterSheet = function({id, filter, onClose}) {
               z($button, {
                 text: lang.get('general.save'),
                 isPrimary: true,
-                onclick() {
-                  filter.valueStreams.next(valueStreams.pipe(rx.switchAll()));
-                  return onClose();
+                onclick () {
+                  filter.valueStreams.next(valueStreams.pipe(rx.switchAll()))
+                  return onClose()
                 }
               }
               )
@@ -75,5 +72,5 @@ export default $filterSheet = function({id, filter, onClose}) {
           z($filterContent, {
             filter, filterValue, valueStreams, overlayAnchor: 'bottom-left'
           }))
-    }));
+    }))
 };

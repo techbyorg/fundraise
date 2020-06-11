@@ -1,23 +1,23 @@
 // TODO: This file was created by bulk-decaffeinate.
 // Sanity-check the conversion and remove this comment.
-import * as _ from 'lodash-es';
-import * as Rx from 'rxjs';
-import * as rx from 'rxjs/operators';
+import * as _ from 'lodash-es'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
-import FormatService from 'frontend-shared/services/format';
+import FormatService from 'frontend-shared/services/format'
 
-import {nteeColors} from '../colors';
+import { nteeColors } from '../colors'
 
 const states = {
   AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming'
-};
+}
 
 class SearchFiltersService {
-  constructor() {
-    this.getESQueryFilterFromFilters = this.getESQueryFilterFromFilters.bind(this);
+  constructor () {
+    this.getESQueryFilterFromFilters = this.getESQueryFilterFromFilters.bind(this)
   }
 
-  getFundFilters(lang) {
+  getFundFilters (lang) {
     return [
       // search-tags. not in filter bar
       {
@@ -25,21 +25,21 @@ class SearchFiltersService {
         field: 'fundedNteeMajor',
         title: lang.get('filter.fundedNteeMajor.title'),
         type: 'ntee',
-        getTagsFn(value = {}) {
-          const {nteeMajors, ntees} = value;
-          const nteeMajorsGroups = _.countBy(_.keys(ntees), ntee => ntee.substr(0, 1));
-          const allNteeMajors = _.defaults(_.clone(nteeMajors), nteeMajorsGroups);
-          return _.map(allNteeMajors, function(count, nteeMajor) {
-            let text = lang.get(`nteeMajor.${nteeMajor}`);
+        getTagsFn (value = {}) {
+          const { nteeMajors, ntees } = value
+          const nteeMajorsGroups = _.countBy(_.keys(ntees), ntee => ntee.substr(0, 1))
+          const allNteeMajors = _.defaults(_.clone(nteeMajors), nteeMajorsGroups)
+          return _.map(allNteeMajors, function (count, nteeMajor) {
+            let text = lang.get(`nteeMajor.${nteeMajor}`)
             if (count !== true) {
-              text = `(${count}) ${text}`;
+              text = `(${count}) ${text}`
             }
             return {
               text,
               background: nteeColors[nteeMajor]?.bg,
               color: nteeColors[nteeMajor]?.fg
-            };
-        });
+            }
+          })
         }
       },
       // search-tags, not in filter bar
@@ -51,29 +51,29 @@ class SearchFiltersService {
         items: _.mapValues(states, (state, stateCode) => ({
           label: state
         })),
-        getTagsFn(value) {
-          return _.filter(_.map(value, function(val, key) {
+        getTagsFn (value) {
+          return _.filter(_.map(value, function (val, key) {
             if (val) {
               return {
                 text: states[key]
-              };
+              }
             }
-        }));
+          }))
         },
-        queryFn(value, key) {
+        queryFn (value, key) {
           return {
             nested: {
               path: 'fundedStates',
               query: {
                 bool: {
                   must: [
-                    {match: {'fundedStates.key': key}},
-                    {range: {'fundedStates.percent': {gte: 2}}}
+                    { match: { 'fundedStates.key': key } },
+                    { range: { 'fundedStates.percent': { gte: 2 } } }
                   ]
                 }
               }
             }
-          };
+          }
         }
       },
 
@@ -84,22 +84,22 @@ class SearchFiltersService {
         name: lang.get('filter.assets'),
         title: lang.get('filter.assetsTitle'),
         minOptions: [
-          {value: '0', text: lang.get('filter.noMin')},
-          {value: '100000', text: FormatService.abbreviateDollar(100000)},
-          {value: '1000000', text: FormatService.abbreviateDollar(1000000)},
-          {value: '10000000', text: FormatService.abbreviateDollar(10000000)},
-          {value: '100000000', text: FormatService.abbreviateDollar(100000000)},
-          {value: '1000000000', text: FormatService.abbreviateDollar(1000000000)},
-          {value: '10000000000', text: FormatService.abbreviateDollar(10000000000)} // 10b
+          { value: '0', text: lang.get('filter.noMin') },
+          { value: '100000', text: FormatService.abbreviateDollar(100000) },
+          { value: '1000000', text: FormatService.abbreviateDollar(1000000) },
+          { value: '10000000', text: FormatService.abbreviateDollar(10000000) },
+          { value: '100000000', text: FormatService.abbreviateDollar(100000000) },
+          { value: '1000000000', text: FormatService.abbreviateDollar(1000000000) },
+          { value: '10000000000', text: FormatService.abbreviateDollar(10000000000) } // 10b
         ],
         maxOptions: [
-          {value: '0', text: lang.get('filter.noMax')},
-          {value: '100000', text: FormatService.abbreviateDollar(100000)},
-          {value: '1000000', text: FormatService.abbreviateDollar(1000000)},
-          {value: '10000000', text: FormatService.abbreviateDollar(10000000)},
-          {value: '100000000', text: FormatService.abbreviateDollar(100000000)},
-          {value: '1000000000', text: FormatService.abbreviateDollar(1000000000)},
-          {value: '10000000000', text: FormatService.abbreviateDollar(10000000000)} // 10b
+          { value: '0', text: lang.get('filter.noMax') },
+          { value: '100000', text: FormatService.abbreviateDollar(100000) },
+          { value: '1000000', text: FormatService.abbreviateDollar(1000000) },
+          { value: '10000000', text: FormatService.abbreviateDollar(10000000) },
+          { value: '100000000', text: FormatService.abbreviateDollar(100000000) },
+          { value: '1000000000', text: FormatService.abbreviateDollar(1000000000) },
+          { value: '10000000000', text: FormatService.abbreviateDollar(10000000000) } // 10b
         ]
       },
       {
@@ -108,22 +108,22 @@ class SearchFiltersService {
         type: 'minMax',
         name: lang.get('filter.grantSum'),
         minOptions: [
-          {value: '0', text: lang.get('filter.noMin')},
-          {value: '10000', text: FormatService.abbreviateDollar(10000)},
-          {value: '100000', text: FormatService.abbreviateDollar(100000)},
-          {value: '1000000', text: FormatService.abbreviateDollar(1000000)},
-          {value: '10000000', text: FormatService.abbreviateDollar(10000000)},
-          {value: '100000000', text: FormatService.abbreviateDollar(100000000)},
-          {value: '1000000000', text: FormatService.abbreviateDollar(1000000000)} // 1b
+          { value: '0', text: lang.get('filter.noMin') },
+          { value: '10000', text: FormatService.abbreviateDollar(10000) },
+          { value: '100000', text: FormatService.abbreviateDollar(100000) },
+          { value: '1000000', text: FormatService.abbreviateDollar(1000000) },
+          { value: '10000000', text: FormatService.abbreviateDollar(10000000) },
+          { value: '100000000', text: FormatService.abbreviateDollar(100000000) },
+          { value: '1000000000', text: FormatService.abbreviateDollar(1000000000) } // 1b
         ],
         maxOptions: [
-          {value: '0', text: lang.get('filter.noMax')},
-          {value: '10000', text: FormatService.abbreviateDollar(10000)},
-          {value: '100000', text: FormatService.abbreviateDollar(100000)},
-          {value: '1000000', text: FormatService.abbreviateDollar(1000000)},
-          {value: '10000000', text: FormatService.abbreviateDollar(10000000)},
-          {value: '100000000', text: FormatService.abbreviateDollar(100000000)},
-          {value: '1000000000', text: FormatService.abbreviateDollar(1000000000)} // 1b
+          { value: '0', text: lang.get('filter.noMax') },
+          { value: '10000', text: FormatService.abbreviateDollar(10000) },
+          { value: '100000', text: FormatService.abbreviateDollar(100000) },
+          { value: '1000000', text: FormatService.abbreviateDollar(1000000) },
+          { value: '10000000', text: FormatService.abbreviateDollar(10000000) },
+          { value: '100000000', text: FormatService.abbreviateDollar(100000000) },
+          { value: '1000000000', text: FormatService.abbreviateDollar(1000000000) } // 1b
         ]
       },
       {
@@ -132,22 +132,22 @@ class SearchFiltersService {
         type: 'minMax',
         name: lang.get('filter.grantMedian'),
         minOptions: [
-          {value: '0', text: lang.get('filter.noMin')},
-          {value: '1000', text: FormatService.abbreviateDollar(1000)},
-          {value: '10000', text: FormatService.abbreviateDollar(10000)},
-          {value: '100000', text: FormatService.abbreviateDollar(100000)},
-          {value: '1000000', text: FormatService.abbreviateDollar(1000000)},
-          {value: '10000000', text: FormatService.abbreviateDollar(10000000)},
-          {value: '100000000', text: FormatService.abbreviateDollar(100000000)} // 100m
+          { value: '0', text: lang.get('filter.noMin') },
+          { value: '1000', text: FormatService.abbreviateDollar(1000) },
+          { value: '10000', text: FormatService.abbreviateDollar(10000) },
+          { value: '100000', text: FormatService.abbreviateDollar(100000) },
+          { value: '1000000', text: FormatService.abbreviateDollar(1000000) },
+          { value: '10000000', text: FormatService.abbreviateDollar(10000000) },
+          { value: '100000000', text: FormatService.abbreviateDollar(100000000) } // 100m
         ],
         maxOptions: [
-          {value: '0', text: lang.get('filter.noMax')},
-          {value: '1000', text: FormatService.abbreviateDollar(1000)},
-          {value: '10000', text: FormatService.abbreviateDollar(10000)},
-          {value: '100000', text: FormatService.abbreviateDollar(100000)},
-          {value: '1000000', text: FormatService.abbreviateDollar(1000000)},
-          {value: '10000000', text: FormatService.abbreviateDollar(10000000)},
-          {value: '100000000', text: FormatService.abbreviateDollar(100000000)} // 100m
+          { value: '0', text: lang.get('filter.noMax') },
+          { value: '1000', text: FormatService.abbreviateDollar(1000) },
+          { value: '10000', text: FormatService.abbreviateDollar(10000) },
+          { value: '100000', text: FormatService.abbreviateDollar(100000) },
+          { value: '1000000', text: FormatService.abbreviateDollar(1000000) },
+          { value: '10000000', text: FormatService.abbreviateDollar(10000000) },
+          { value: '100000000', text: FormatService.abbreviateDollar(100000000) } // 100m
         ]
       },
       {
@@ -157,106 +157,106 @@ class SearchFiltersService {
         type: 'boolean',
         isBoolean: true
       }
-  ];
+    ]
   }
 
-  getFiltersStream(props) {
+  getFiltersStream (props) {
     let {
-          cookie,
-          filters,
-          initialFiltersStream
-        } = props,
-        val = props.dataType,
-        dataType = val != null ? val : 'irsFund';
+      cookie,
+      filters,
+      initialFiltersStream
+    } = props
+    const val = props.dataType
+    let dataType = val != null ? val : 'irsFund'
 
     // eg filters from custom urls
-    if (initialFiltersStream == null) { initialFiltersStream = new Rx.BehaviorSubject(null); }
+    if (initialFiltersStream == null) { initialFiltersStream = new Rx.BehaviorSubject(null) }
     initialFiltersStream = initialFiltersStream.pipe(rx.switchMap(initialFilters => {
-      const persistentCookie = 'savedFilters';
-      let savedFilters = (() => { try {
-        return JSON.parse(cookie.get(persistentCookie));
-      } catch (error) {
-        return {};
-      } })();
+      const persistentCookie = 'savedFilters'
+      let savedFilters = (() => {
+        try {
+          return JSON.parse(cookie.get(persistentCookie))
+        } catch (error) {
+          return {}
+        }
+      })()
 
-      console.log('saved filters', persistentCookie, savedFilters);
+      console.log('saved filters', persistentCookie, savedFilters)
 
       filters = _.map(filters, filter => {
-        let savedValueKey;
+        let savedValueKey
         if (filter.type === 'booleanArray') {
-          savedValueKey = `${dataType}.${filter.field}.${filter.arrayValue}`;
+          savedValueKey = `${dataType}.${filter.field}.${filter.arrayValue}`
         } else {
-          savedValueKey = `${dataType}.${filter.field}`;
+          savedValueKey = `${dataType}.${filter.field}`
         }
 
+        const initialValue = !_.isEmpty(initialFilters)
+          ? initialFilters[savedValueKey]
+          : savedFilters[savedValueKey]
 
-        const initialValue = !_.isEmpty(initialFilters) 
-                       ? initialFilters[savedValueKey] 
-                       : savedFilters[savedValueKey];
+        console.log('initial', initialValue, savedValueKey, initialFilters)
 
-        console.log('initial', initialValue, savedValueKey, initialFilters);
-
-        const valueStreams = new Rx.ReplaySubject(1);
+        const valueStreams = new Rx.ReplaySubject(1)
         valueStreams.next(Rx.of(
           (initialValue != null) ? initialValue : filter.defaultValue
         )
-        );
+        )
 
-        return _.defaults({dataType, valueStreams}, filter);
-      });
+        return _.defaults({ dataType, valueStreams }, filter)
+      })
 
       if (_.isEmpty(filters)) {
-        return Rx.of({});
+        return Rx.of({})
       }
 
       return Rx.combineLatest(
-        _.map(filters, ({valueStreams}) => valueStreams.pipe(rx.switchAll())),
+        _.map(filters, ({ valueStreams }) => valueStreams.pipe(rx.switchAll())),
         (...vals) => vals)
       // ^^ updates a lot since $filterContent sets valueStreams on a lot
       // on load. this prevents a bunch of extra lodash loops from getting called
-      .pipe(
-        rx.distinctUntilChanged(_.isEqual),
-        rx.map(values => {
-          const filtersWithValue = _.zipWith(filters, values, (filter, value) => _.defaults({value}, filter));
+        .pipe(
+          rx.distinctUntilChanged(_.isEqual),
+          rx.map(values => {
+            const filtersWithValue = _.zipWith(filters, values, (filter, value) => _.defaults({ value }, filter))
 
-          // set cookie to persist filters
-          savedFilters = _.reduce(filtersWithValue, function(obj, filter) {
-            let arrayValue, field, type, value;
-            ({dataType, field, value, type, arrayValue} = filter);
-            if ((value != null) && (type === 'booleanArray')) {
-              obj[`${dataType}.${field}.${arrayValue}`] = value;
-            } else if (value != null) {
-              obj[`${dataType}.${field}`] = value;
+            // set cookie to persist filters
+            savedFilters = _.reduce(filtersWithValue, function (obj, filter) {
+              let arrayValue, field, type, value;
+              ({ dataType, field, value, type, arrayValue } = filter)
+              if ((value != null) && (type === 'booleanArray')) {
+                obj[`${dataType}.${field}.${arrayValue}`] = value
+              } else if (value != null) {
+                obj[`${dataType}.${field}`] = value
+              }
+              return obj
             }
-            return obj;
-          }
-          , {});
-          cookie.set(persistentCookie, JSON.stringify(savedFilters));
+            , {})
+            cookie.set(persistentCookie, JSON.stringify(savedFilters))
 
-          return filtersWithValue;
-      })
-      );
+            return filtersWithValue
+          })
+        )
     })
-    );
+    )
 
     // for whatever reason, required for stream to update, unless the
     // initialFiltersStream switchMap is removed
     return initialFiltersStream.pipe(
       rx.publishReplay(1),
       rx.refCount()
-    );
+    )
   }
 
-
-  getESQueryFilterFromFilters(filters) {
-    const groupedFilters = _.groupBy(filters, 'field');
+  getESQueryFilterFromFilters (filters) {
+    const groupedFilters = _.groupBy(filters, 'field')
     var filter = _.filter(_.map(groupedFilters, (fieldFilters, field) => {
-      let range;
+      let range
       if (!_.some(fieldFilters, 'value')) {
-        return;
+        return
       }
 
-      filter = fieldFilters[0];
+      filter = fieldFilters[0]
 
       switch (filter.type) {
         case 'maxInt': case 'maxIntCustom':
@@ -266,7 +266,7 @@ class SearchFiltersService {
                 lte: filter.value
               }
             }
-          };
+          }
         case 'minInt': case 'minIntCustom':
           return {
             range: {
@@ -274,7 +274,7 @@ class SearchFiltersService {
                 gte: filter.value
               }
             }
-          };
+          }
         case 'gtlt':
           if (filter.value.operator && filter.value.value) {
             return {
@@ -283,20 +283,20 @@ class SearchFiltersService {
                   [filter.value.operator]: filter.value.value
                 }
               }
-            };
+            }
           }
-          break;
+          break
         case 'minMax':
           var {
             min
-          } = filter.value;
+          } = filter.value
           var {
             max
-          } = filter.value;
+          } = filter.value
           if (min || max) {
-            range = {};
+            range = {}
             if (min) {
-              range.gte = min;
+              range.gte = min
             }
             // if max
             //   range.lte = max
@@ -304,9 +304,9 @@ class SearchFiltersService {
               range: {
                 [field]: range
               }
-            };
+            }
           }
-          break;
+          break
         case 'gtZero':
           return {
             range: {
@@ -314,33 +314,33 @@ class SearchFiltersService {
                 gt: 0
               }
             }
-          };
+          }
         case 'listAnd': case 'listBooleanAnd':
           return {
             bool: {
-              must: _.filter(_.map(filter.value, function(value, key) {
+              must: _.filter(_.map(filter.value, function (value, key) {
                 if (value && filter.queryFn) {
-                  return filter.queryFn(value, key);
+                  return filter.queryFn(value, key)
                 } else if (value) {
-                  return {match: {[`${field}.${key}`]: value}};
+                  return { match: { [`${field}.${key}`]: value } }
                 }
               })
               )
             }
-          };
+          }
         case 'listBooleanOr': case 'listOr':
           return {
             bool: {
-              should: _.filter(_.map(filter.value, function(value, key) {
+              should: _.filter(_.map(filter.value, function (value, key) {
                 if (value && filter.queryFn) {
-                  return filter.queryFn(value, key);
+                  return filter.queryFn(value, key)
                 } else if (value) {
-                  return {match: {[`${field}.${key}`]: value}};
+                  return { match: { [`${field}.${key}`]: value } }
                 }
               })
               )
             }
-          };
+          }
         case 'ntee':
           return {
             bool: {
@@ -351,8 +351,8 @@ class SearchFiltersService {
                     query: {
                       bool: {
                         must: [
-                          {match: {'fundedNteeMajors.key': key}},
-                          {range: {'fundedNteeMajors.percent': {gte: 2}}}
+                          { match: { 'fundedNteeMajors.key': key } },
+                          { range: { 'fundedNteeMajors.percent': { gte: 2 } } }
                         ]
                       }
                     }
@@ -363,64 +363,62 @@ class SearchFiltersService {
                     query: {
                       bool: {
                         must: [
-                          {match: {'fundedNtees.key': key}},
-                          {range: {'fundedNtees.percent': {gte: 2}}}
+                          { match: { 'fundedNtees.key': key } },
+                          { range: { 'fundedNtees.percent': { gte: 2 } } }
                         ]
                       }
                     }
                   }
                 })))
             }
-          };
+          }
         case 'fieldList':
           return {
             bool: {
-              should: _.filter(_.map(filter.value, function(value, key) {
+              should: _.filter(_.map(filter.value, function (value, key) {
                 if (value) {
-                  return {match: {[field]: key}};
+                  return { match: { [field]: key } }
                 }
               })
               )
             }
-          };
+          }
         case 'boolean':
           return {
-            match: { [field]: true
+            match: { [field]: true }
           }
-          };
         case 'booleanArray':
-          var withValues = _.filter(fieldFilters, 'value');
+          var withValues = _.filter(fieldFilters, 'value')
 
           return {
             // there's potentially a cleaner way to do this?
             bool: {
-              should: _.map(withValues, function({value, arrayValue, valueFn}) {
+              should: _.map(withValues, function ({ value, arrayValue, valueFn }) {
                 // if subtypes are specified
                 if (typeof value === 'object') {
                   return {
                     bool: {
                       must: [
-                        {match: {[field]: arrayValue}}, {
-                        bool: {
-                          should: valueFn(value)
+                        { match: { [field]: arrayValue } }, {
+                          bool: {
+                            should: valueFn(value)
+                          }
                         }
-                      }
                       ]
                     }
-                  };
+                  }
                 } else {
-                  return {match: {[field]: arrayValue}};
+                  return { match: { [field]: arrayValue } }
                 }
-            })
+              })
             }
 
-            };
+          }
       }
-  }));
+    }))
 
-    return filter;
+    return filter
   }
 }
 
-
-export default new SearchFiltersService();
+export default new SearchFiltersService()

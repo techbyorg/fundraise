@@ -22,29 +22,29 @@ import $tosPage from 'frontend-shared/pages/tos'
 import $unsubscribeEmailPage from 'frontend-shared/pages/unsubscribe_email'
 import $verifyEmailPage from 'frontend-shared/pages/verify_email'
 import $404Page from './pages/404'
-let $app
 
-export default $app = props => z($sharedApp, _.defaults({
-  routes: {
-    // add to lang/paths_en.json
-    // <langKey>: $page
-    fundByEin: $fundPage,
-    fundByEinWithTab: $fundPage,
-    loginLink: $loginLinkPage,
-    // notifications: $notificationsPage
-    orgByEin: $orgPage,
-    policies: $policiesPage,
-    privacy: $privacyPage,
-    // settings: $settingsPage
-    home: $searchPage,
-    search: $searchPage,
-    searchWithFocusAreaAndLocation: $searchPage,
-    shell: $shellPage,
-    signIn: $signInPage,
-    termsOfService: $tosPage,
-    unsubscribeEmail: $unsubscribeEmailPage,
-    verifyEmail: $verifyEmailPage,
-    fourOhFour: $404Page
-  }
-}, props)
-)
+export default function $app (props) {
+  return z($sharedApp, _.defaults({
+    routes: {
+      // add to lang/paths_en.json
+      // <langKey>: $page
+      fundByEin: $fundPage,
+      fundByEinWithTab: $fundPage,
+      loginLink: $loginLinkPage,
+      // notifications: $notificationsPage
+      orgByEin: $orgPage,
+      policies: $policiesPage,
+      privacy: $privacyPage,
+      // settings: $settingsPage
+      home: $searchPage,
+      search: $searchPage,
+      searchWithFocusAreaAndLocation: $searchPage,
+      shell: $shellPage,
+      signIn: $signInPage,
+      termsOfService: $tosPage,
+      unsubscribeEmail: $unsubscribeEmailPage,
+      verifyEmail: $verifyEmailPage,
+      fourOhFour: $404Page
+    }
+  }, props))
+}

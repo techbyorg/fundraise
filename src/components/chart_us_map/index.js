@@ -14,7 +14,6 @@ import useRefSize from 'frontend-shared/services/use_ref_size'
 
 import colors from '../../colors'
 import config from '../../config'
-let $chartUsMap
 
 const $choropleth = lazy(() => Promise.all([
   import(/* webpackChunkName: "nivo" */'@nivo/geo')
@@ -31,7 +30,6 @@ const $choropleth = lazy(() => Promise.all([
 ])
   .then(function (...args) {
     let features
-    let $choropleth;
     [$choropleth, { features }] = Array.from(args[0])
     return ({ width, height, data, min, max }) => z($choropleth, {
       data,
@@ -57,11 +55,9 @@ const $choropleth = lazy(() => Promise.all([
     )
   }))
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $chartUsMap = function ({ data }) {
+export default function $chartUsMap ({ data }) {
   const $$ref = useRef()
 
   const { min, max } = useMemo(function () {

@@ -1,29 +1,28 @@
 // TODO: This file was created by bulk-decaffeinate.
 // Sanity-check the conversion and remove this comment.
-let $fundOverviewlineChart;
-import {z} from 'zorium';
-import * as _ from 'lodash-es';
+import { z } from 'zorium'
+import * as _ from 'lodash-es'
 
-import $chartLine from '../chart_line';
+import $chartLine from '../chart_line'
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $fundOverviewlineChart = function({metric, irsFund}) {
+export default function $fundOverviewlineChart ({ metric, irsFund }) {
   // TODO: metric dropdown: assets, grant median, grant sum, grants made
   const data = [{
     id: 'main',
-    data: _.filter(_.map(irsFund?.yearlyStats?.years, function(yearStats) {
+    data: _.filter(_.map(irsFund?.yearlyStats?.years, function (yearStats) {
       if (yearStats[metric] != null) {
         return {
           x: yearStats.year,
           y: yearStats[metric]
-        };
+        }
       }
-  }))
-  }];
+    }))
+  }]
 
   return z('.z-fund-overview-line-chart',
-    z($chartLine, {data}));
+    z($chartLine, { data }))
 };

@@ -1,22 +1,20 @@
 // TODO: This file was created by bulk-decaffeinate.
 // Sanity-check the conversion and remove this comment.
-let $fundOverviewNteePie;
-import {z} from 'zorium';
-import * as _ from 'lodash-es';
+import { z } from 'zorium'
+import * as _ from 'lodash-es'
 
-import $chartUsMap from '../chart_us_map';
-import config from '../../config';
+import $chartUsMap from '../chart_us_map'
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $fundOverviewNteePie = function({irsFund}) {
-  const data = _.map(irsFund?.fundedStates, ({key, sum}) => ({
+export default function $fundOverviewNteePie ({ irsFund }) {
+  const data = _.map(irsFund?.fundedStates, ({ key, sum }) => ({
     id: key,
     value: sum
-  }));
+  }))
 
   return z('.z-fund-overview-funding-map',
-    z($chartUsMap, {data}));
+    z($chartUsMap, { data }))
 };

@@ -12,13 +12,10 @@ import $notifications from 'frontend-shared/components/notifications'
 import config from '../../config'
 import context from '../../context'
 import colors from '../../colors'
-let $notificationsPage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $notificationsPage = function () {
+export default function $notificationsPage () {
   const { lang } = useContext(context)
 
   return z('.p-notifications',

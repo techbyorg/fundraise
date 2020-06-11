@@ -1,29 +1,27 @@
 // TODO: This file was created by bulk-decaffeinate.
 // Sanity-check the conversion and remove this comment.
-let $fundAtAGlance;
-import {z, classKebab, useContext, useStream} from 'zorium';
-import * as _ from 'lodash-es';
+import { z, useContext, useStream } from 'zorium'
 
-import $tags from 'frontend-shared/components/tags';
-import $icon from 'frontend-shared/components/icon';
-import {giveIconPath} from 'frontend-shared/components/icon/paths';
-import FormatService from 'frontend-shared/services/format';
+// import $tags from 'frontend-shared/components/tags'
+import $icon from 'frontend-shared/components/icon'
+import { giveIconPath } from 'frontend-shared/components/icon/paths'
+import FormatService from 'frontend-shared/services/format'
 
-import colors, {nteeColors} from '../../colors';
-import context from '../../context';
+import colors from '../../colors'
+import context from '../../context'
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-const VISIBLE_FOCUS_AREAS_COUNT = 5;
+// const VISIBLE_FOCUS_AREAS_COUNT = 5
 
-export default $fundAtAGlance = function({placeholderNameStream, irsFund} ) {
-  const {lang, router} = useContext(context);
+export default function $fundAtAGlance ({ placeholderNameStream, irsFund }) {
+  const { lang, router } = useContext(context)
 
-  const {placeholderName} = useStream(() => ({
+  const { placeholderName } = useStream(() => ({
     placeholderName: placeholderNameStream
-  }));
+  }))
 
   // TODO: component for this? it's used in the results table too
   // focusAreas = _.orderBy irsFund?.fundedNteeMajors, 'count', 'desc'
@@ -33,7 +31,6 @@ export default $fundAtAGlance = function({placeholderNameStream, irsFund} ) {
   //     background: nteeColors[key].bg
   //     color: nteeColors[key].fg
   //   }
-
 
   return z('.z-fund-at-a-glance',
     z('.name', irsFund?.name || placeholderName),
@@ -48,11 +45,11 @@ export default $fundAtAGlance = function({placeholderNameStream, irsFund} ) {
     //     z '.text',
     //       z $tags, {
     //         tags, fitToContent: true,isNoWrap: false,
-    //         maxVisibleCount: VISIBLE_FOCUS_AREAS_COUNT
+    //          maxVisibleCount: VISIBLE_FOCUS_AREAS_COUNT
     //       }
 
-    irsFund?.website ?
-      z('.block',
+    irsFund?.website
+      ? z('.block',
         z('.title', lang.get('general.web')),
         router.link(z('a.text.link', {
           href: irsFund?.website
@@ -61,8 +58,8 @@ export default $fundAtAGlance = function({placeholderNameStream, irsFund} ) {
         )
       ) : undefined,
 
-    irsFund?.lastYearStats ?
-      [
+    irsFund?.lastYearStats
+      ? [
         z('.divider'),
         z('.grant-summary',
           z('.title',
@@ -95,5 +92,5 @@ export default $fundAtAGlance = function({placeholderNameStream, irsFund} ) {
               FormatService.abbreviateDollar(irsFund?.assets))
           )
         )
-      ] : undefined);
+      ] : undefined)
 };

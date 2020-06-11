@@ -1,5 +1,5 @@
 - FIXME:
-  - auth.coffee exoid.getCached
+  - auth.js exoid.getCached
   - exoid should always use graphql route? not at exoid level, but auth.call and auth.stream
 
 
