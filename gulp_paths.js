@@ -1,4 +1,6 @@
-const path = require('path');
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
+const path = require('path')
 
 module.exports = {
   static: path.join(__dirname, './src/static/**/*'),
@@ -15,4 +17,4 @@ module.exports = {
     '!' + path.join(__dirname, './dist/stats.json'),
     '!' + path.join(__dirname, './dist/manifest.html')
   ]
-};
+}

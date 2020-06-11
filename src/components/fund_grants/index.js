@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 let $fundGrants;
 import {z, useContext, useMemo, useStream} from 'zorium';
 import * as rx from 'rxjs/operators';
@@ -63,7 +65,7 @@ export default $fundGrants = function({irsFund, irsFundStream}) {
       })));
 };
 
-var $fundGrantName = function({row}) {
+function $fundGrantName({row}) {
   const {model, router} = useContext(context);
   let hasEin = model.irsOrg.isEin(row.toId);
   hasEin = false; // FIXME: add org page
@@ -76,9 +78,9 @@ var $fundGrantName = function({row}) {
     }) : undefined
   }, row.toName)
   );
-};
+}
 
-var $fundGrantsMobileRow = function({row}) {
+function $fundGrantsMobileRow({row}) {
   const {lang} = useContext(context);
   return z('.z-fund-grants-mobile-row',
     z('.name',
@@ -103,4 +105,4 @@ var $fundGrantsMobileRow = function({row}) {
       )
     )
   );
-};
+}

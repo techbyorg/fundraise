@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 let $orgPage;
 import {z, useContext, useMemo, useStream} from 'zorium';
 import * as rx from 'rxjs/operators';

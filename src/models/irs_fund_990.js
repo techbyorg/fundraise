@@ -1,9 +1,15 @@
-import config from '../config';
+/* eslint-disable
+    no-unused-expressions,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import config from '../config'
 
 export default class IrsFund990 {
-  constructor({auth}) { this.auth = auth; null; }
+  constructor ({ auth }) { this.auth = auth; null }
 
-  getAllByEin(ein) {
+  getAllByEin (ein) {
     return this.auth.stream({
       query: `\
 query IrsFund990GetAllByEin($ein: String!) {
@@ -12,8 +18,8 @@ query IrsFund990GetAllByEin($ein: String!) {
   }
 }\
 `,
-      variables: {ein},
+      variables: { ein },
       pull: 'irsFund990s'
-    });
+    })
   }
 }

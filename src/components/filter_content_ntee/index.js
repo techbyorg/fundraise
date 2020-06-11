@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 let $filterContentNtee;
 import {z, Boundary, Fragment, Suspense, classKebab, lazy, useContext, useEffect, useMemo, useStream} from 'zorium';
 import * as _ from 'lodash-es';
@@ -20,10 +22,14 @@ if (typeof window !== 'undefined' && window !== null) {
 
 const SEARCH_DEBOUNCE_MS = 300;
 
-const getNtees = () => import(/* webpackChunkName: "ntee" */'./ntee.coffee')
-.then(module => module.default);
+function getNtees() {
+  return import(/* webpackChunkName: "ntee" */'./ntee.coffee')
+  .then(module => module.default);
+}
 
-const searchLabel = (label, search) => label.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+function searchLabel(label, search) {
+  return label.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+}
 
 const _$filterContentNtee = lazy(() => getNtees().then(ntees => (function(props) {
   let groupsStream, groupTogglesStream, nteeValueStreams, searchStream;

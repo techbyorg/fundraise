@@ -1,9 +1,16 @@
-import config from '../config';
+/* eslint-disable
+    no-multi-str,
+    no-unused-expressions,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import config from '../config'
 
 export default class IrsContribution {
-  constructor({auth}) { this.getAllByFromEin = this.getAllByFromEin.bind(this);   this.getAllByToId = this.getAllByToId.bind(this);   this.search = this.search.bind(this);   this.auth = auth; null; }
+  constructor ({ auth }) { this.getAllByFromEin = this.getAllByFromEin.bind(this); this.getAllByToId = this.getAllByToId.bind(this); this.search = this.search.bind(this); this.auth = auth; null }
 
-  getAllByFromEin(fromEin, {limit} = {}) {
+  getAllByFromEin (fromEin, { limit } = {}) {
     return this.auth.stream({
       query: `\
 query IrsContributionGetAllByFromEin($fromEin: String!, $limit: Int) {
@@ -12,13 +19,12 @@ query IrsContributionGetAllByFromEin($fromEin: String!, $limit: Int) {
   }
 }\
 `,
-      variables: {fromEin, limit},
+      variables: { fromEin, limit },
       pull: 'irsContributions'
-    });
+    })
   }
 
-
-  getAllByToId(toId, {limit} = {}) {
+  getAllByToId (toId, { limit } = {}) {
     return this.auth.stream({
       query: `\
 query IrsContributionGetAllByFromEin($toId: String!, $limit: Int) {
@@ -27,19 +33,18 @@ query IrsContributionGetAllByFromEin($toId: String!, $limit: Int) {
   }
 }\
 `,
-      variables: {toId, limit},
+      variables: { toId, limit },
       pull: 'irsContributions'
-    });
+    })
   }
 
-
-  search({query, limit}) {
+  search ({ query, limit }) {
     return this.auth.stream({
-      query: `\
+      query: '\
 query IrsContributionSearch($query: ESQuery!) { irsContributions(query: $query) { nodes { fromEin } } }\
-`,
-      variables: {query},
+',
+      variables: { query },
       pull: 'irsContributions'
-    });
+    })
   }
 }

@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 let $navDrawer;
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium';
 import * as _ from 'lodash-es';
@@ -147,7 +149,7 @@ export default $navDrawer = function({entityStream, currentPath}) {
   const isExpandedByPath = path => expandedItems.indexOf(path) !== -1;
 
   // useMemo expandedItems
-  const toggleExpandItemByPath = function(path) {
+  function toggleExpandItemByPath(path) {
     const isExpanded = isExpandedByPath(path);
 
     if (isExpanded) {
@@ -157,7 +159,7 @@ export default $navDrawer = function({entityStream, currentPath}) {
     } else {
       return expandedItemsStream.next(expandedItems.concat([path]));
     }
-  };
+  }
 
 
 
@@ -168,10 +170,10 @@ export default $navDrawer = function({entityStream, currentPath}) {
   const translateX = isOpen ? 0 : `-${drawerWidth}px`;
   // adblock plus blocks has-ad
   const hasA = false; //model.ad.isVisible({isWebOnly: true}) and
-    // windowSize?.height > 880 and
-    // not Environment.isMobile()
+  // windowSize?.height > 880 and
+  // not Environment.isMobile()
 
-  var renderChild = function(child, depth = 0) {
+  function renderChild(child, depth = 0) {
     const {path, title, $chevronIcon, children, expandOnClick} = child;
     const isSelected = currentPath?.indexOf(path) === 0;
     const isExpanded = isSelected || isExpandedByPath(path || title);
@@ -211,7 +213,7 @@ export default $navDrawer = function({entityStream, currentPath}) {
           _.map(children, child => renderChild(child, depth + 1))
         ) : undefined
     );
-  };
+  }
 
   return z('.z-nav-drawer',
     z($drawer, {
@@ -269,11 +271,11 @@ export default $navDrawer = function({entityStream, currentPath}) {
 
                   const isExpanded = isSelected || isExpandedByPath(path || title);
 
-                  const expand = function(e) {
+                  function expand(e) {
                     e?.stopPropagation();
                     e?.preventDefault();
                     return toggleExpandItemByPath(path || title);
-                  };
+                  }
 
                   return z('li.menu-item', {
                     className: classKebab({isSelected})

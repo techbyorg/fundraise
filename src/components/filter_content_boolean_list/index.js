@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 let $filterContentBooleanList;
 import {z, classKebab, useEffect, useMemo} from 'zorium';
 import * as _ from 'lodash-es';

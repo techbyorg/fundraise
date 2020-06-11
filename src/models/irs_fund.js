@@ -1,9 +1,15 @@
-import config from '../config';
+/* eslint-disable
+    no-unused-expressions,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import config from '../config'
 
 export default class IrsFund {
-  constructor({auth}) { this.getByEin = this.getByEin.bind(this);   this.search = this.search.bind(this);   this.auth = auth; null; }
+  constructor ({ auth }) { this.getByEin = this.getByEin.bind(this); this.search = this.search.bind(this); this.auth = auth; null }
 
-  getByEin(ein) {
+  getByEin (ein) {
     return this.auth.stream({
       query: `\
 query IrsFundGetByEin($ein: String!) {
@@ -27,13 +33,13 @@ query IrsFundGetByEin($ein: String!) {
   }
 }\
 `,
-      variables: {ein},
+      variables: { ein },
       pull: 'irsFund'
-    });
+    })
   }
 
-  search({query, sort, limit}) {
-    console.log('search');
+  search ({ query, sort, limit }) {
+    console.log('search')
     return this.auth.stream({
       query: `\
 query IrsFundSearch($query: ESQuery!, $sort: JSON, $limit: Int) {
@@ -49,8 +55,8 @@ query IrsFundSearch($query: ESQuery!, $sort: JSON, $limit: Int) {
   }
 }\
 `,
-      variables: {query, sort, limit},
+      variables: { query, sort, limit },
       pull: 'irsFunds'
-    });
+    })
   }
 }

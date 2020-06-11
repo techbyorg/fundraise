@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 let $fund990s;
 import {z, useContext, useMemo, useStream} from 'zorium';
 import * as _ from 'lodash-es';

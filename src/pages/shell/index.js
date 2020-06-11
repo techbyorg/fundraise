@@ -1,24 +1,29 @@
-let $shellPage;
-import {z, useContext, useStream} from 'zorium';
+/* eslint-disable
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, useContext, useStream } from 'zorium'
 
-import $appBar from 'frontend-shared/components/app_bar';
-import $buttonMenu from 'frontend-shared/components/button_menu';
-import $spinner from 'frontend-shared/components/spinner';
+import $appBar from 'frontend-shared/components/app_bar'
+import $buttonMenu from 'frontend-shared/components/button_menu'
+import $spinner from 'frontend-shared/components/spinner'
 
 // import colors from '../../colors'
-import context from '../../context';
+import context from '../../context'
+let $shellPage
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
 // generic page that gets loaded from cache for any page w/o a specific shell
-export default $shellPage = function({requestsStream}) {
-  const {model} = useContext(context);
+export default $shellPage = function ({ requestsStream }) {
+  const { model } = useContext(context)
   // subscribe so they're in exoid cache
   const obj = useStream(() => ({
     me: model.user.getMe()
-  }));
+  }))
 
   return z('.p-shell',
     z($appBar, {
@@ -29,5 +34,5 @@ export default $shellPage = function({requestsStream}) {
     }),
     z('.spinner',
       z($spinner))
-  );
-};
+  )
+}

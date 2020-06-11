@@ -1,32 +1,37 @@
-let $fundOverview;
-import {z, useContext, useMemo, useStream} from 'zorium';
-import * as Rx from 'rxjs';
+/* eslint-disable
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, useContext, useMemo, useStream } from 'zorium'
+import * as Rx from 'rxjs'
 
-import $dropdown from 'frontend-shared/components/dropdown';
+import $dropdown from 'frontend-shared/components/dropdown'
 
-import $fundOverviewLineChart from '../fund_overview_line_chart';
-import $fundOverviewNteePie from '../fund_overview_ntee_pie';
-import $fundOverviewFundingMap from '../fund_overview_funding_map';
-import context from '../../context';
+import $fundOverviewLineChart from '../fund_overview_line_chart'
+import $fundOverviewNteePie from '../fund_overview_ntee_pie'
+import $fundOverviewFundingMap from '../fund_overview_funding_map'
+import context from '../../context'
+let $fundOverview
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $fundOverview = function({irsFund}) {
-  const {lang} = useContext(context);
+export default $fundOverview = function ({ irsFund }) {
+  const { lang } = useContext(context)
 
-  var {metricStream} = useMemo(function() {
-    metricStream = new Rx.BehaviorSubject('assets');
+  var { metricStream } = useMemo(function () {
+    metricStream = new Rx.BehaviorSubject('assets')
     return {
       metricStream
-    };
+    }
   }
-  , []);
+  , [])
 
-  const {metric} = useStream(() => ({
+  const { metric } = useStream(() => ({
     metric: metricStream
-  }));
+  }))
 
   return z('.z-fund-overview',
     z('.analytics',
@@ -39,20 +44,20 @@ export default $fundOverview = function({irsFund}) {
               currentText: lang.get('fundOverview.changeMetric'),
               valueStream: metricStream,
               options: [
-                {value: 'assets', text: lang.get('metric.assets')},
-                {value: 'grantSum', text: lang.get('metric.grantSum')},
-                {value: 'officerSalaries', text: lang.get('metric.officerSalaries')}
+                { value: 'assets', text: lang.get('metric.assets') },
+                { value: 'grantSum', text: lang.get('metric.grantSum') },
+                { value: 'officerSalaries', text: lang.get('metric.officerSalaries') }
               ]
             }))),
 
-        z($fundOverviewLineChart, {metric, irsFund}))),
+        z($fundOverviewLineChart, { metric, irsFund }))),
     z('.grid',
       z('.block.pie',
         z('.head',
           z('.title', lang.get('fundOverview.fundedNtee'))),
-        z($fundOverviewNteePie, {irsFund})),
+        z($fundOverviewNteePie, { irsFund })),
       z('.block.map',
         z('.head',
           z('.title', lang.get('fundOverview.fundingMap'))),
-        z($fundOverviewFundingMap, {irsFund}))));
-};
+        z($fundOverviewFundingMap, { irsFund }))))
+}

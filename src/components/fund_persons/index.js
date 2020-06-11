@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 let $fundPersons;
 import {z, useContext, useMemo, useStream} from 'zorium';
 import * as _ from 'lodash-es';
@@ -67,7 +69,7 @@ export default $fundPersons = function({irsFund, irsFundStream}) {
       })));
 };
 
-var $fundPersonsMobileRow = function({row}) {
+function $fundPersonsMobileRow({row}) {
   const {lang} = useContext(context);
 
   return z('.z-fund-persons-mobile-row',
@@ -82,4 +84,4 @@ var $fundPersonsMobileRow = function({row}) {
       ': ',
       FormatService.yearsArrayToEnglish(_.map(row.years, 'year')))
   );
-};
+}
