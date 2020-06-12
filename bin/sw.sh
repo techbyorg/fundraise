@@ -3,8 +3,8 @@ export NODE_ENV=production
 
 node_modules/gulp/bin/gulp.js dist:sw
 
-paths_dist=`./node_modules/coffeescript/bin/coffee --transpile -e "process.stdout.write require('./gulp_paths').dist"`
-paths_build=`./node_modules/coffeescript/bin/coffee --transpile -e "process.stdout.write require('./gulp_paths').build"`
+paths_dist=`node -r ./node_modules/@babel/register -e "process.stdout.write(require('./gulp_paths').dist)"`
+paths_build=`node -r ./node_modules/@babel/register -e "process.stdout.write(require('./gulp_paths').build)"`
 
 if [ ! -d $paths_dist ]; then
   echo "./dist directory not found. make sure to run 'npm run dist' beforehand"

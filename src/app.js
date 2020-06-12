@@ -1,15 +1,10 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z } from 'zorium'
 import * as _ from 'lodash-es'
 
 import $sharedApp from 'frontend-shared/app'
 
 import $fundPage from './pages/fund'
-import $homePage from './pages/home'
+// import $homePage from './pages/home'
 import $orgPage from './pages/org'
 import $loginLinkPage from 'frontend-shared/pages/login_link'
 // import $notificationsPage from './pages/notifications'

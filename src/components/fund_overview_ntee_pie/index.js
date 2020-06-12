@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useContext } from 'zorium'
 import * as _ from 'lodash-es'
 
@@ -18,7 +16,7 @@ export default function $fundOverviewNteePie ({ irsFund }) {
 
   // TODO: useMemo?
   const nteeMajors = _.orderBy(irsFund?.fundedNteeMajors, 'count', 'desc')
-  const pieNteeMajors = _.reduce(nteeMajors, function (obj, { count, percent, key }) {
+  const pieNteeMajors = _.reduce(nteeMajors, (obj, { count, percent, key }) => {
     if (percent > 7) {
       obj[key] = { count, percent, key }
     } else {
@@ -28,8 +26,7 @@ export default function $fundOverviewNteePie ({ irsFund }) {
       obj.rest.percent += percent
     }
     return obj
-  }
-  , {})
+  }, {})
   const data = _.map(pieNteeMajors, function ({ count, percent, key }) {
     const label = key === 'rest'
       ? lang.get('general.other')
@@ -49,19 +46,23 @@ export default function $fundOverviewNteePie ({ irsFund }) {
 
   const colors = _.map(data, 'color')
 
-  return z('.z-fund-overview-ntee-pie',
+  return z('.z-fund-overview-ntee-pie', [
     z($chartPie, { data, colors }),
     z('.legend',
-      _.map(_.take(nteeMajors, LEGEND_COUNT), ({ count, percent, key }) => z('.legend-item',
-        z('.color', {
-          style: {
-            background: nteeColors[key].graph
-          }
-        }),
-        z('.info',
-          z('.ntee', lang.get(`nteeMajor.${key}`))),
-        // z '.dollars', FormatService.abbreviateDollar value
-        z('.percent', `${Math.round(percent)}%`)))
+      _.map(_.take(nteeMajors, LEGEND_COUNT), ({ count, percent, key }) =>
+        z('.legend-item', [
+          z('.color', {
+            style: {
+              background: nteeColors[key].graph
+            }
+          }),
+          z('.info', [
+            z('.ntee', lang.get(`nteeMajor.${key}`))
+          ]),
+          // z '.dollars', FormatService.abbreviateDollar value
+          z('.percent', `${Math.round(percent)}%`)
+        ])
+      )
     )
-  )
+  ])
 };

@@ -31,8 +31,3 @@ More to come soonish
   - z
 
 In general don't use wildcard imports, but for lodash and RxJS do (tree shaking means it's the same as explicit imports, and naming / collisions (map, filter, etc...) of the two would be annoying)
-
-### Cleanup
-Occassionally run node /usr/lib/node_modules/coffee-unused/index.js --src ./src and clean up unused vars
-
-More for just clean code vs reduced bundle size. As of 1/19 have only done for src/models and it only saved ~120b gzipped

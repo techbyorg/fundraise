@@ -1,12 +1,10 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useContext, useMemo, useStream } from 'zorium'
 import * as rx from 'rxjs/operators'
 
 import $appBar from 'frontend-shared/components/app_bar'
 import $buttonBack from 'frontend-shared/components/button_back'
 
-import $org from '../../components/org'
+// import $org from '../../components/org'
 import colors from '../../colors'
 import context from '../../context'
 
@@ -32,12 +30,13 @@ export default function $orgPage ({ requestsStream }) {
 
   console.log('org', irsOrg)
 
-  return z('.p-org',
+  return z('.p-org', [
     z($appBar, {
       title: irsOrg?.name,
       $topLeftButton: z($buttonBack, {
         color: colors.$header500Icon
       })
-    }),
-    z($org, { irsOrgStream }))
+    })
+    // z($org, { irsOrgStream }))
+  ])
 };

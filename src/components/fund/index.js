@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
@@ -48,35 +43,37 @@ const TABS = [
   }
 ]
 
-export default function $fund ({ placeholderNameStream, irsFundStream, tabStream }) {
+export default function $fund (props) {
+  const { placeholderNameStream, irsFundStream, tabStream } = props
   const { lang, router } = useContext(context)
 
-  var { selectedIndexStreams } = useMemo(function () {
-    selectedIndexStreams = new Rx.ReplaySubject(1)
-    selectedIndexStreams.next(tabStream.pipe(rx.map(function (tab) {
-      let index = _.findIndex(TABS, { slug: tab })
-      if (index === -1) {
-        index = 0
-      }
-      return index
-    })
-    )
+  const { selectedIndexStreams } = useMemo(() => {
+    const selectedIndexStreams = new Rx.ReplaySubject(1)
+    selectedIndexStreams.next(
+      tabStream.pipe(rx.map((tab) => {
+        let index = _.findIndex(TABS, { slug: tab })
+        if (index === -1) {
+          index = 0
+        }
+        return index
+      }))
     )
     return { selectedIndexStreams }
-  }
-  , [])
+  }, [])
 
   let { irsFund, selectedIndex } = useStream(() => ({
     irsFund: irsFundStream,
     selectedIndex: selectedIndexStreams.pipe(rx.switchAll())
   }))
 
-  const tabs = _.map(TABS, tab => _.defaults({
-    name: lang.get(tab.langKey),
-    route: router.getFund(irsFund, tab.slug)
-  }, tab))
+  const tabs = _.map(TABS, tab =>
+    _.defaults({
+      name: lang.get(tab.langKey),
+      route: router.getFund(irsFund, tab.slug)
+    }, tab)
+  )
 
-  if (selectedIndex == null) { selectedIndex = 0 }
+  selectedIndex = selectedIndex || 0
 
   const selectedTab = tabs[selectedIndex]
 
@@ -84,13 +81,16 @@ export default function $fund ({ placeholderNameStream, irsFundStream, tabStream
     className: classKebab({
       scrollFitContent: !(['grants', 'persons'].includes(selectedTab.slug))
     })
-  },
-  z('.quick-info',
-    z($fundAtAGlance, { placeholderNameStream, irsFund })),
-
-  z('.content',
-    z('.inner',
-      z($tapTabs, {
-        selectedIndexStreams, tabs, tabProps: { irsFund, irsFundStream }
-      }))))
+  }, [
+    z('.quick-info', [
+      z($fundAtAGlance, { placeholderNameStream, irsFund })
+    ]),
+    z('.content', [
+      z('.inner', [
+        z($tapTabs, {
+          selectedIndexStreams, tabs, tabProps: { irsFund, irsFundStream }
+        })
+      ])
+    ])
+  ])
 }

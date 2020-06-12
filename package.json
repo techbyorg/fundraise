@@ -34,7 +34,6 @@
     "@nivo/pie": "^0.60.0",
     "assert-none-missing": "github:claydotio/assert-none-missing#es",
     "babel-plugin-replace-imports": "^1.0.2",
-    "coffeescript": "^2.5.1",
     "frontend-shared": "file:frontend-shared",
     "lodash": "^4.17.2",
     "lodash-es": "^4.17.15",

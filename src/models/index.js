@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import SharedModel from 'frontend-shared/models/index'
 
 // import Entity from './entity'

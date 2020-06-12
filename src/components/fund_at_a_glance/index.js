@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useContext, useStream } from 'zorium'
 
 // import $tags from 'frontend-shared/components/tags'
@@ -14,8 +12,6 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-// const VISIBLE_FOCUS_AREAS_COUNT = 5
-
 export default function $fundAtAGlance ({ placeholderNameStream, irsFund }) {
   const { lang, router } = useContext(context)
 
@@ -23,74 +19,60 @@ export default function $fundAtAGlance ({ placeholderNameStream, irsFund }) {
     placeholderName: placeholderNameStream
   }))
 
-  // TODO: component for this? it's used in the results table too
-  // focusAreas = _.orderBy irsFund?.fundedNteeMajors, 'count', 'desc'
-  // tags = _.map focusAreas, ({key}) ->
-  //   {
-  //     text: lang.get "nteeMajor.#{key}"
-  //     background: nteeColors[key].bg
-  //     color: nteeColors[key].fg
-  //   }
-
-  return z('.z-fund-at-a-glance',
+  return z('.z-fund-at-a-glance', [
     z('.name', irsFund?.name || placeholderName),
 
-    z('.block',
+    z('.block', [
       z('.title', lang.get('general.location')),
-      z('.text', FormatService.location(irsFund))),
+      z('.text', FormatService.location(irsFund))
+    ]),
 
-    // unless _.isEmpty tags
-    //   z '.block',
-    //     z '.title', lang.get 'fund.focusAreas'
-    //     z '.text',
-    //       z $tags, {
-    //         tags, fitToContent: true,isNoWrap: false,
-    //          maxVisibleCount: VISIBLE_FOCUS_AREAS_COUNT
-    //       }
-
-    irsFund?.website
-      ? z('.block',
+    irsFund?.website &&
+      z('.block', [
         z('.title', lang.get('general.web')),
         router.link(z('a.text.link', {
           href: irsFund?.website
-        },
-          irsFund?.website)
-        )
-      ) : undefined,
+        }, irsFund?.website))
+      ]),
 
-    irsFund?.lastYearStats
-      ? [
+    irsFund?.lastYearStats &&
+      [
         z('.divider'),
-        z('.grant-summary',
-          z('.title',
-            z('.icon',
+        z('.grant-summary', [
+          z('.title', [
+            z('.icon', [
               z($icon, {
                 icon: giveIconPath,
                 color: colors.$secondaryMain
-              }
-              )
-            ),
-            lang.get('fund.grantSummary')),
-          z('.metric',
+              })
+            ]),
+            lang.get('fund.grantSummary')
+          ]),
+          z('.metric', [
             z('.name', lang.get('fund.medianGrant')),
             z('.value',
-              FormatService.abbreviateDollar(irsFund?.lastYearStats?.grantMedian))
-          ),
-          z('.metric',
+              FormatService.abbreviateDollar(irsFund?.lastYearStats?.grantMedian)
+            )
+          ]),
+          z('.metric', [
             z('.name', lang.get('filter.grantCount')),
             z('.value',
-              FormatService.abbreviateNumber(irsFund?.lastYearStats?.grants))
-          ),
-          z('.metric',
+              FormatService.abbreviateNumber(irsFund?.lastYearStats?.grants)
+            )
+          ]),
+          z('.metric', [
             z('.name', lang.get('filter.grantSum')),
             z('.value',
-              FormatService.abbreviateDollar(irsFund?.lastYearStats?.grantSum))
-          ),
-          z('.metric',
+              FormatService.abbreviateDollar(irsFund?.lastYearStats?.grantSum)
+            )
+          ]),
+          z('.metric', [
             z('.name', lang.get('org.assets')),
             z('.value',
-              FormatService.abbreviateDollar(irsFund?.assets))
-          )
-        )
-      ] : undefined)
+              FormatService.abbreviateDollar(irsFund?.assets)
+            )
+          ])
+        ])
+      ]
+  ])
 };

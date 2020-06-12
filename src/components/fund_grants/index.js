@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as rx from 'rxjs/operators'
@@ -26,8 +24,8 @@ export default function $fundGrants ({ irsFund, irsFundStream }) {
     breakpoint: browser.getBreakpoint()
   }))
 
-  return z('.z-fund-grants',
-    z('.grants',
+  return z('.z-fund-grants', [
+    z('.grants', [
       z($table, {
         breakpoint,
         data: contributions?.nodes,
@@ -71,7 +69,9 @@ export default function $fundGrants ({ irsFund, irsFundStream }) {
           },
           { key: 'year', name: lang.get('general.year'), width: 100 }
         ]
-      })))
+      })
+    ])
+  ])
 };
 
 function $fundGrantName ({ row }) {
@@ -85,33 +85,36 @@ function $fundGrantName ({ row }) {
       ein: row.toId,
       slug: _.kebabCase(row.toName)
     }) : undefined
-  }, row.toName)
-  )
+  }, row.toName))
 }
 
 function $fundGrantsMobileRow ({ row }) {
   const { lang } = useContext(context)
-  return z('.z-fund-grants-mobile-row',
-    z('.name',
-      z($fundGrantName, { row })),
-    z('.location',
+  return z('.z-fund-grants-mobile-row', [
+    z('.name', [
+      z($fundGrantName, { row })
+    ]),
+    z('.location', [
       FormatService.location({
         city: row.toCity,
         state: row.toState
-      })),
+      })
+    ]),
     z('.divider'),
-    z('.purpose',
+    z('.purpose', [
       z('.category', lang.get(`nteeMajor.${row.nteeMajor}`)),
-      z('.text', row.purpose)),
-    z('.stats',
-      z('.stat',
+      z('.text', row.purpose)
+    ]),
+    z('.stats', [
+      z('.stat', [
         z('.title', lang.get('general.year')),
-        z('.value', row.year)),
-      z('.stat',
+        z('.value', row.year)
+      ]),
+      z('.stat', [
         z('.title', lang.get('general.amount')),
         z('.value',
           FormatService.abbreviateDollar(row.amount))
-      )
-    )
-  )
+      ])
+    ])
+  ])
 }

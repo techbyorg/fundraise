@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z } from 'zorium'
 import * as _ from 'lodash-es'
 
@@ -23,6 +21,7 @@ export default function $fundOverviewlineChart ({ metric, irsFund }) {
     }))
   }]
 
-  return z('.z-fund-overview-line-chart',
-    z($chartLine, { data }))
+  return z('.z-fund-overview-line-chart', [
+    z($chartLine, { data })
+  ])
 };

@@ -1,4 +1,3 @@
-var colors = require('./colors').default
 var config = require('./config').default
 
 module.exports = function () {

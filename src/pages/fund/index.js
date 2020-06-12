@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as rx from 'rxjs/operators'
@@ -19,31 +17,30 @@ if (typeof window !== 'undefined' && window !== null) {
 export default function $fundPage ({ requestsStream }) {
   const { model } = useContext(context)
 
-  const { placeholderNameStream, irsFundStream, tabStream } = useMemo(() => ({
-    // for smoother loading
-    placeholderNameStream: requestsStream.pipe(rx.map(({ route }) => _.startCase(route.params.slug))
-    ),
-
-    irsFundStream: requestsStream.pipe(rx.switchMap(({ route }) => model.irsFund.getByEin(route.params.ein))
-    ),
-
-    tabStream: requestsStream.pipe(rx.map(({ route }) => route.params.tab)
-    )
-  })
-  , [])
+  const { placeholderNameStream, irsFundStream, tabStream } = useMemo(() => {
+    return {
+      // for smoother loading
+      placeholderNameStream: requestsStream.pipe(
+        rx.map(({ route }) => _.startCase(route.params.slug))
+      ),
+      irsFundStream: requestsStream.pipe(
+        rx.switchMap(({ route }) => model.irsFund.getByEin(route.params.ein))
+      ),
+      tabStream: requestsStream.pipe(rx.map(({ route }) => route.params.tab))
+    }
+  }, [])
 
   const { irsFund } = useStream(() => ({
     irsFund: irsFundStream
   }))
 
-  useMeta(function () {
+  useMeta(() => {
     if (irsFund) {
       return { title: irsFund?.name }
     }
-  }
-  , [irsFund?.name])
+  }, [irsFund?.name])
 
-  return z('.p-fund',
+  return z('.p-fund', [
     z($appBar, {
       // title: irsFund?.name
       hasLogo: true,
@@ -53,5 +50,6 @@ export default function $fundPage ({ requestsStream }) {
         color: colors.$header500Icon
       })
     }),
-    z($fund, { placeholderNameStream, irsFundStream, tabStream }))
+    z($fund, { placeholderNameStream, irsFundStream, tabStream })
+  ])
 };

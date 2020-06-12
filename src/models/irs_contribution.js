@@ -1,24 +1,19 @@
-/* eslint-disable
-    no-multi-str,
-    no-unused-expressions,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-import config from '../config'
-
 export default class IrsContribution {
-  constructor ({ auth }) { this.getAllByFromEin = this.getAllByFromEin.bind(this); this.getAllByToId = this.getAllByToId.bind(this); this.search = this.search.bind(this); this.auth = auth; null }
+  constructor ({ auth }) {
+    this.getAllByFromEin = this.getAllByFromEin.bind(this)
+    this.getAllByToId = this.getAllByToId.bind(this)
+    this.search = this.search.bind(this)
+    this.auth = auth
+  }
 
   getAllByFromEin (fromEin, { limit } = {}) {
     return this.auth.stream({
-      query: `\
-query IrsContributionGetAllByFromEin($fromEin: String!, $limit: Int) {
-  irsContributions(fromEin: $fromEin, limit: $limit) {
-    nodes { year, toId, toName, toCity, toState, amount, nteeMajor, relationship, purpose }
-  }
-}\
-`,
+      query: `
+        query IrsContributionGetAllByFromEin($fromEin: String!, $limit: Int) {
+          irsContributions(fromEin: $fromEin, limit: $limit) {
+            nodes { year, toId, toName, toCity, toState, amount, nteeMajor, relationship, purpose }
+          }
+        }`,
       variables: { fromEin, limit },
       pull: 'irsContributions'
     })
@@ -26,13 +21,12 @@ query IrsContributionGetAllByFromEin($fromEin: String!, $limit: Int) {
 
   getAllByToId (toId, { limit } = {}) {
     return this.auth.stream({
-      query: `\
-query IrsContributionGetAllByFromEin($toId: String!, $limit: Int) {
-  irsContributions(toId: $toId, limit: $limit) {
-    nodes { year, fromEin, toName, toCity, toState, amount, nteeMajor, relationship, purpose }
-  }
-}\
-`,
+      query: `
+        query IrsContributionGetAllByFromEin($toId: String!, $limit: Int) {
+          irsContributions(toId: $toId, limit: $limit) {
+            nodes { year, fromEin, toName, toCity, toState, amount, nteeMajor, relationship, purpose }
+          }
+        }`,
       variables: { toId, limit },
       pull: 'irsContributions'
     })
@@ -40,9 +34,7 @@ query IrsContributionGetAllByFromEin($toId: String!, $limit: Int) {
 
   search ({ query, limit }) {
     return this.auth.stream({
-      query: '\
-query IrsContributionSearch($query: ESQuery!) { irsContributions(query: $query) { nodes { fromEin } } }\
-',
+      query: 'query IrsContributionSearch($query: ESQuery!) { irsContributions(query: $query) { nodes { fromEin } } }',
       variables: { query },
       pull: 'irsContributions'
     })

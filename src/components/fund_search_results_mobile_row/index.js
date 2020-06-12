@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useContext } from 'zorium'
 import * as _ from 'lodash-es'
 
@@ -25,27 +23,30 @@ export default function $fundSearchResultsMobileRow ({ row }) {
     color: nteeColors[key].fg
   }))
 
-  return z('.z-fund-search-results-mobile-row',
+  return z('.z-fund-search-results-mobile-row', [
     z('.name', row.name),
     z('.location', FormatService.location(row)),
     z('.focus-areas',
-      z($tags, { tags, maxVisibleCount: VISIBLE_FOCUS_AREAS_COUNT })),
-    z('.stats',
-      z('.stat',
+      z($tags, { tags, maxVisibleCount: VISIBLE_FOCUS_AREAS_COUNT })
+    ),
+    z('.stats', [
+      z('.stat', [
         z('.title', lang.get('org.assets')),
         z('.value',
           FormatService.abbreviateDollar(row.assets))
-      ),
-      z('.stat',
+      ]),
+      z('.stat', [
         z('.title', lang.get('fund.medianGrant')),
         z('.value',
-          FormatService.abbreviateDollar(row.lastYearStats?.grantMedian))
-      ),
-      z('.stat',
+          FormatService.abbreviateDollar(row.lastYearStats?.grantMedian)
+        )
+      ]),
+      z('.stat', [
         z('.title', lang.get('fund.grantsPerYear')),
         z('.value',
-          FormatService.abbreviateDollar(row.lastYearStats?.grantSum))
-      )
-    )
-  )
+          FormatService.abbreviateDollar(row.lastYearStats?.grantSum)
+        )
+      ])
+    ])
+  ])
 };

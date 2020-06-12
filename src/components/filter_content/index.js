@@ -1,13 +1,4 @@
-/* eslint-disable
-    no-duplicate-case,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+import { z } from 'zorium'
 
 import $filterContentBooleanList from '../filter_content_boolean_list'
 import $filterContentList from '../filter_content_list'
@@ -18,11 +9,9 @@ import $filterContentMinMax from '../filter_content_min_max'
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $filterContent (props) {
-  let $$parentRef, filter, filterValue, isGrouped, overlayAnchor, resetValue, valueStreams;
-  ({
-    filter, valueStreams, filterValue, resetValue, isGrouped, resetValue,
-    overlayAnchor, $$parentRef
-  } = props)
+  const {
+    filter, valueStreams, filterValue, resetValue, overlayAnchor, $$parentRef
+  } = props
 
   let filterValueStr = filterValue && JSON.stringify(filterValue) // "deep" compare
   if (!filterValueStr) { filterValueStr = '' }
@@ -34,7 +23,7 @@ export default function $filterContent (props) {
           return z($filterContentBooleanList, {
             filterValueStr, resetValue, filter, valueStreams, filterValue
           })
-        case 'listAnd': case 'listOr': case 'fieldList':
+        case 'listAnd': case 'listOr':
           return z($filterContentList, {
             filterValueStr, resetValue, filter, valueStreams, filterValue
           })

@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, classKebab, useEffect, useMemo } from 'zorium'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
@@ -23,12 +21,16 @@ export default function $filterContentGtlt (props) {
     operatorStream = new Rx.BehaviorSubject(filterValue?.operator)
     valueStream = new Rx.BehaviorSubject(filterValue?.value || '')
     valueStreams.next(Rx.combineLatest(
-      operatorStream, valueStream, (...vals) => vals).pipe(rx.map(function (...args) {
-      const [operator, value] = Array.from(args[0])
-      if (operator || value) {
-        return { operator, value }
-      }
-    })))
+      operatorStream, valueStream,
+      (...vals) => vals
+    )
+      .pipe(rx.map((...args) => {
+        const [operator, value] = Array.from(args[0])
+        if (operator || value) {
+          return { operator, value }
+        }
+      }))
+    )
 
     return { operatorStream, valueStream }
   }
@@ -38,14 +40,15 @@ export default function $filterContentGtlt (props) {
     operatorStream.next(filterValue?.operator)
     return valueStream.next(filterValue?.value || '')
   }
-  , [filterValueStr, resetValue]) // need to recreate valueStreams when resetting
+  // need to recreate valueStreams when resetting
+  , [filterValueStr, resetValue])
 
   const operator = filterValue?.operator
 
-  return z('.z-filter-content-gtlt',
-    z('.label',
+  return z('.z-filter-content-gtlt', [
+    z('.label', [
       z('.text', 'gtlt'), // FIXME
-      z('.operators',
+      z('.operators', [
         z('.operator', {
           className: classKebab({
             isSelected: operator === 'gt'
@@ -53,16 +56,15 @@ export default function $filterContentGtlt (props) {
           onclick: () => {
             return operatorStream.next('gt')
           }
-        },
-        z($icon, {
-          icon: chevronRightIconPath,
-          size: '20px',
-          color: operator === 'gt'
-            ? colors.$secondaryMainText
-            : colors.$bgText38
-        }
-        )
-        ),
+        }, [
+          z($icon, {
+            icon: chevronRightIconPath,
+            size: '20px',
+            color: operator === 'gt'
+              ? colors.$secondaryMainText
+              : colors.$bgText38
+          })
+        ]),
         z('.operator', {
           className: classKebab({
             isSelected: operator === 'lt'
@@ -70,21 +72,23 @@ export default function $filterContentGtlt (props) {
           onclick: () => {
             return operatorStream.next('lt')
           }
-        },
-        z($icon, {
-          icon: chevronLeftIconPath,
-          size: '20px',
-          color: operator === 'lt'
-            ? colors.$secondaryMainText
-            : colors.$bgText38
-        }
-        )
-        )
-      ),
-      z('.operator-input-wide',
+        }, [
+          z($icon, {
+            icon: chevronLeftIconPath,
+            size: '20px',
+            color: operator === 'lt'
+              ? colors.$secondaryMainText
+              : colors.$bgText38
+          })
+        ])
+      ]),
+      z('.operator-input-wide', [
         z($inputOld, {
           valueStream,
           type: 'number',
           height: '24px'
-        }))))
+        })
+      ])
+    ])
+  ])
 };

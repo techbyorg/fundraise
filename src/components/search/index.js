@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
@@ -24,7 +22,7 @@ if (typeof window !== 'undefined' && window !== null) {
 export default function $search ({ nteeStream, locationStream }) {
   const { model, lang, browser, cookie } = useContext(context)
 
-  var {
+  const {
     filtersStream, hasSearchedStream, hasHitSearchStream, isLoadingStream,
     nameStream, modeStream, searchResultsStream
   } = useMemo(function () {
@@ -42,23 +40,22 @@ export default function $search ({ nteeStream, locationStream }) {
         return filters
       })
 
-    filtersStream = SearchFiltersService.getFiltersStream({
+    const filtersStream = SearchFiltersService.getFiltersStream({
       cookie,
       initialFiltersStream,
       filters: SearchFiltersService.getFundFilters(lang)
     })
-    nameStream = new Rx.BehaviorSubject('')
+    const nameStream = new Rx.BehaviorSubject('')
 
-    const esQueryFilterStream = filtersStream.pipe(rx.map(filters => SearchFiltersService.getESQueryFilterFromFilters(
-      filters
+    const esQueryFilterStream = filtersStream.pipe(rx.map(filters =>
+      SearchFiltersService.getESQueryFilterFromFilters(filters)
     ))
-    )
 
     const esQueryFilterAndNameStream = Rx.combineLatest(
       esQueryFilterStream, nameStream, (...vals) => vals)
 
-    hasHitSearchStream = new Rx.BehaviorSubject(false)
-    isLoadingStream = new Rx.BehaviorSubject(false)
+    const hasHitSearchStream = new Rx.BehaviorSubject(false)
+    const isLoadingStream = new Rx.BehaviorSubject(false)
 
     return {
       filtersStream,
@@ -66,13 +63,13 @@ export default function $search ({ nteeStream, locationStream }) {
       hasHitSearchStream,
       isLoadingStream,
       hasSearchedStream: Rx.combineLatest(
-        esQueryFilterStream, nameStream, hasHitSearchStream, (...vals) => vals).pipe(rx.map(function (...args) {
-        const [esQueryFilter, name, hasHitSearch] = Array.from(args[0])
+        esQueryFilterStream, nameStream, hasHitSearchStream,
+        (...vals) => vals
+      ).pipe(rx.map(function ([esQueryFilter, name, hasHitSearch]) {
         const hasSearchedBefore = cookie.get('hasSearched')
         const hasFilters = !_.isEmpty(esQueryFilter) || name
         return (hasSearchedBefore && hasFilters) || hasHitSearch
-      })
-      ),
+      })),
       modeStream: new Rx.BehaviorSubject('tags'),
       searchResultsStream: esQueryFilterAndNameStream
         .pipe(
@@ -91,20 +88,15 @@ export default function $search ({ nteeStream, locationStream }) {
             }
 
             return model.irsFund.search({
-              query: {
-                bool
-              },
-              sort: [
-                { 'lastYearStats.grants': { order: 'desc' } }
-              ],
+              query: { bool },
+              sort: [{ 'lastYearStats.grants': { order: 'desc' } }],
               limit: 100
             })
           }),
           rx.tap(() => isLoadingStream.next(false))
         )
     }
-  }
-  , [])
+  }, [])
 
   const {
     mode, hasSearched, isLoading, focusAreasFilter, statesFilter,
@@ -113,98 +105,99 @@ export default function $search ({ nteeStream, locationStream }) {
     mode: modeStream,
     hasSearched: hasSearchedStream,
     isLoading: isLoadingStream,
-    focusAreasFilter: filtersStream.pipe(rx.map(filters => _.find(filters, { id: 'fundedNteeMajor' }))),
-    statesFilter: filtersStream.pipe(rx.map(filters => _.find(filters, { id: 'state' }))),
+    focusAreasFilter: filtersStream.pipe(rx.map(filters =>
+      _.find(filters, { id: 'fundedNteeMajor' })
+    )),
+    statesFilter: filtersStream.pipe(rx.map(filters =>
+      _.find(filters, { id: 'state' })
+    )),
     searchResults: searchResultsStream,
     breakpoint: browser.getBreakpoint()
   }))
 
   return z('.z-search', {
     className: classKebab({ hasSearched })
-  },
-  z('.search',
-    z('.title',
-      mode === 'specific'
-        ? z('.text', lang.get('fundSearch.titleSpecific'))
-        : z('.text', lang.get('fundSearch.titleFocusArea'))
-    ),
-    z(`form.search-box.${mode}`, {
-      onsubmit (e) {
-        e.preventDefault()
-        cookie.set('hasSearched', true)
-        return hasHitSearchStream.next(true)
-      }
-    }, [
-      mode === 'specific'
-        ? z($searchInput, {
-          valueStream: nameStream,
-          placeholder: lang.get('fundSearch.byNameEinPlaceholder')
+  }, [
+    z('.search', [
+      z('.title', [
+        mode === 'specific'
+          ? z('.text', lang.get('fundSearch.titleSpecific'))
+          : z('.text', lang.get('fundSearch.titleFocusArea'))
+      ]),
+      z(`form.search-box.${mode}`, {
+        onsubmit: (e) => {
+          e.preventDefault()
+          cookie.set('hasSearched', true)
+          hasHitSearchStream.next(true)
         }
-        )
-        : [
-          z('.search-tags',
-            z($searchTags, {
-              filter: focusAreasFilter,
-              title: lang.get('fund.focusAreas'),
-              placeholder: lang.get('fundSearch.focusAreasPlaceholder')
-            }
-            )
-          ),
-          z('.divider'),
-          z('.search-tags',
-            z($searchTags, {
-              filter: statesFilter,
-              title: lang.get('general.location'),
-              placeholder: lang.get('fundSearch.locationPlaceholder')
-            }
-            )
-          )
-        ],
+      }, [
+        mode === 'specific'
+          ? z($searchInput, {
+            valueStream: nameStream,
+            placeholder: lang.get('fundSearch.byNameEinPlaceholder')
+          })
+          : [
+            z('.search-tags', [
+              z($searchTags, {
+                filter: focusAreasFilter,
+                title: lang.get('fund.focusAreas'),
+                placeholder: lang.get('fundSearch.focusAreasPlaceholder')
+              })
+            ]),
+            z('.divider'),
+            z('.search-tags', [
+              z($searchTags, {
+                filter: statesFilter,
+                title: lang.get('general.location'),
+                placeholder: lang.get('fundSearch.locationPlaceholder')
+              })
+            ])
+          ],
 
-      z('.button',
-        z($button, {
-          type: 'submit',
-          isPrimary: breakpoint !== 'mobile',
-          icon: searchIconPath,
-          text: lang.get('general.search')
+        z('.button', [
+          z($button, {
+            type: 'submit',
+            isPrimary: breakpoint !== 'mobile',
+            icon: searchIconPath,
+            text: lang.get('general.search')
+          })
+        ])
+      ]),
+
+      z('.alt', {
+        onclick: () => {
+          if (mode === 'specific') {
+            modeStream.next('tags')
+          } else {
+            focusAreasFilter.valueStreams.next(Rx.of(null))
+            statesFilter.valueStreams.next(Rx.of(null))
+            modeStream.next('specific')
+          }
         }
-        )
+      },
+      z('.or', lang.get('general.or')),
+      mode === 'specific'
+        ? z('.text', lang.get('fundSearch.byFocusArea'))
+        : z('.text', lang.get('fundSearch.byNameEin'))
       )
     ]),
 
-    z('.alt', {
-      onclick () {
-        if (mode === 'specific') {
-          return modeStream.next('tags')
-        } else {
-          focusAreasFilter.valueStreams.next(Rx.of(null))
-          statesFilter.valueStreams.next(Rx.of(null))
-          return modeStream.next('specific')
-        }
-      }
-    },
-    z('.or', lang.get('general.or')),
-    mode === 'specific'
-      ? z('.text', lang.get('fundSearch.byFocusArea'))
-      : z('.text', lang.get('fundSearch.byNameEin'))
-    )
-  ),
-
-  hasSearched
-    ? z('.results',
-      z('.container',
-        z('.title',
-          lang.get('fundSearch.resultsTitle', {
-            replacements: {
-              count: FormatService.number(searchResults?.totalCount)
-            }
-          }),
-          z('.loading', {
-            className: classKebab({ isLoading: searchResults && isLoading })
-          },
-          z($spinner, { size: 30 }))),
-        z('.filter-bar',
-          z($filterBar, { filtersStream })),
-
-        z($fundSearchResults, { rows: searchResults?.nodes }))) : undefined)
+    hasSearched &&
+      z('.results', [
+        z('.container', [
+          z('.title', [
+            lang.get('fundSearch.resultsTitle', {
+              replacements: {
+                count: FormatService.number(searchResults?.totalCount)
+              }
+            }),
+            z('.loading', {
+              className: classKebab({ isLoading: searchResults && isLoading })
+            }, z($spinner, { size: 30 }))
+          ]),
+          z('.filter-bar', z($filterBar, { filtersStream })),
+          z($fundSearchResults, { rows: searchResults?.nodes })
+        ])
+      ])
+  ])
 };

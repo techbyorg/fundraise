@@ -1,16 +1,6 @@
-/* eslint-disable
-    no-dupe-keys,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-// process.env.* is replaced at run-time with * environment variable
-// Note that simply env.* is not replaced, and thus suitible for private config
-
 import * as _ from 'lodash-es'
 import assertNoneMissing from 'assert-none-missing'
 
-import colors from './colors'
 let API_HOST, API_PATH, config
 
 // Don't let server environment variables leak into client code
@@ -18,25 +8,6 @@ const serverEnv = process.env
 
 const HOST = process.env.FUNDRAISE_HOST || '127.0.0.1'
 const HOSTNAME = HOST.split(':')[0]
-
-const URL_REGEX_STR = '(\\bhttps?://[-A-Z0-9+&@#/%?=~_|!:,.;]*[A-Z0-9+&@#/%=~_|])'
-const STICKER_REGEX_STR = '(:[a-z_]+:)'
-const IMAGE_REGEX_STR = '(\\!\\[(.*?)\\]\\((.*?)\\=([0-9.]+)x([0-9.]+)\\))'
-const IMAGE_REGEX_BASE_STR = '(\\!\\[(?:.*?)\\]\\((?:.*?)\\))'
-const LOCAL_IMAGE_REGEX_STR =
-  '(\\!\\[(.*?)\\]\\(local://(.*?) \\=([0-9.]+)x([0-9.]+)\\))'
-const MENTION_REGEX_STR = '\\@[a-zA-Z0-9_-]+'
-const YOUTUBE_ID_REGEX_STR =
-  '(?:youtube\\.com\\/(?:[^\\/]+\\/.+\\/|(?:v|e(?:mbed)?)\\/|.*[?&]v=)|youtu\\.be\\/)([^"&?\\/ ]{11})'
-
-const ONE_HOUR_SECONDS = 3600 * 1
-const TWO_HOURS_SECONDS = 3600 * 2
-const THREE_HOURS_SECONDS = 3600 * 3
-const FOUR_HOURS_SECONDS = 3600 * 4
-const EIGHT_HOURS_SECONDS = 3600 * 8
-const ONE_DAY_SECONDS = 3600 * 24 * 1
-const TWO_DAYS_SECONDS = 3600 * 24 * 2
-const THREE_DAYS_SECONDS = 3600 * 24 * 3
 
 const API_URL =
   serverEnv.PHIL_API_URL || // server
@@ -64,17 +35,6 @@ const isomorphic = {
 
   // ALSO IN backend
   EMPTY_UUID: '00000000-0000-0000-0000-000000000000',
-  DEFAULT_PERMISSIONS: {
-    readMessage: true,
-    manageChannel: false,
-    sendMessage: true,
-    sendLink: true,
-    sendImage: true
-  },
-  DEFAULT_NOTIFICATIONS: {
-    conversationMessage: true,
-    conversationMention: true
-  },
   CDN_URL,
   // d folder has longer cache
   SCRIPTS_CDN_URL: 'https://fdn.uno/d/scripts', // FIXME

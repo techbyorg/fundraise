@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as rx from 'rxjs/operators'
@@ -17,18 +15,24 @@ export default function $fundPersons ({ irsFund, irsFundStream }) {
   const { model, browser, lang } = useContext(context)
 
   const { personsStream } = useMemo(() => ({
-    personsStream: irsFundStream.pipe(rx.switchMap(irsFund => model.irsPerson.getAllByEin(irsFund.ein, { limit: 100 })
-      .pipe(rx.map(function (persons) {
-        persons = _.map(persons?.nodes, function (person) {
-          const maxYear = _.maxBy(person.years, 'year')
-          return _.defaults({ maxYear }, person)
-        })
-        persons = _.orderBy(persons, [
-          ({ maxYear }) => maxYear.year,
-          ({ maxYear }) => maxYear.compensation
-        ], ['desc', 'desc'])
-        return persons
-      }))))
+    personsStream: irsFundStream.pipe(
+      rx.switchMap(irsFund =>
+        model.irsPerson.getAllByEin(irsFund.ein, { limit: 100 })
+          .pipe(
+            rx.map((persons) => {
+              persons = _.map(persons?.nodes, function (person) {
+                const maxYear = _.maxBy(person.years, 'year')
+                return _.defaults({ maxYear }, person)
+              })
+              persons = _.orderBy(persons, [
+                ({ maxYear }) => maxYear.year,
+                ({ maxYear }) => maxYear.compensation
+              ], ['desc', 'desc'])
+              return persons
+            })
+          )
+      )
+    )
   })
   , [])
 
@@ -37,8 +41,8 @@ export default function $fundPersons ({ irsFund, irsFundStream }) {
     breakpoint: browser.getBreakpoint()
   }))
 
-  return z('.z-fund-persons',
-    z('.persons',
+  return z('.z-fund-persons', [
+    z('.persons', [
       z($table, {
         breakpoint,
         data: persons,
@@ -73,22 +77,26 @@ export default function $fundPersons ({ irsFund, irsFundStream }) {
             }
           }
         ]
-      })))
+      })
+    ])
+  ])
 };
 
 function $fundPersonsMobileRow ({ row }) {
   const { lang } = useContext(context)
 
-  return z('.z-fund-persons-mobile-row',
+  return z('.z-fund-persons-mobile-row', [
     z('.name', row.name),
     z('.title', row.maxYear.title),
-    z('.compensation',
+    z('.compensation', [
       lang.get('person.compensation'),
       ': ',
-      FormatService.abbreviateDollar(row.maxYear.compensation)),
-    z('.years',
+      FormatService.abbreviateDollar(row.maxYear.compensation)
+    ]),
+    z('.years', [
       lang.get('person.years'),
       ': ',
-      FormatService.yearsArrayToEnglish(_.map(row.years, 'year')))
-  )
+      FormatService.yearsArrayToEnglish(_.map(row.years, 'year'))
+    ])
+  ])
 }

@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z } from 'zorium'
 import * as _ from 'lodash-es'
 
@@ -15,6 +13,7 @@ export default function $fundOverviewNteePie ({ irsFund }) {
     value: sum
   }))
 
-  return z('.z-fund-overview-funding-map',
-    z($chartUsMap, { data }))
+  return z('.z-fund-overview-funding-map', [
+    z($chartUsMap, { data })
+  ])
 };

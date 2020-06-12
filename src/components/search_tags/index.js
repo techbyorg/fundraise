@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
@@ -23,22 +21,24 @@ export default function $searchTags ({ filter, title, placeholder }) {
   }))
 
   return z('.z-search-tags', {
-    onclick () {
+    onclick: () => {
       return isDialogVisibleStream.next(true)
     }
-  },
-  z('.title', title),
-  z('.tags',
-    _.isEmpty(filter?.value)
-      ? placeholder
-      : z($tags, {
-        maxVisibleCount: 6,
-        fitToContent: true,
-        isNoWrap: false,
-        tags: filter.getTagsFn(filter.value)
-      })),
-  filter && isDialogVisible
-    ? z($filterDialog, {
-      filter, onClose () { return isDialogVisibleStream.next(false) }
-    }) : undefined)
+  }, [
+    z('.title', title),
+    z('.tags', [
+      _.isEmpty(filter?.value)
+        ? placeholder
+        : z($tags, {
+          maxVisibleCount: 6,
+          fitToContent: true,
+          isNoWrap: false,
+          tags: filter.getTagsFn(filter.value)
+        })
+    ]),
+    filter && isDialogVisible &&
+      z($filterDialog, {
+        filter, onClose () { return isDialogVisibleStream.next(false) }
+      })
+  ])
 };

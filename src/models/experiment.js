@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 export default class Experiment {
   // TODO: have exp cookies only last ~ a month
   constructor ({ cookie }) {
@@ -15,7 +13,7 @@ export default class Experiment {
       this.cookie.set('exp:default', expDefault)
     }
 
-    globalThis?.window?.ga?.('send', 'event', 'exp', `default:${expDefault}`)
+    globalThis?.window?.ga('send', 'event', 'exp', `default:${expDefault}`)
 
     let expGuidesOnboard = this.cookie.get('exp:guidesOnboard')
     if (!expGuidesOnboard) {
@@ -26,7 +24,7 @@ export default class Experiment {
       this.cookie.set('exp:guidesOnboard', expGuidesOnboard)
     }
 
-    globalThis?.window?.ga?.('send', 'event', 'exp', `guidesOnboard:${expGuidesOnboard}`)
+    globalThis?.window?.ga('send', 'event', 'exp', `guidesOnboard:${expGuidesOnboard}`)
 
     let expWelcomeOverlay = this.cookie.get('exp:welcomeOverlay')
     if (!expWelcomeOverlay) {
@@ -37,7 +35,7 @@ export default class Experiment {
       this.cookie.set('exp:welcomeOverlay', expWelcomeOverlay)
     }
 
-    globalThis?.window?.ga?.('send', 'event', 'exp', `welcomeOverlay:${expWelcomeOverlay}`)
+    globalThis?.window?.ga('send', 'event', 'exp', `welcomeOverlay:${expWelcomeOverlay}`)
 
     let expTripsOnboard = this.cookie.get('exp:tripsOnboard')
     if (!expTripsOnboard) {
@@ -48,7 +46,7 @@ export default class Experiment {
       this.cookie.set('exp:tripsOnboard', expTripsOnboard)
     }
 
-    globalThis?.window?.ga?.('send', 'event', 'exp', `tripsOnboard:${expTripsOnboard}`)
+    globalThis?.window?.ga('send', 'event', 'exp', `tripsOnboard:${expTripsOnboard}`)
 
     this.experiments = {
       default: expDefault,

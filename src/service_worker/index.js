@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import Cache from 'frontend-shared/service_worker/cache'
 import Portal from 'frontend-shared/service_worker/portal'
 import Push from 'frontend-shared/service_worker/push'

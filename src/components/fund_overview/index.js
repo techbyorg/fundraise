@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, useContext, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
 
@@ -30,12 +25,12 @@ export default function $fundOverview ({ irsFund }) {
     metric: metricStream
   }))
 
-  return z('.z-fund-overview',
-    z('.analytics',
-      z('.block',
-        z('.head',
+  return z('.z-fund-overview', [
+    z('.analytics', [
+      z('.block', [
+        z('.head', [
           z('.title', lang.get(`metric.${metric}`)),
-          z('.metrics',
+          z('.metrics', [
             z($dropdown, {
               isPrimary: true,
               currentText: lang.get('fundOverview.changeMetric'),
@@ -45,16 +40,25 @@ export default function $fundOverview ({ irsFund }) {
                 { value: 'grantSum', text: lang.get('metric.grantSum') },
                 { value: 'officerSalaries', text: lang.get('metric.officerSalaries') }
               ]
-            }))),
+            })
+          ])
+        ]),
 
-        z($fundOverviewLineChart, { metric, irsFund }))),
-    z('.grid',
-      z('.block.pie',
-        z('.head',
-          z('.title', lang.get('fundOverview.fundedNtee'))),
-        z($fundOverviewNteePie, { irsFund })),
-      z('.block.map',
+        z($fundOverviewLineChart, { metric, irsFund })
+      ])
+    ]),
+    z('.grid', [
+      z('.block.pie', [
+        z('.head', [
+          z('.title', lang.get('fundOverview.fundedNtee'))
+        ]),
+        z($fundOverviewNteePie, { irsFund })
+      ]),
+      z('.block.map', [
         z('.head',
           z('.title', lang.get('fundOverview.fundingMap'))),
-        z($fundOverviewFundingMap, { irsFund }))))
+        z($fundOverviewFundingMap, { irsFund })
+      ])
+    ])
+  ])
 }

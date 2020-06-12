@@ -1,6 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
-// react/react-dom -> preact
 import 'module-alias/register'
 
 import setup from 'frontend-shared/services/setup_server'

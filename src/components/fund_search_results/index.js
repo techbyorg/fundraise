@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useContext, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 
@@ -24,7 +22,7 @@ export default function $fundSearchResults ({ rows }) {
     breakpoint: browser.getBreakpoint()
   }))
 
-  return z('.z-fund-search-results',
+  return z('.z-fund-search-results', [
     z($table, {
       breakpoint,
       data: rows,
@@ -73,5 +71,6 @@ export default function $fundSearchResults ({ rows }) {
           }
         }
       ]
-    }))
+    })
+  ])
 };

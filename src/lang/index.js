@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import * as _ from 'lodash-es'
 
 import config from '../config'
@@ -18,7 +13,7 @@ class Language {
   }
 
   getLangFiles (language) {
-    return _.mapValues(files, function (val, file) {
+    return _.mapValues(files, (val, file) => {
       let languages
       if (!language || (file === 'paths')) {
         languages = config.LANGUAGES
@@ -27,17 +22,20 @@ class Language {
       }
 
       // always need en for fallback
-      return _.reduce(languages, function (obj, lang) {
+      return _.reduce(languages, (obj, lang) => {
         // be explicit about /lang/ and .json so webpack can strip from prod
-        let e
         obj[lang] = (() => {
-          try { return require(`../lang/${lang}/${file}_${lang}.json`) } catch (error) { e = error; return null }
+          try {
+            return require(`../lang/${lang}/${file}_${lang}.json`)
+          } catch { return null }
         })()
         if (file === 'strings') {
           // add from frontend-shared
           // be explicit about /lang/ and .json so webpack can strip from prod
           const sharedLang = (() => {
-            try { return require(`frontend-shared/lang/${lang}/${file}_${lang}.json`) } catch (error1) { e = error1; return null }
+            try {
+              return require(`frontend-shared/lang/${lang}/${file}_${lang}.json`)
+            } catch { return null }
           })()
           obj[lang] = _.defaults(obj[lang], sharedLang)
         }

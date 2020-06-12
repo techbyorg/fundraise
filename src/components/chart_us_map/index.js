@@ -1,11 +1,4 @@
-/* eslint-disable
-    no-dupe-keys,
-    no-unused-vars,
-    prefer-const,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-import { z, lazy, Suspense, Boundary, useRef, useMemo, useStream, useEffect } from 'zorium'
+import { z, lazy, Suspense, Boundary, useRef, useMemo } from 'zorium'
 import * as _ from 'lodash-es'
 
 import $spinner from 'frontend-shared/components/spinner'
@@ -13,7 +6,6 @@ import FormatService from 'frontend-shared/services/format'
 import useRefSize from 'frontend-shared/services/use_ref_size'
 
 import colors from '../../colors'
-import config from '../../config'
 
 const $choropleth = lazy(() => Promise.all([
   import(/* webpackChunkName: "nivo" */'@nivo/geo')
@@ -28,52 +20,55 @@ const $choropleth = lazy(() => Promise.all([
     'https://fdn.uno/d/data/us_states.json?1'
   ).then(response => response.json())
 ])
-  .then(function (...args) {
-    let features
-    [$choropleth, { features }] = Array.from(args[0])
-    return ({ width, height, data, min, max }) => z($choropleth, {
-      data,
-      width,
-      height,
-      features,
-      theme: {},
-      colors: 'nivo',
-      domain: [min, max],
-      unknownColor: colors.getRawColor(colors.$bgText12),
-      colors: [
-        '#91e0f4', '#81caef', '#6fafe6', '#5e9de7', '#4a7ed5', '#3d6edb'
-      ],
-      label: 'properties.name',
-      valueFormat (value) {
-        return FormatService.abbreviateDollar(Number(value))
-      },
-      projectionScale: width * 1.2,
-      projectionType: 'albersUsa',
-      borderWidth: 1,
-      borderColor: colors.getRawColor(colors.$bgColor)
-    }
-    )
-  }))
+  .then(function ([$cloropleth, { features }]) {
+    return ({ width, height, data, min, max }) =>
+      z($choropleth, {
+        data,
+        width,
+        height,
+        features,
+        theme: {},
+        domain: [min, max],
+        unknownColor: colors.getRawColor(colors.$bgText12),
+        colors: [
+          '#91e0f4', '#81caef', '#6fafe6', '#5e9de7', '#4a7ed5', '#3d6edb'
+        ],
+        label: 'properties.name',
+        valueFormat (value) {
+          return FormatService.abbreviateDollar(Number(value))
+        },
+        projectionScale: width * 1.2,
+        projectionType: 'albersUsa',
+        borderWidth: 1,
+        borderColor: colors.getRawColor(colors.$bgColor)
+      }
+      )
+  })
+)
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $chartUsMap ({ data }) {
   const $$ref = useRef()
 
-  const { min, max } = useMemo(function () {
+  const { min, max } = useMemo(() => {
     const values = _.map(data, 'value')
     return {
       min: _.min(values),
       max: _.max(values)
     }
-  }
-  , [data])
+  }, [data])
 
   const size = useRefSize($$ref)
 
-  return z('.z-chart-us-map', { ref: $$ref },
-    (typeof window !== 'undefined' && window !== null) && size
-      ? z(Boundary, { fallback: z('.error', 'err') },
-        z(Suspense, { fallback: $spinner },
-          z($choropleth, { data, min, max, width: size.width, height: size.height }))) : undefined)
+  return z('.z-chart-us-map', { ref: $$ref }, [
+    (typeof window !== 'undefined') && size &&
+      z(Boundary, { fallback: z('.error', 'err') }, [
+        z(Suspense, { fallback: $spinner }, [
+          z($choropleth, {
+            data, min, max, width: size.width, height: size.height
+          })
+        ])
+      ])
+  ])
 }

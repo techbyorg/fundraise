@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, useContext } from 'zorium'
 
 import $icon from 'frontend-shared/components/icon'
@@ -14,16 +12,14 @@ if (typeof window !== 'undefined' && window !== null) {
 export default function $fundApplicationInfo ({ irsFund }) {
   const { lang } = useContext(context)
 
-  return z('.z-fund-application-info',
-    irsFund?.applicantInfo
-      ? [
-        !irsFund.applicantInfo.acceptsUnsolicitedRequests
-          ? z('.warning',
-            z('.icon',
-              z($icon,
-                { icon: infoIconPath })
-            ),
-            z('.text', lang.get('fundApplicantInfo.noUnsolicited'))) : undefined,
+  return z('.z-fund-application-info', [
+    irsFund?.applicantInfo &&
+      [
+        !irsFund.applicantInfo.acceptsUnsolicitedRequests &&
+          z('.warning', [
+            z('.icon', z($icon, { icon: infoIconPath })),
+            z('.text', lang.get('fundApplicantInfo.noUnsolicited'))
+          ]),
         z('.title', lang.get('fundApplicantInfo.deadline')),
         z('.block', irsFund.applicantInfo.deadlines),
 
@@ -35,15 +31,17 @@ export default function $fundApplicationInfo ({ irsFund }) {
 
         z('.title', lang.get('general.contact')),
         z('.name', irsFund.applicantInfo.recipientName),
-        irsFund.applicantInfo.address
-          ? [
+        irsFund.applicantInfo.address &&
+          [
             z('.address-line', irsFund.applicantInfo.address.street1),
-            irsFund.applicantInfo.address.street2
-              ? z('.address-line', irsFund.applicantInfo.address.street2) : undefined,
-            z('.address-line',
+            irsFund.applicantInfo.address.street2 &&
+              z('.address-line', irsFund.applicantInfo.address.street2),
+            z('.address-line', [
               `${irsFund.applicantInfo.address.city}, `,
               irsFund.applicantInfo.address.state,
-              ` ${irsFund.applicantInfo.address.postalCode}`)
-          ] : undefined
-      ] : undefined)
+              ` ${irsFund.applicantInfo.address.postalCode}`
+            ])
+          ]
+      ]
+  ])
 };

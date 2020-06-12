@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
@@ -27,9 +25,11 @@ class SearchFiltersService {
         type: 'ntee',
         getTagsFn (value = {}) {
           const { nteeMajors, ntees } = value
-          const nteeMajorsGroups = _.countBy(_.keys(ntees), ntee => ntee.substr(0, 1))
+          const nteeMajorsGroups = _.countBy(_.keys(ntees), ntee =>
+            ntee.substr(0, 1)
+          )
           const allNteeMajors = _.defaults(_.clone(nteeMajors), nteeMajorsGroups)
-          return _.map(allNteeMajors, function (count, nteeMajor) {
+          return _.map(allNteeMajors, (count, nteeMajor) => {
             let text = lang.get(`nteeMajor.${nteeMajor}`)
             if (count !== true) {
               text = `(${count}) ${text}`
@@ -52,11 +52,9 @@ class SearchFiltersService {
           label: state
         })),
         getTagsFn (value) {
-          return _.filter(_.map(value, function (val, key) {
+          return _.filter(_.map(value, (val, key) => {
             if (val) {
-              return {
-                text: states[key]
-              }
+              return { text: states[key] }
             }
           }))
         },
@@ -161,13 +159,8 @@ class SearchFiltersService {
   }
 
   getFiltersStream (props) {
-    let {
-      cookie,
-      filters,
-      initialFiltersStream
-    } = props
-    const val = props.dataType
-    let dataType = val != null ? val : 'irsFund'
+    const { cookie } = props
+    let { initialFiltersStream, filters, dataType = 'irsFund' } = props
 
     // eg filters from custom urls
     if (initialFiltersStream == null) { initialFiltersStream = new Rx.BehaviorSubject(null) }
@@ -218,10 +211,12 @@ class SearchFiltersService {
         .pipe(
           rx.distinctUntilChanged(_.isEqual),
           rx.map(values => {
-            const filtersWithValue = _.zipWith(filters, values, (filter, value) => _.defaults({ value }, filter))
+            const filtersWithValue = _.zipWith(filters, values, (filter, value) =>
+              _.defaults({ value }, filter)
+            )
 
             // set cookie to persist filters
-            savedFilters = _.reduce(filtersWithValue, function (obj, filter) {
+            savedFilters = _.reduce(filtersWithValue, (obj, filter) => {
               let arrayValue, field, type, value;
               ({ dataType, field, value, type, arrayValue } = filter)
               if ((value != null) && (type === 'booleanArray')) {
@@ -318,7 +313,7 @@ class SearchFiltersService {
         case 'listAnd': case 'listBooleanAnd':
           return {
             bool: {
-              must: _.filter(_.map(filter.value, function (value, key) {
+              must: _.filter(_.map(filter.value, (value, key) => {
                 if (value && filter.queryFn) {
                   return filter.queryFn(value, key)
                 } else if (value) {
@@ -331,7 +326,7 @@ class SearchFiltersService {
         case 'listBooleanOr': case 'listOr':
           return {
             bool: {
-              should: _.filter(_.map(filter.value, function (value, key) {
+              should: _.filter(_.map(filter.value, (value, key) => {
                 if (value && filter.queryFn) {
                   return filter.queryFn(value, key)
                 } else if (value) {
@@ -375,7 +370,7 @@ class SearchFiltersService {
         case 'fieldList':
           return {
             bool: {
-              should: _.filter(_.map(filter.value, function (value, key) {
+              should: _.filter(_.map(filter.value, (value, key) => {
                 if (value) {
                   return { match: { [field]: key } }
                 }
@@ -393,7 +388,7 @@ class SearchFiltersService {
           return {
             // there's potentially a cleaner way to do this?
             bool: {
-              should: _.map(withValues, function ({ value, arrayValue, valueFn }) {
+              should: _.map(withValues, ({ value, arrayValue, valueFn }) => {
                 // if subtypes are specified
                 if (typeof value === 'object') {
                   return {
