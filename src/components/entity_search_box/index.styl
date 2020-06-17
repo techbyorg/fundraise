@@ -1,0 +1,67 @@
+@require '../../vars'
+
+.z-entity-search-box
+  padding: 32px
+
+  > .title
+    font-h5()
+    max-width: 1200px
+    margin: 0 auto 20px auto
+
+  > .search-box
+    shadow-1()
+    background: getColor('$bgColor')
+    max-width: 1200px
+    margin: 0 auto
+    border-radius: 12px
+
+  > .alt
+    max-width: 1200px
+    margin: 24px auto 0 auto
+    cursor: pointer
+
+    > .or
+      display: inline-block
+      margin-right: 4px
+
+    > .text
+      font-button()
+      text-decoration: underline
+      display: inline-block
+
+  @media (min-width: $breakPointMedium)
+    &.has-searched
+      > .search-box
+        grid-template-columns: 1fr 1px 1fr
+
+        > .button
+          display: none
+
+    > .title
+      font-h4()
+
+    > .search-box
+      // display: flex
+      // align-items: center
+      display: grid
+      grid-template-columns: 1fr 1px 1fr 165px
+      grid-column-gap: 0
+      grid-row-gap: 0
+      align-items: center
+
+      &.specific
+        grid-template-columns: 1fr 165px
+
+
+      > .search-tags
+        height: 100%
+        min-width: 0
+        display: flex
+
+      > .divider
+        width: 1px
+        height: 56px
+        background: getColor('$bgText6')
+
+      > .button
+        padding: 20px

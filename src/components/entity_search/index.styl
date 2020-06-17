@@ -1,0 +1,30 @@
+@require '../../vars'
+
+.z-entity-search
+  flex1()
+  overflow: auto
+  -webkit-overflow-scrolling: touch
+
+  > .results
+    padding: 48px 32px
+    shadow-upper-1()
+
+    > .container
+      container()
+
+      > .title
+        font-h5()
+        margin-bottom: 20px
+        display: flex
+        align-items: center
+
+        > .loading
+          display: none
+          margin-left: 20px
+          margin-top: -12px
+
+          &.is-loading
+            display: block
+
+      > .filter-bar
+        margin-bottom: 16px

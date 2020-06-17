@@ -3,15 +3,12 @@ import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
-import $button from 'frontend-shared/components/button'
 import $spinner from 'frontend-shared/components/spinner'
-import { searchIconPath } from 'frontend-shared/components/icon/paths'
 import FormatService from 'frontend-shared/services/format'
 
 import $filterBar from '../filter_bar'
 import $fundSearchResults from '../fund_search_results'
-import $searchInput from '../search_input'
-import $searchTags from '../search_tags'
+import $entitySearchBox from '../entity_search_box'
 import SearchFiltersService from '../../services/search_filters'
 import context from '../../context'
 
@@ -19,12 +16,12 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $search ({ nteeStream, locationStream }) {
-  const { model, lang, browser, cookie } = useContext(context)
+export default function $entitySearch ({ nteeStream, locationStream }) {
+  const { model, lang, cookie } = useContext(context)
 
   const {
     filtersStream, hasSearchedStream, hasHitSearchStream, isLoadingStream,
-    nameStream, modeStream, searchResultsStream
+    nameStream, searchResultsStream
   } = useMemo(function () {
     const initialFiltersStream = Rx.combineLatest(
       nteeStream, locationStream,
@@ -70,7 +67,6 @@ export default function $search ({ nteeStream, locationStream }) {
         const hasFilters = !_.isEmpty(esQueryFilter) || name
         return (hasSearchedBefore && hasFilters) || hasHitSearch
       })),
-      modeStream: new Rx.BehaviorSubject('tags'),
       searchResultsStream: esQueryFilterAndNameStream
         .pipe(
           rx.tap(() => isLoadingStream.next(true)),
@@ -99,88 +95,19 @@ export default function $search ({ nteeStream, locationStream }) {
   }, [])
 
   const {
-    mode, hasSearched, isLoading, focusAreasFilter, statesFilter,
-    searchResults, breakpoint
+    hasSearched, isLoading, searchResults
   } = useStream(() => ({
-    mode: modeStream,
     hasSearched: hasSearchedStream,
     isLoading: isLoadingStream,
-    focusAreasFilter: filtersStream.pipe(rx.map(filters =>
-      _.find(filters, { id: 'fundedNteeMajor' })
-    )),
-    statesFilter: filtersStream.pipe(rx.map(filters =>
-      _.find(filters, { id: 'state' })
-    )),
-    searchResults: searchResultsStream,
-    breakpoint: browser.getBreakpoint()
+    searchResults: searchResultsStream
   }))
 
-  return z('.z-search', {
+  return z('.z-entity-search', {
     className: classKebab({ hasSearched })
   }, [
-    z('.search', [
-      z('.title', [
-        mode === 'specific'
-          ? z('.text', lang.get('fundSearch.titleSpecific'))
-          : z('.text', lang.get('fundSearch.titleFocusArea'))
-      ]),
-      z(`form.search-box.${mode}`, {
-        onsubmit: (e) => {
-          e.preventDefault()
-          cookie.set('hasSearched', true)
-          hasHitSearchStream.next(true)
-        }
-      }, [
-        mode === 'specific'
-          ? z($searchInput, {
-            valueStream: nameStream,
-            placeholder: lang.get('fundSearch.byNameEinPlaceholder')
-          })
-          : [
-            z('.search-tags', [
-              z($searchTags, {
-                filter: focusAreasFilter,
-                title: lang.get('fund.focusAreas'),
-                placeholder: lang.get('fundSearch.focusAreasPlaceholder')
-              })
-            ]),
-            z('.divider'),
-            z('.search-tags', [
-              z($searchTags, {
-                filter: statesFilter,
-                title: lang.get('general.location'),
-                placeholder: lang.get('fundSearch.locationPlaceholder')
-              })
-            ])
-          ],
-
-        z('.button', [
-          z($button, {
-            type: 'submit',
-            isPrimary: breakpoint !== 'mobile',
-            icon: searchIconPath,
-            text: lang.get('general.search')
-          })
-        ])
-      ]),
-
-      z('.alt', {
-        onclick: () => {
-          if (mode === 'specific') {
-            modeStream.next('tags')
-          } else {
-            focusAreasFilter.valueStreams.next(Rx.of(null))
-            statesFilter.valueStreams.next(Rx.of(null))
-            modeStream.next('specific')
-          }
-        }
-      },
-      z('.or', lang.get('general.or')),
-      mode === 'specific'
-        ? z('.text', lang.get('fundSearch.byFocusArea'))
-        : z('.text', lang.get('fundSearch.byNameEin'))
-      )
-    ]),
+    z($entitySearchBox, {
+      nameStream, filtersStream, hasHitSearchStream, hasSearched
+    }),
 
     hasSearched &&
       z('.results', [

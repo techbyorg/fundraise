@@ -4,7 +4,7 @@ import * as rx from 'rxjs/operators'
 import $appBar from 'frontend-shared/components/app_bar'
 import useMeta from 'frontend-shared/services/use_meta'
 
-import $search from '../../components/search'
+import $entitySearch from '../../components/entity_search'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
@@ -31,7 +31,7 @@ export default function $searchPage ({ requestsStream }) {
       hasLogo: true
       // $topLeftButton: z $buttonBack, {color: colors.$header500Icon}
     }),
-    z($search, {
+    z($entitySearch, {
       nteeStream, locationStream
     })
   ])
