@@ -25,8 +25,7 @@ export default function $filterContentMinMax (props) {
       minStream, maxStream,
       (...vals) => vals
     )
-      .pipe(rx.map(function (...args) {
-        let [min, max] = Array.from(args[0])
+      .pipe(rx.map(function ([min, max]) {
         min = min && parseInt(min)
         max = max && parseInt(max)
         if (min || max) {

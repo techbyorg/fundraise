@@ -24,8 +24,7 @@ export default function $filterContentGtlt (props) {
       operatorStream, valueStream,
       (...vals) => vals
     )
-      .pipe(rx.map((...args) => {
-        const [operator, value] = Array.from(args[0])
+      .pipe(rx.map(([operator, value]) => {
         if (operator || value) {
           return { operator, value }
         }

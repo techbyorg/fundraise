@@ -75,10 +75,12 @@ export default function $entitySearch (props) {
       searchResultsStream: esQueryFilterAndNameStream
         .pipe(
           rx.tap(() => isLoadingStream.next(true)),
-          rx.switchMap(function (...args) {
-            const [esQueryFilter, name] = Array.from(args[0])
+          rx.switchMap(function ([esQueryFilter, name]) {
             const bool = { filter: esQueryFilter }
             if (name) {
+              if (model.irsOrg.isEin(name)) {
+                name = name.replace('-', '')
+              }
               bool.must = {
                 multi_match: {
                   query: name,

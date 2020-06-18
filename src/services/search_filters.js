@@ -263,13 +263,23 @@ class SearchFiltersService {
           { value: '1000', text: FormatService.abbreviateNumber(1000) },
           { value: '10000', text: FormatService.abbreviateNumber(10000) }
         ]
-      } // ,
-      // {
-      //   id: 'keywords', // used as ref/key
-      //   field: 'keywords',
-      //   type: 'minMax',
-      //   name: lang.get('filter.keywords')
-      // }
+      },
+      {
+        id: 'keywords', // used as ref/key
+        field: 'keywords',
+        fields: ['websiteText', 'mission'],
+        type: 'keywords',
+        name: lang.get('filter.keywords'),
+        placeholder: lang.get('filter.keywords')
+      },
+      {
+        id: 'city', // used as ref/key
+        field: 'city',
+        fields: ['city'],
+        type: 'searchPhrase',
+        name: lang.get('filter.city'),
+        placeholder: lang.get('filter.city')
+      }
     ]
   }
 
@@ -386,6 +396,26 @@ class SearchFiltersService {
               }
             }
           }
+        case 'keywords':
+          return {
+            bool: {
+              filter: _.map(filter.value.split('+'), (keywords) => ({
+                bool: {
+                  should: _.map(filter.fields, (field) => ({
+                    terms: { [field]: keywords.split(',') }
+                  }))
+                }
+              }))
+            }
+          }
+        case 'searchPhrase':
+          return {
+            bool: {
+              should: _.map(filter.value.split(','), (search) => ({
+                match_phrase: { [field]: search }
+              }))
+            }
+          }
         case 'gtlt':
           if (filter.value.operator && filter.value.value) {
             return {
@@ -435,8 +465,7 @@ class SearchFiltersService {
                 } else if (value) {
                   return { match: { [`${field}.${key}`]: value } }
                 }
-              })
-              )
+              }))
             }
           }
         case 'listBooleanOr': case 'listOr':
@@ -448,8 +477,7 @@ class SearchFiltersService {
                 } else if (value) {
                   return { match: { [`${field}.${key}`]: value } }
                 }
-              })
-              )
+              }))
             }
           }
         case 'ntee':

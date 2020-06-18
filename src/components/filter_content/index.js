@@ -3,6 +3,7 @@ import { z } from 'zorium'
 import $filterContentBooleanList from '../filter_content_boolean_list'
 import $filterContentList from '../filter_content_list'
 import $filterContentNtee from '../filter_content_ntee'
+import $filterContentKeywords from '../filter_content_keywords'
 // import $filterContentGtlt from '../filter_content_gtlt'
 import $filterContentMinMax from '../filter_content_min_max'
 
@@ -29,6 +30,10 @@ export default function $filterContent (props) {
           })
         case 'ntee': case 'fundedNtee':
           return z($filterContentNtee, {
+            filterValueStr, resetValue, filter, valueStreams, filterValue
+          })
+        case 'keywords': case 'searchPhrase':
+          return z($filterContentKeywords, {
             filterValueStr, resetValue, filter, valueStreams, filterValue
           })
         case 'minMax':

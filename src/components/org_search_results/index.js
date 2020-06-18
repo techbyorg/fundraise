@@ -37,6 +37,7 @@ export default function $orgSearchResults ({ rows }) {
             const nteeMajor = row.nteecc?.substr(0, 1)
             const tags = nteeMajor && [{
               text: lang.get(`nteeMajor.${nteeMajor}`),
+              title: row.nteecc,
               background: nteeColors[nteeMajor].bg,
               color: nteeColors[nteeMajor].fg
             }]
