@@ -11,13 +11,13 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $fundPersons ({ irsFund, irsFundStream }) {
+export default function $entityPersons ({ entity, entityStream }) {
   const { model, browser, lang } = useContext(context)
 
   const { personsStream } = useMemo(() => ({
-    personsStream: irsFundStream.pipe(
-      rx.switchMap(irsFund =>
-        model.irsPerson.getAllByEin(irsFund.ein, { limit: 100 })
+    personsStream: entityStream.pipe(
+      rx.switchMap(entity =>
+        model.irsPerson.getAllByEin(entity.ein, { limit: 100 })
           .pipe(
             rx.map((persons) => {
               persons = _.map(persons?.nodes, function (person) {
@@ -41,12 +41,12 @@ export default function $fundPersons ({ irsFund, irsFundStream }) {
     breakpoint: browser.getBreakpoint()
   }))
 
-  return z('.z-fund-persons', [
+  return z('.z-entity-persons', [
     z('.persons', [
       z($table, {
         breakpoint,
         data: persons,
-        mobileRowRenderer: $fundPersonsMobileRow,
+        mobileRowRenderer: $entityPersonsMobileRow,
         columns: [
           {
             key: 'name', name: lang.get('general.name'), isFlex: true
@@ -72,7 +72,7 @@ export default function $fundPersons ({ irsFund, irsFundStream }) {
             name: lang.get('person.years'),
             width: 150,
             content ({ row }) {
-              return z('.z-fund-persons_years',
+              return z('.z-entity-persons_years',
                 FormatService.yearsArrayToEnglish(_.map(row.years, 'year')))
             }
           }
@@ -82,10 +82,10 @@ export default function $fundPersons ({ irsFund, irsFundStream }) {
   ])
 };
 
-function $fundPersonsMobileRow ({ row }) {
+function $entityPersonsMobileRow ({ row }) {
   const { lang } = useContext(context)
 
-  return z('.z-fund-persons-mobile-row', [
+  return z('.z-entity-persons-mobile-row', [
     z('.name', row.name),
     z('.title', row.maxYear.title),
     z('.compensation', [

@@ -20,9 +20,9 @@ const $choropleth = lazy(() => Promise.all([
     'https://fdn.uno/d/data/us_states.json?1'
   ).then(response => response.json())
 ])
-  .then(function ([$cloropleth, { features }]) {
+  .then(function ([ChloroplethCanvas, { features }]) {
     return ({ width, height, data, min, max }) =>
-      z($choropleth, {
+      z(ChloroplethCanvas, {
         data,
         width,
         height,
@@ -41,8 +41,7 @@ const $choropleth = lazy(() => Promise.all([
         projectionType: 'albersUsa',
         borderWidth: 1,
         borderColor: colors.getRawColor(colors.$bgColor)
-      }
-      )
+      })
   })
 )
 

@@ -10,7 +10,11 @@ export default class IrsOrg {
       query: `
         query IrsOrgGetByEin($ein: String!) {
           irsOrg(ein: $ein) {
-            name, ein, employeeCount, assets
+            ein, name, city, state, assets, mission, website,
+            employeeCount, volunteerCount,
+            yearlyStats {
+              years { year, assets, employeeCount, volunteerCount }
+            },
           }
         }`,
       variables: { ein },
@@ -18,15 +22,19 @@ export default class IrsOrg {
     })
   }
 
-  search ({ query, limit }) {
+  search ({ query, sort, limit }) {
     return this.auth.stream({
       query: `
-        query IrsOrgSearch($query: ESQuery!) {
-          irsOrgs(query: $query) {
-            nodes { name, ein }
+        query IrsOrgSearch($query: ESQuery!, $sort: JSON, $limit: Int) {
+          irsOrgs(query: $query, sort: $sort, limit: $limit) {
+            totalCount,
+            nodes {
+              ein, nteecc, name, city, state, assets,
+              employeeCount, volunteerCount
+            }
           }
         }`,
-      variables: { query },
+      variables: { query, sort, limit },
       pull: 'irsOrgs'
     })
   }

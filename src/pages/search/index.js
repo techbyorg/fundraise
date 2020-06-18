@@ -8,31 +8,33 @@ import $entitySearch from '../../components/entity_search'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $searchPage ({ requestsStream }) {
-  const { nteeStream, locationStream } = useMemo(() => {
-    return {
-      nteeStream: requestsStream.pipe(
-        rx.map(({ route }) => route.params.ntee)
-      ),
-      locationStream: requestsStream.pipe(
-        rx.map(({ route }) => route.params.location)
-      )
-    }
-  }, [])
+export default function getSearchPage (entityType) {
+  return function $searchPage ({ requestsStream }) {
+    const { nteeStream, locationStream } = useMemo(() => {
+      return {
+        nteeStream: requestsStream.pipe(
+          rx.map(({ route }) => route.params.ntee)
+        ),
+        locationStream: requestsStream.pipe(
+          rx.map(({ route }) => route.params.location)
+        )
+      }
+    }, [])
 
-  useMeta(() => ({
-    openGraph: {
-      image: 'https://fdn.uno/d/images/techby/home/fundraise_thumbnail.png'
-    }
-  }), [])
+    useMeta(() => ({
+      openGraph: {
+        image: 'https://fdn.uno/d/images/techby/home/fundraise_thumbnail.png'
+      }
+    }), [])
 
-  return z('.p-search', [
-    z($appBar, {
-      hasLogo: true
-      // $topLeftButton: z $buttonBack, {color: colors.$header500Icon}
-    }),
-    z($entitySearch, {
-      nteeStream, locationStream
-    })
-  ])
+    return z('.p-search', [
+      z($appBar, {
+        hasLogo: true
+        // $topLeftButton: z $buttonBack, {color: colors.$header500Icon}
+      }),
+      z($entitySearch, {
+        nteeStream, locationStream, entityType
+      })
+    ])
+  }
 }

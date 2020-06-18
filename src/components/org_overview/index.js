@@ -4,13 +4,11 @@ import * as Rx from 'rxjs'
 import $dropdown from 'frontend-shared/components/dropdown'
 
 import $fundOverviewLineChart from '../fund_overview_line_chart'
-import $fundOverviewNteePie from '../fund_overview_ntee_pie'
-import $fundOverviewFundingMap from '../fund_overview_funding_map'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $fundOverview ({ entity }) {
+export default function $orgOverview ({ entity }) {
   const { lang } = useContext(context)
 
   var { metricStream } = useMemo(function () {
@@ -25,7 +23,9 @@ export default function $fundOverview ({ entity }) {
     metric: metricStream
   }))
 
-  return z('.z-fund-overview', [
+  console.log('org ov', entity)
+
+  return z('.z-org-overview', [
     z('.analytics', [
       z('.block', [
         z('.head', [
@@ -33,31 +33,19 @@ export default function $fundOverview ({ entity }) {
           z('.metrics', [
             z($dropdown, {
               isPrimary: true,
-              currentText: lang.get('fundOverview.changeMetric'),
+              currentText: lang.get('orgOverview.changeMetric'),
               valueStream: metricStream,
               options: [
                 { value: 'assets', text: lang.get('metric.assets') },
-                { value: 'grantSum', text: lang.get('metric.grantSum') },
-                { value: 'officerSalaries', text: lang.get('metric.officerSalaries') }
+                { value: 'employeeCount', text: lang.get('org.employees') },
+                { value: 'volunteerCount', text: lang.get('org.volunteers') },
+                // { value: 'officerSalaries', text: lang.get('metric.officerSalaries') }
               ]
             })
           ])
         ]),
 
         z($fundOverviewLineChart, { metric, entity })
-      ])
-    ]),
-    z('.grid', [
-      z('.block.pie', [
-        z('.head', [
-          z('.title', lang.get('fundOverview.fundedNtee'))
-        ]),
-        z($fundOverviewNteePie, { entity })
-      ]),
-      z('.block.map', [
-        z('.head',
-          z('.title', lang.get('fundOverview.fundingMap'))),
-        z($fundOverviewFundingMap, { entity })
       ])
     ])
   ])

@@ -1,5 +1,7 @@
 export default class IrsFund990 {
-  constructor ({ auth }) { this.auth = auth; null }
+  constructor ({ auth }) {
+    this.auth = auth
+  }
 
   getAllByEin (ein) {
     return this.auth.stream({

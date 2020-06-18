@@ -10,6 +10,27 @@ const states = {
   AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming'
 }
 
+function nteeGetTagsFn (lang) {
+  return (value = {}) => {
+    const { nteeMajors, ntees } = value
+    const nteeMajorsGroups = _.countBy(_.keys(ntees), ntee =>
+      ntee.substr(0, 1)
+    )
+    const allNteeMajors = _.defaults(_.clone(nteeMajors), nteeMajorsGroups)
+    return _.map(allNteeMajors, (count, nteeMajor) => {
+      let text = lang.get(`nteeMajor.${nteeMajor}`)
+      if (count !== true) {
+        text = `(${count}) ${text}`
+      }
+      return {
+        text,
+        background: nteeColors[nteeMajor]?.bg,
+        color: nteeColors[nteeMajor]?.fg
+      }
+    })
+  }
+}
+
 class SearchFiltersService {
   constructor () {
     this.getESQueryFilterFromFilters = this.getESQueryFilterFromFilters.bind(this)
@@ -22,25 +43,8 @@ class SearchFiltersService {
         id: 'fundedNteeMajor', // used as ref/key
         field: 'fundedNteeMajor',
         title: lang.get('filter.fundedNteeMajor.title'),
-        type: 'ntee',
-        getTagsFn (value = {}) {
-          const { nteeMajors, ntees } = value
-          const nteeMajorsGroups = _.countBy(_.keys(ntees), ntee =>
-            ntee.substr(0, 1)
-          )
-          const allNteeMajors = _.defaults(_.clone(nteeMajors), nteeMajorsGroups)
-          return _.map(allNteeMajors, (count, nteeMajor) => {
-            let text = lang.get(`nteeMajor.${nteeMajor}`)
-            if (count !== true) {
-              text = `(${count}) ${text}`
-            }
-            return {
-              text,
-              background: nteeColors[nteeMajor]?.bg,
-              color: nteeColors[nteeMajor]?.fg
-            }
-          })
-        }
+        type: 'fundedNtee',
+        getTagsFn: nteeGetTagsFn(lang)
       },
       // search-tags, not in filter bar
       {
@@ -51,14 +55,14 @@ class SearchFiltersService {
         items: _.mapValues(states, (state, stateCode) => ({
           label: state
         })),
-        getTagsFn (value) {
+        getTagsFn: (value) => {
           return _.filter(_.map(value, (val, key) => {
             if (val) {
               return { text: states[key] }
             }
           }))
         },
-        queryFn (value, key) {
+        queryFn: (value, key) => {
           return {
             nested: {
               path: 'fundedStates',
@@ -158,14 +162,126 @@ class SearchFiltersService {
     ]
   }
 
+  getOrgFilters (lang) {
+    return [
+      // search-tags. not in filter bar
+      {
+        id: 'fundedNteeMajor', // used as ref/key
+        field: 'nteeMajor',
+        title: lang.get('filter.fundedNteeMajor.title'),
+        type: 'ntee',
+        getTagsFn: nteeGetTagsFn(lang)
+      },
+      // search-tags, not in filter bar
+      {
+        id: 'state', // used as ref/key
+        field: 'state',
+        title: lang.get('filter.fundedStates.title'),
+        type: 'listOr',
+        items: _.mapValues(states, (state, stateCode) => ({
+          label: state
+        })),
+        getTagsFn: (value) => {
+          return _.filter(_.map(value, (val, key) => {
+            if (val) {
+              return { text: states[key] }
+            }
+          }))
+        },
+        queryFn: (value, key) => {
+          return { match: { state: key } }
+        }
+      },
+      {
+        id: 'assets', // used as ref/key
+        field: 'assets',
+        type: 'minMax',
+        name: lang.get('filter.assets'),
+        minOptions: [
+          { value: '0', text: lang.get('filter.noMin') },
+          { value: '10000', text: FormatService.abbreviateDollar(10000) },
+          { value: '100000', text: FormatService.abbreviateDollar(100000) },
+          { value: '1000000', text: FormatService.abbreviateDollar(1000000) },
+          { value: '10000000', text: FormatService.abbreviateDollar(10000000) },
+          { value: '100000000', text: FormatService.abbreviateDollar(100000000) },
+          { value: '1000000000', text: FormatService.abbreviateDollar(1000000000) } // 1b
+        ],
+        maxOptions: [
+          { value: '0', text: lang.get('filter.noMax') },
+          { value: '10000', text: FormatService.abbreviateDollar(10000) },
+          { value: '100000', text: FormatService.abbreviateDollar(100000) },
+          { value: '1000000', text: FormatService.abbreviateDollar(1000000) },
+          { value: '10000000', text: FormatService.abbreviateDollar(10000000) },
+          { value: '100000000', text: FormatService.abbreviateDollar(100000000) },
+          { value: '1000000000', text: FormatService.abbreviateDollar(1000000000) } // 1b
+        ]
+      },
+      {
+        id: 'employeeCount', // used as ref/key
+        field: 'employeeCount',
+        type: 'minMax',
+        name: lang.get('filter.employeeCount'),
+        minOptions: [
+          { value: '0', text: lang.get('filter.noMin') },
+          { value: '1', text: FormatService.abbreviateNumber(1) },
+          { value: '5', text: FormatService.abbreviateNumber(5) },
+          { value: '10', text: FormatService.abbreviateNumber(10) },
+          { value: '100', text: FormatService.abbreviateNumber(100) },
+          { value: '1000', text: FormatService.abbreviateNumber(1000) },
+          { value: '10000', text: FormatService.abbreviateNumber(10000) }
+        ],
+        maxOptions: [
+          { value: '0', text: lang.get('filter.noMax') },
+          { value: '1', text: FormatService.abbreviateNumber(1) },
+          { value: '5', text: FormatService.abbreviateNumber(5) },
+          { value: '10', text: FormatService.abbreviateNumber(10) },
+          { value: '100', text: FormatService.abbreviateNumber(100) },
+          { value: '1000', text: FormatService.abbreviateNumber(1000) },
+          { value: '10000', text: FormatService.abbreviateNumber(10000) }
+        ]
+      },
+      {
+        id: 'volunteerCount', // used as ref/key
+        field: 'volunteerCount',
+        type: 'minMax',
+        name: lang.get('filter.volunteerCount'),
+        minOptions: [
+          { value: '0', text: lang.get('filter.noMin') },
+          { value: '1', text: FormatService.abbreviateNumber(1) },
+          { value: '5', text: FormatService.abbreviateNumber(5) },
+          { value: '10', text: FormatService.abbreviateNumber(10) },
+          { value: '100', text: FormatService.abbreviateNumber(100) },
+          { value: '1000', text: FormatService.abbreviateNumber(1000) },
+          { value: '10000', text: FormatService.abbreviateNumber(10000) }
+        ],
+        maxOptions: [
+          { value: '0', text: lang.get('filter.noMax') },
+          { value: '1', text: FormatService.abbreviateNumber(1) },
+          { value: '5', text: FormatService.abbreviateNumber(5) },
+          { value: '10', text: FormatService.abbreviateNumber(10) },
+          { value: '100', text: FormatService.abbreviateNumber(100) },
+          { value: '1000', text: FormatService.abbreviateNumber(1000) },
+          { value: '10000', text: FormatService.abbreviateNumber(10000) }
+        ]
+      } // ,
+      // {
+      //   id: 'keywords', // used as ref/key
+      //   field: 'keywords',
+      //   type: 'minMax',
+      //   name: lang.get('filter.keywords')
+      // }
+    ]
+  }
+
   getFiltersStream (props) {
     const { cookie } = props
-    let { initialFiltersStream, filters, dataType = 'irsFund' } = props
+    let {
+      initialFiltersStream, filters, persistentCookie, dataType = 'irsFund'
+    } = props
 
     // eg filters from custom urls
     if (initialFiltersStream == null) { initialFiltersStream = new Rx.BehaviorSubject(null) }
     initialFiltersStream = initialFiltersStream.pipe(rx.switchMap(initialFilters => {
-      const persistentCookie = 'savedFilters'
       let savedFilters = (() => {
         try {
           return JSON.parse(cookie.get(persistentCookie))
@@ -337,6 +453,17 @@ class SearchFiltersService {
             }
           }
         case 'ntee':
+          return {
+            bool: {
+              should:
+                _.map(filter.value.nteeMajors, (value, key) => ({
+                  match_phrase_prefix: { nteecc: key }
+                })).concat(_.map(filter.value.ntees, (value, key) => ({
+                  match: { nteecc: key }
+                })))
+            }
+          }
+        case 'fundedNtee':
           return {
             bool: {
               should:

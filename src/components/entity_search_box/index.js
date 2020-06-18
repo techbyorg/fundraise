@@ -15,7 +15,9 @@ if (typeof window !== 'undefined' && window !== null) {
 }
 
 export default function $entitySearchBox (props) {
-  const { nameStream, filtersStream, hasHitSearchStream, hasSearched } = props
+  const {
+    nameStream, filtersStream, hasHitSearchStream, hasSearched, entityType
+  } = props
   const { lang, browser, cookie } = useContext(context)
 
   const { modeStream } = useMemo(function () {
@@ -40,8 +42,8 @@ export default function $entitySearchBox (props) {
   return z('.z-entity-search-box', { className: classKebab({ hasSearched }) }, [
     z('.title', [
       mode === 'specific'
-        ? z('.text', lang.get('fundSearch.titleSpecific'))
-        : z('.text', lang.get('fundSearch.titleFocusArea'))
+        ? z('.text', lang.get(`${entityType}Search.titleSpecific`))
+        : z('.text', lang.get(`${entityType}Search.titleFocusArea`))
     ]),
     z(`form.search-box.${mode}`, {
       onsubmit: (e) => {
@@ -53,14 +55,14 @@ export default function $entitySearchBox (props) {
       mode === 'specific'
         ? z($searchInput, {
           valueStream: nameStream,
-          placeholder: lang.get('fundSearch.byNameEinPlaceholder')
+          placeholder: lang.get(`${entityType}Search.byNameEinPlaceholder`)
         })
         : [
           z('.search-tags', [
             z($searchTags, {
               filter: focusAreasFilter,
-              title: lang.get('fund.focusAreas'),
-              placeholder: lang.get('fundSearch.focusAreasPlaceholder')
+              title: lang.get('irsFund.focusAreas'),
+              placeholder: lang.get('entitySearch.focusAreasPlaceholder')
             })
           ]),
           z('.divider'),
@@ -68,7 +70,7 @@ export default function $entitySearchBox (props) {
             z($searchTags, {
               filter: statesFilter,
               title: lang.get('general.location'),
-              placeholder: lang.get('fundSearch.locationPlaceholder')
+              placeholder: lang.get('entitySearch.locationPlaceholder')
             })
           ])
         ],
@@ -96,8 +98,8 @@ export default function $entitySearchBox (props) {
     },
     z('.or', lang.get('general.or')),
     mode === 'specific'
-      ? z('.text', lang.get('fundSearch.byFocusArea'))
-      : z('.text', lang.get('fundSearch.byNameEin'))
+      ? z('.text', lang.get('entitySearch.byFocusArea'))
+      : z('.text', lang.get(`${entityType}Search.byNameEin`))
     )
   ])
 };

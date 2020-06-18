@@ -11,11 +11,11 @@ if (typeof window !== 'undefined' && window !== null) {
 
 const LEGEND_COUNT = 5
 
-export default function $fundOverviewNteePie ({ irsFund }) {
+export default function $fundOverviewNteePie ({ entity }) {
   const { lang } = useContext(context)
 
   // TODO: useMemo?
-  const nteeMajors = _.orderBy(irsFund?.fundedNteeMajors, 'count', 'desc')
+  const nteeMajors = _.orderBy(entity?.fundedNteeMajors, 'count', 'desc')
   const pieNteeMajors = _.reduce(nteeMajors, (obj, { count, percent, key }) => {
     if (percent > 7) {
       obj[key] = { count, percent, key }

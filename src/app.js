@@ -3,20 +3,23 @@ import * as _ from 'lodash-es'
 
 import $sharedApp from 'frontend-shared/app'
 
-import $fundPage from './pages/fund'
-// import $homePage from './pages/home'
-import $orgPage from './pages/org'
+import getEntityPage from './pages/entity'
 import $loginLinkPage from 'frontend-shared/pages/login_link'
 // import $notificationsPage from './pages/notifications'
 import $policiesPage from 'frontend-shared/pages/policies'
 import $privacyPage from 'frontend-shared/pages/privacy'
 import $shellPage from './pages/shell'
-import $searchPage from './pages/search'
+import getSearchPage from './pages/search'
 import $signInPage from 'frontend-shared/pages/sign_in'
 import $tosPage from 'frontend-shared/pages/tos'
 import $unsubscribeEmailPage from 'frontend-shared/pages/unsubscribe_email'
 import $verifyEmailPage from 'frontend-shared/pages/verify_email'
 import $404Page from './pages/404'
+
+const $fundSearchPage = getSearchPage('irsFund')
+const $fundPage = getEntityPage('irsFund')
+const $orgSearchPage = getSearchPage('irsOrg')
+const $orgPage = getEntityPage('irsOrg')
 
 export default function $app (props) {
   return z($sharedApp, _.defaults({
@@ -28,12 +31,15 @@ export default function $app (props) {
       loginLink: $loginLinkPage,
       // notifications: $notificationsPage
       orgByEin: $orgPage,
+      orgByEinWithTab: $orgPage,
       policies: $policiesPage,
       privacy: $privacyPage,
       // settings: $settingsPage
-      home: $searchPage,
-      search: $searchPage,
-      searchWithFocusAreaAndLocation: $searchPage,
+      home: $fundSearchPage,
+      search: $fundSearchPage,
+      searchWithFocusAreaAndLocation: $fundSearchPage,
+      searchOrgs: $orgSearchPage,
+      searchOrgsWithFocusAreaAndLocation: $orgSearchPage,
       shell: $shellPage,
       signIn: $signInPage,
       termsOfService: $tosPage,

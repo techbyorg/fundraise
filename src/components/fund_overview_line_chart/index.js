@@ -7,11 +7,11 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $fundOverviewlineChart ({ metric, irsFund }) {
+export default function $fundOverviewlineChart ({ metric, entity }) {
   // TODO: metric dropdown: assets, grant median, grant sum, grants made
   const data = [{
     id: 'main',
-    data: _.filter(_.map(irsFund?.yearlyStats?.years, function (yearStats) {
+    data: _.filter(_.map(entity?.yearlyStats?.years, function (yearStats) {
       if (yearStats[metric] != null) {
         return {
           x: yearStats.year,

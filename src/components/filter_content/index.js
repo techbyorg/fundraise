@@ -27,7 +27,7 @@ export default function $filterContent (props) {
           return z($filterContentList, {
             filterValueStr, resetValue, filter, valueStreams, filterValue
           })
-        case 'ntee':
+        case 'ntee': case 'fundedNtee':
           return z($filterContentNtee, {
             filterValueStr, resetValue, filter, valueStreams, filterValue
           })

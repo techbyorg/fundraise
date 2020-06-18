@@ -7,6 +7,7 @@ import $spinner from 'frontend-shared/components/spinner'
 import FormatService from 'frontend-shared/services/format'
 
 import $filterBar from '../filter_bar'
+import $orgSearchResults from '../org_search_results'
 import $fundSearchResults from '../fund_search_results'
 import $entitySearchBox from '../entity_search_box'
 import SearchFiltersService from '../../services/search_filters'
@@ -16,7 +17,8 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $entitySearch ({ nteeStream, locationStream }) {
+export default function $entitySearch (props) {
+  const { nteeStream, locationStream, entityType } = props
   const { model, lang, cookie } = useContext(context)
 
   const {
@@ -28,11 +30,11 @@ export default function $entitySearch ({ nteeStream, locationStream }) {
       function (ntee, location) {
         const filters = {}
         if (ntee) {
-          filters['irsFund.fundedNteeMajor'] =
+          filters[`${entityType}.fundedNteeMajor`] =
             { nteeMajors: {}, ntees: { [ntee.toUpperCase()]: true } }
         }
         if (location) {
-          filters['irsFund.state'] = { [location.toUpperCase()]: true }
+          filters[`${entityType}.state`] = { [location.toUpperCase()]: true }
         }
         return filters
       })
@@ -40,7 +42,10 @@ export default function $entitySearch ({ nteeStream, locationStream }) {
     const filtersStream = SearchFiltersService.getFiltersStream({
       cookie,
       initialFiltersStream,
-      filters: SearchFiltersService.getFundFilters(lang)
+      persistentCookie: `${entityType}Filters`,
+      filters: entityType === 'irsOrg'
+        ? SearchFiltersService.getOrgFilters(lang)
+        : SearchFiltersService.getFundFilters(lang)
     })
     const nameStream = new Rx.BehaviorSubject('')
 
@@ -83,9 +88,11 @@ export default function $entitySearch ({ nteeStream, locationStream }) {
               }
             }
 
-            return model.irsFund.search({
+            return model[entityType].search({
               query: { bool },
-              sort: [{ 'lastYearStats.grants': { order: 'desc' } }],
+              sort: entityType === 'irsOrg'
+                ? [{ volunteerCount: { order: 'desc' } }]
+                : [{ 'lastYearStats.grants': { order: 'desc' } }],
               limit: 100
             })
           }),
@@ -102,18 +109,22 @@ export default function $entitySearch ({ nteeStream, locationStream }) {
     searchResults: searchResultsStream
   }))
 
+  const $searchResults = entityType === 'irsOrg'
+    ? $orgSearchResults
+    : $fundSearchResults
+
   return z('.z-entity-search', {
     className: classKebab({ hasSearched })
   }, [
     z($entitySearchBox, {
-      nameStream, filtersStream, hasHitSearchStream, hasSearched
+      nameStream, filtersStream, hasHitSearchStream, hasSearched, entityType
     }),
 
     hasSearched &&
       z('.results', [
         z('.container', [
           z('.title', [
-            lang.get('fundSearch.resultsTitle', {
+            lang.get(`${entityType}Search.resultsTitle`, {
               replacements: {
                 count: FormatService.number(searchResults?.totalCount)
               }
@@ -123,7 +134,7 @@ export default function $entitySearch ({ nteeStream, locationStream }) {
             }, z($spinner, { size: 30 }))
           ]),
           z('.filter-bar', z($filterBar, { filtersStream })),
-          z($fundSearchResults, { rows: searchResults?.nodes })
+          z($searchResults, { rows: searchResults?.nodes })
         ])
       ])
   ])

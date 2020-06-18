@@ -12,25 +12,25 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $fund990s ({ irsFundStream }) {
+export default function $fund990s ({ entityStream, entityType }) {
   const { model, lang, router } = useContext(context)
 
-  const { irsFund990sStream } = useMemo(() => {
+  const { entity990sStream } = useMemo(() => {
     return {
-      irsFund990sStream: irsFundStream.pipe(
-        rx.switchMap(irsFund => model.irsFund990.getAllByEin(irsFund.ein))
+      entity990sStream: entityStream.pipe(
+        rx.switchMap(entity => model[`${entityType}990`].getAllByEin(entity.ein))
       )
     }
   }, [])
 
-  const { irsFund990s } = useStream(() => ({
-    irsFund990s: irsFund990sStream
+  const { entity990s } = useStream(() => ({
+    entity990s: entity990sStream
   }))
 
   return z('.z-fund-990s', [
     z('.title', lang.get('fund990s.title')),
     z('.irs-990s',
-      _.map(irsFund990s?.nodes, ({ ein, year, taxPeriod }, i) => {
+      _.map(entity990s?.nodes, ({ ein, year, taxPeriod }, i) => {
         const folder1 = ein.substr(0, 3)
         return router.link(z('a.irs-990', {
           // TODO: https://www.irs.gov/charities-non-profits/tax-exempt-organization-search-bulk-data-downloads

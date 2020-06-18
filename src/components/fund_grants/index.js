@@ -11,11 +11,11 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $fundGrants ({ irsFund, irsFundStream }) {
+export default function $fundGrants ({ entity, entityStream }) {
   const { model, browser, lang } = useContext(context)
 
   const { contributionsStream } = useMemo(() => ({
-    contributionsStream: irsFundStream.pipe(rx.switchMap(irsFund => model.irsContribution.getAllByFromEin(irsFund.ein, { limit: 100 })))
+    contributionsStream: entityStream.pipe(rx.switchMap(entity => model.irsContribution.getAllByFromEin(entity.ein, { limit: 100 })))
   })
   , [])
 

@@ -12,10 +12,13 @@
   "fundByEin": "/fund/:slug/:ein",
   "fundByEinWithTab": "/fund/:slug/:ein/:tab",
   "orgByEin": "/org/:slug/:ein",
+  "orgByEinWithTab": "/org/:slug/:ein/:tab",
   "policies": "/policies",
   "privacy": "/privacy",
   "search": "/search",
   "searchWithFocusAreaAndLocation": "/search/focus/:focusAreaSlug/:ntee/location/:location",
+  "searchOrgs": "/search-orgs",
+  "searchOrgsWithFocusAreaAndLocation": "/search-orgs/focus/:focusAreaSlug/:ntee/location/:location",
   "shell": "/cache-shell",
   "termsOfService": "/tos"
 }

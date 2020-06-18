@@ -7,8 +7,8 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $fundOverviewNteePie ({ irsFund }) {
-  const data = _.map(irsFund?.fundedStates, ({ key, sum }) => ({
+export default function $fundOverviewNteePie ({ entity }) {
+  const data = _.map(entity?.fundedStates, ({ key, sum }) => ({
     id: key,
     value: sum
   }))

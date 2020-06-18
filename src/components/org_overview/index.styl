@@ -1,0 +1,52 @@
+@require '../../vars'
+
+.z-org-overview
+  flex1()
+
+  > .analytics
+    width: 100%
+    height: 0
+    position: relative
+    margin-bottom: 20px
+    padding-bottom: 80%
+
+    > .block
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      display: flex
+
+      > .head
+        display: flex
+
+        > .metrics
+          margin-left: auto
+
+  > .analytics
+    > .block
+      flex1()
+      display: flex
+      flex-direction: column
+      background: getColor('$bgColor')
+      padding: 20px
+      box-sizing: border-box
+      border: 1px solid getColor('$bgText12')
+      border-radius: 6px
+      margin-bottom: 20px
+
+      &.pie
+        height: 500px
+
+      &.map
+        height: 400px
+
+      > .head
+        > .title
+          font-subtitle1()
+          margin-bottom: 16px
+
+  @media (min-width: $breakPointMedium)
+    > .analytics
+      padding-bottom: 33%

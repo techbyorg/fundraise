@@ -12,30 +12,61 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $fundAtAGlance ({ placeholderNameStream, irsFund }) {
+export default function $entityAtAGlance (props) {
+  const { placeholderNameStream, entity, entityType } = props
   const { lang, router } = useContext(context)
 
   const { placeholderName } = useStream(() => ({
     placeholderName: placeholderNameStream
   }))
 
-  return z('.z-fund-at-a-glance', [
-    z('.name', irsFund?.name || placeholderName),
+  return z('.z-entity-at-a-glance', [
+    z('.name', entity?.name || placeholderName),
 
     z('.block', [
       z('.title', lang.get('general.location')),
-      z('.text', FormatService.location(irsFund))
+      z('.text', FormatService.location(entity))
     ]),
 
-    irsFund?.website &&
+    entity?.website && entity.website !== 'N/A' &&
       z('.block', [
         z('.title', lang.get('general.web')),
         router.link(z('a.text.link', {
-          href: irsFund?.website
-        }, irsFund?.website))
+          href: entity?.website
+        }, entity?.website))
       ]),
 
-    irsFund?.lastYearStats &&
+    entity?.mission &&
+      z('.block', [
+        z('.title', lang.get('general.mission')),
+        entity?.mission
+      ]),
+
+    entityType === 'irsOrg' &&
+      [
+        z('.divider'),
+        z('.grant-summary', [
+          z('.metric', [
+            z('.name', lang.get('org.assets')),
+            z('.value',
+              FormatService.abbreviateDollar(entity?.assets)
+            )
+          ]),
+          z('.metric', [
+            z('.name', lang.get('org.employees')),
+            z('.value',
+              FormatService.abbreviateNumber(entity?.employeeCount)
+            )
+          ]),
+          z('.metric', [
+            z('.name', lang.get('org.volunteers')),
+            z('.value',
+              FormatService.abbreviateNumber(entity?.volunteerCount)
+            )
+          ])
+        ])
+      ],
+    entityType === 'irsFund' && entity?.lastYearStats &&
       [
         z('.divider'),
         z('.grant-summary', [
@@ -51,25 +82,25 @@ export default function $fundAtAGlance ({ placeholderNameStream, irsFund }) {
           z('.metric', [
             z('.name', lang.get('fund.medianGrant')),
             z('.value',
-              FormatService.abbreviateDollar(irsFund?.lastYearStats?.grantMedian)
+              FormatService.abbreviateDollar(entity?.lastYearStats?.grantMedian)
             )
           ]),
           z('.metric', [
             z('.name', lang.get('filter.grantCount')),
             z('.value',
-              FormatService.abbreviateNumber(irsFund?.lastYearStats?.grants)
+              FormatService.abbreviateNumber(entity?.lastYearStats?.grants)
             )
           ]),
           z('.metric', [
             z('.name', lang.get('filter.grantSum')),
             z('.value',
-              FormatService.abbreviateDollar(irsFund?.lastYearStats?.grantSum)
+              FormatService.abbreviateDollar(entity?.lastYearStats?.grantSum)
             )
           ]),
           z('.metric', [
             z('.name', lang.get('org.assets')),
             z('.value',
-              FormatService.abbreviateDollar(irsFund?.assets)
+              FormatService.abbreviateDollar(entity?.assets)
             )
           ])
         ])
