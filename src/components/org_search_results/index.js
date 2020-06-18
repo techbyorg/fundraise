@@ -23,9 +23,7 @@ export default function $orgSearchResults ({ rows }) {
     z($table, {
       breakpoint,
       data: rows,
-      onRowClick (e, i) {
-        return router.goOrg(rows[i])
-      },
+      rowHrefFn: (i) => router.getOrg(rows[i]),
       mobileRowRenderer: $orgSearchResultsMobileRow,
       columns: [
         { key: 'name', name: lang.get('general.name'), width: 240, isFlex: true },

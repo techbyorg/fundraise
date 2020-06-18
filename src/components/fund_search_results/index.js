@@ -26,9 +26,7 @@ export default function $fundSearchResults ({ rows }) {
     z($table, {
       breakpoint,
       data: rows,
-      onRowClick (e, i) {
-        return router.goFund(rows[i])
-      },
+      rowHrefFn: (i) => router.getFund(rows[i]),
       mobileRowRenderer: $fundSearchResultsMobileRow,
       columns: [
         { key: 'name', name: lang.get('general.name'), width: 240, isFlex: true },
