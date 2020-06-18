@@ -24,7 +24,10 @@ export default class IrsContribution {
       query: `
         query IrsContributionGetAllByFromEin($toId: String!, $limit: Int) {
           irsContributions(toId: $toId, limit: $limit) {
-            nodes { year, fromEin, toName, toCity, toState, amount, nteeMajor, relationship, purpose }
+            nodes {
+              year, fromEin, toName, toCity, toState, amount, nteeMajor, relationship, purpose,
+              irsFund { name, ein }
+            }
           }
         }`,
       variables: { toId, limit },

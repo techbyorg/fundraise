@@ -10,7 +10,7 @@ import $entityAtAGlance from '../entity_at_a_glance'
 import $entityPersons from '../entity_persons'
 import $fundApplicationInfo from '../fund_application_info'
 import $fundOverview from '../fund_overview'
-import $fundGrants from '../fund_grants'
+import $entityGrants from '../entity_grants'
 import $orgOverview from '../org_overview'
 import context from '../../context'
 
@@ -51,13 +51,13 @@ export default function $entity (props) {
         ? $orgOverview
         : $fundOverview
     },
-    entityType === 'irsFund' && {
+    {
       name: lang.get('entity.tabGrants'),
       slug: 'grants',
       route: entityType === 'irsOrg'
         ? router.getOrg(entity, 'grants')
         : router.getFund(entity, 'grants'),
-      $el: $fundGrants
+      $el: $entityGrants
     },
     {
       name: lang.get('entity.tabPersons'),

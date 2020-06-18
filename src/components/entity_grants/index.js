@@ -11,26 +11,33 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $fundGrants ({ entity, entityStream }) {
+export default function $entityGrants ({ entity, entityStream, entityType }) {
   const { model, browser, lang } = useContext(context)
 
   const { contributionsStream } = useMemo(() => ({
-    contributionsStream: entityStream.pipe(rx.switchMap(entity => model.irsContribution.getAllByFromEin(entity.ein, { limit: 100 })))
-  })
-  , [])
+    contributionsStream: entityStream.pipe(rx.switchMap(entity => {
+      if (entityType === 'irsOrg') {
+        return model.irsContribution.getAllByToId(entity.ein, { limit: 100 })
+      } else {
+        return model.irsContribution.getAllByFromEin(entity.ein, { limit: 100 })
+      }
+    }))
+  }), [])
 
   const { contributions, breakpoint } = useStream(() => ({
     contributions: contributionsStream,
     breakpoint: browser.getBreakpoint()
   }))
 
-  return z('.z-fund-grants', [
+  return z('.z-entity-grants', [
     z('.grants', [
       z($table, {
         breakpoint,
         data: contributions?.nodes,
-        mobileRowRenderer: $fundGrantsMobileRow,
-        columns: [
+        mobileRowRenderer: entityType === 'irsOrg'
+          ? $orgGrantsMobileRow
+          : $fundGrantsMobileRow,
+        columns: _.filter([
           {
             key: 'amount',
             name: lang.get('general.amount'),
@@ -39,15 +46,21 @@ export default function $fundGrants ({ entity, entityStream }) {
               return `$${FormatService.number(row.amount)}`
             }
           },
-          {
+          entityType === 'irsOrg' && {
+            key: 'fromEin',
+            name: 'Name',
+            width: 300,
+            content: $entityGrantFundName
+          },
+          entityType === 'irsFund' && {
             key: 'toId',
             name: 'Name',
             width: 300,
-            content: $fundGrantName
+            content: $entityGrantOrgName
           },
           {
             key: 'purpose',
-            name: lang.get('fundGrants.purpose'),
+            name: lang.get('entityGrants.purpose'),
             width: 300,
             isFlex: true,
             content ({ row }) {
@@ -56,7 +69,7 @@ export default function $fundGrants ({ entity, entityStream }) {
                 z('.text', row.purpose))
             }
           },
-          {
+          entityType === 'irsFund' && {
             key: 'location',
             name: lang.get('general.location'),
             width: 150,
@@ -68,31 +81,45 @@ export default function $fundGrants ({ entity, entityStream }) {
             }
           },
           { key: 'year', name: lang.get('general.year'), width: 100 }
-        ]
+        ])
       })
     ])
   ])
 };
 
-function $fundGrantName ({ row }) {
+function $entityGrantOrgName ({ row }) {
   const { model, router } = useContext(context)
-  let hasEin = model.irsOrg.isEin(row.toId)
-  hasEin = false // FIXME: add org page
-  const nameTag = hasEin ? 'a' : 'div'
-  const nameFn = hasEin ? router.link : n => n
-  return nameFn(z(`${nameTag}.name`, {
-    href: hasEin ? router.get('orgByEin', {
+  const hasEin = model.irsOrg.isEin(row.toId)
+  return router.linkIfHref(z('.name', {
+    href: hasEin && router.get('orgByEin', {
       ein: row.toId,
       slug: _.kebabCase(row.toName)
-    }) : undefined
+    })
   }, row.toName))
 }
 
+function $entityGrantFundName ({ row }) {
+  const { router } = useContext(context)
+  return router.linkIfHref(z('.name', {
+    href: router.getFund(row.irsFund)
+  }, row.irsFund?.name))
+}
+
 function $fundGrantsMobileRow ({ row }) {
+  return z($entityGrantsMobileRow, { row, entityType: 'irsFund' })
+}
+
+function $orgGrantsMobileRow ({ row }) {
+  return z($entityGrantsMobileRow, { row, entityType: 'irsOrg' })
+}
+
+function $entityGrantsMobileRow ({ row, entityType }) {
   const { lang } = useContext(context)
-  return z('.z-fund-grants-mobile-row', [
+  return z('.z-entity-grants-mobile-row', [
     z('.name', [
-      z($fundGrantName, { row })
+      entityType === 'irsOrg'
+        ? z($entityGrantFundName, { row })
+        : z($entityGrantOrgName, { row })
     ]),
     z('.location', [
       FormatService.location({
