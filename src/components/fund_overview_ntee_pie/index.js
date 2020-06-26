@@ -1,7 +1,7 @@
 import { z, useContext } from 'zorium'
 import * as _ from 'lodash-es'
 
-import $chartPie from '../chart_pie'
+import $chartPie from 'frontend-shared/components/chart_pie'
 import context from '../../context'
 import { nteeColors } from '../../colors'
 

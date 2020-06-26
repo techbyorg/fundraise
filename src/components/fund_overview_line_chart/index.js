@@ -1,7 +1,7 @@
 import { z } from 'zorium'
 import * as _ from 'lodash-es'
 
-import $chartLine from '../chart_line'
+import $chartLine from 'frontend-shared/components/chart_line'
 
 if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
