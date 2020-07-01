@@ -6,8 +6,8 @@ import Experiment from './experiment'
 import IrsContribution from './irs_contribution'
 import IrsFund from './irs_fund'
 import IrsFund990 from './irs_fund_990'
-import IrsOrg from './irs_org'
-import IrsOrg990 from './irs_org_990'
+import IrsNonprofit from './irs_nonprofit'
+import IrsNonprofit990 from './irs_nonprofit_990'
 import IrsPerson from './irs_person'
 // import Notification from './notification'
 // import PushToken from './push_token'
@@ -25,8 +25,8 @@ export default class Model extends SharedModel {
     this.irsContribution = new IrsContribution({ auth: this.auth })
     this.irsFund = new IrsFund({ auth: this.auth })
     this.irsFund990 = new IrsFund990({ auth: this.auth })
-    this.irsOrg = new IrsOrg({ auth: this.auth })
-    this.irsOrg990 = new IrsOrg990({ auth: this.auth })
+    this.irsNonprofit = new IrsNonprofit({ auth: this.auth })
+    this.irsNonprofit990 = new IrsNonprofit990({ auth: this.auth })
     this.irsPerson = new IrsPerson({ auth: this.auth })
   }
 }

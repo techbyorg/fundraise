@@ -8,7 +8,7 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $orgOverview ({ entity }) {
+export default function $nonprofitOverview ({ entity }) {
   const { lang } = useContext(context)
 
   var { metricStream } = useMemo(function () {
@@ -23,9 +23,9 @@ export default function $orgOverview ({ entity }) {
     metric: metricStream
   }))
 
-  console.log('org ov', entity)
+  console.log('nonprofit ov', entity)
 
-  return z('.z-org-overview', [
+  return z('.z-nonprofit-overview', [
     z('.analytics', [
       z('.block', [
         z('.head', [
@@ -33,12 +33,12 @@ export default function $orgOverview ({ entity }) {
           z('.metrics', [
             z($dropdown, {
               isPrimary: true,
-              currentText: lang.get('orgOverview.changeMetric'),
+              currentText: lang.get('nonprofitOverview.changeMetric'),
               valueStream: metricStream,
               options: [
                 { value: 'assets', text: lang.get('metric.assets') },
-                { value: 'employeeCount', text: lang.get('org.employees') },
-                { value: 'volunteerCount', text: lang.get('org.volunteers') },
+                { value: 'employeeCount', text: lang.get('nonprofit.employees') },
+                { value: 'volunteerCount', text: lang.get('nonprofit.volunteers') }
                 // { value: 'officerSalaries', text: lang.get('metric.officerSalaries') }
               ]
             })

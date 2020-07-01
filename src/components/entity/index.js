@@ -11,7 +11,7 @@ import $entityPersons from '../entity_persons'
 import $fundApplicationInfo from '../fund_application_info'
 import $fundOverview from '../fund_overview'
 import $entityGrants from '../entity_grants'
-import $orgOverview from '../org_overview'
+import $nonprofitOverview from '../nonprofit_overview'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -44,42 +44,42 @@ export default function $entity (props) {
     {
       name: lang.get(`${entityType}.tabOverview`),
       slug: 'overview',
-      route: entityType === 'irsOrg'
-        ? router.getOrg(entity, 'overview')
+      route: entityType === 'irsNonprofit'
+        ? router.getNonprofit(entity, 'overview')
         : router.getFund(entity, 'overview'),
-      $el: entityType === 'irsOrg'
-        ? $orgOverview
+      $el: entityType === 'irsNonprofit'
+        ? $nonprofitOverview
         : $fundOverview
     },
     {
       name: lang.get('entity.tabGrants'),
       slug: 'grants',
-      route: entityType === 'irsOrg'
-        ? router.getOrg(entity, 'grants')
+      route: entityType === 'irsNonprofit'
+        ? router.getNonprofit(entity, 'grants')
         : router.getFund(entity, 'grants'),
       $el: $entityGrants
     },
     {
       name: lang.get('entity.tabPersons'),
       slug: 'persons',
-      route: entityType === 'irsOrg'
-        ? router.getOrg(entity, 'persons')
+      route: entityType === 'irsNonprofit'
+        ? router.getNonprofit(entity, 'persons')
         : router.getFund(entity, 'persons'),
       $el: $entityPersons
     },
     entityType === 'irsFund' && {
       name: lang.get('irsFund.tabApplicationInfo'),
       slug: 'application-info',
-      route: entityType === 'irsOrg'
-        ? router.getOrg(entity, 'application-info')
+      route: entityType === 'irsNonprofit'
+        ? router.getNonprofit(entity, 'application-info')
         : router.getFund(entity, 'application-info'),
       $el: $fundApplicationInfo
     },
     {
       name: lang.get('entity.tab990s'),
       slug: '990s',
-      route: entityType === 'irsOrg'
-        ? router.getOrg(entity, '990s')
+      route: entityType === 'irsNonprofit'
+        ? router.getNonprofit(entity, '990s')
         : router.getFund(entity, '990s'),
       $el: $entity990s
     }

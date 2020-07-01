@@ -1,4 +1,4 @@
-export default class IrsOrg990 {
+export default class IrsNonprofit990 {
   constructor ({ auth }) {
     this.auth = auth
   }
@@ -6,13 +6,13 @@ export default class IrsOrg990 {
   getAllByEin (ein) {
     return this.auth.stream({
       query: `
-        query IrsOrg990GetAllByEin($ein: String!) {
-          irsOrg990s(ein: $ein) {
+        query IrsNonprofit990GetAllByEin($ein: String!) {
+          irsNonprofit990s(ein: $ein) {
             nodes { ein, year, taxPeriod }
           }
         }`,
       variables: { ein },
-      pull: 'irsOrg990s'
+      pull: 'irsNonprofit990s'
     })
   }
 }

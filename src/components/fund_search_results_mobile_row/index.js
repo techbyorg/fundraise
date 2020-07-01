@@ -31,7 +31,7 @@ export default function $fundSearchResultsMobileRow ({ row }) {
     ),
     z('.stats', [
       z('.stat', [
-        z('.title', lang.get('org.assets')),
+        z('.title', lang.get('nonprofit.assets')),
         z('.value',
           FormatService.abbreviateDollar(row.assets))
       ]),

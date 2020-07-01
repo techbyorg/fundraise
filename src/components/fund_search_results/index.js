@@ -46,7 +46,7 @@ export default function $fundSearchResults ({ rows }) {
         },
         {
           key: 'assets',
-          name: lang.get('org.assets'),
+          name: lang.get('nonprofit.assets'),
           width: 150,
           content ({ row }) {
             return FormatService.abbreviateDollar(row.assets)

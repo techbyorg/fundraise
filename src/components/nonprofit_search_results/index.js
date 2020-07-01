@@ -4,7 +4,7 @@ import $table from 'frontend-shared/components/table'
 import $tags from 'frontend-shared/components/tags'
 import FormatService from 'frontend-shared/services/format'
 
-import $orgSearchResultsMobileRow from '../org_search_results_mobile_row'
+import $nonprofitSearchResultsMobileRow from '../nonprofit_search_results_mobile_row'
 import context from '../../context'
 import { nteeColors } from '../../colors'
 
@@ -12,19 +12,19 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $orgSearchResults ({ rows }) {
+export default function $nonprofitSearchResults ({ rows }) {
   const { browser, lang, router } = useContext(context)
 
   const { breakpoint } = useStream(() => ({
     breakpoint: browser.getBreakpoint()
   }))
 
-  return z('.z-org-search-results', [
+  return z('.z-nonprofit-search-results', [
     z($table, {
       breakpoint,
       data: rows,
-      rowHrefFn: (i) => router.getOrg(rows[i]),
-      mobileRowRenderer: $orgSearchResultsMobileRow,
+      rowHrefFn: (i) => router.getNonprofit(rows[i]),
+      mobileRowRenderer: $nonprofitSearchResultsMobileRow,
       columns: [
         { key: 'name', name: lang.get('general.name'), width: 240, isFlex: true },
         {
@@ -44,7 +44,7 @@ export default function $orgSearchResults ({ rows }) {
         },
         {
           key: 'assets',
-          name: lang.get('org.assets'),
+          name: lang.get('nonprofit.assets'),
           width: 150,
           content ({ row }) {
             return FormatService.abbreviateDollar(row.assets)
@@ -52,7 +52,7 @@ export default function $orgSearchResults ({ rows }) {
         },
         {
           key: 'grantMedian',
-          name: lang.get('org.employees'),
+          name: lang.get('nonprofit.employees'),
           width: 170,
           content ({ row }) {
             return FormatService.abbreviateNumber(row.employeeCount)
@@ -60,7 +60,7 @@ export default function $orgSearchResults ({ rows }) {
         },
         {
           key: 'grantSum',
-          name: lang.get('org.volunteers'),
+          name: lang.get('nonprofit.volunteers'),
           width: 150,
           content ({ row }) {
             return FormatService.abbreviateNumber(row.volunteerCount)

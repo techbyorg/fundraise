@@ -18,8 +18,8 @@ import $404Page from './pages/404'
 
 const $fundSearchPage = getSearchPage('irsFund')
 const $fundPage = getEntityPage('irsFund')
-const $orgSearchPage = getSearchPage('irsOrg')
-const $orgPage = getEntityPage('irsOrg')
+const $nonprofitSearchPage = getSearchPage('irsNonprofit')
+const $nonprofitPage = getEntityPage('irsNonprofit')
 
 export default function $app (props) {
   return z($sharedApp, _.defaults({
@@ -30,16 +30,16 @@ export default function $app (props) {
       fundByEinWithTab: $fundPage,
       loginLink: $loginLinkPage,
       // notifications: $notificationsPage
-      orgByEin: $orgPage,
-      orgByEinWithTab: $orgPage,
+      nonprofitByEin: $nonprofitPage,
+      nonprofitByEinWithTab: $nonprofitPage,
       policies: $policiesPage,
       privacy: $privacyPage,
       // settings: $settingsPage
       home: $fundSearchPage,
       search: $fundSearchPage,
       searchWithFocusAreaAndLocation: $fundSearchPage,
-      searchOrgs: $orgSearchPage,
-      searchOrgsWithFocusAreaAndLocation: $orgSearchPage,
+      searchNonprofits: $nonprofitSearchPage,
+      searchNonprofitsWithFocusAreaAndLocation: $nonprofitSearchPage,
       shell: $shellPage,
       signIn: $signInPage,
       termsOfService: $tosPage,

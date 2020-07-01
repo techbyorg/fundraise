@@ -10,7 +10,7 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-export default function $orgSearchResultsMobileRow ({ row }) {
+export default function $nonprofitSearchResultsMobileRow ({ row }) {
   const { lang } = useContext(context)
 
   const nteeMajor = row.nteecc?.substr(0, 1)
@@ -20,7 +20,7 @@ export default function $orgSearchResultsMobileRow ({ row }) {
     color: nteeColors[nteeMajor].fg
   }]
 
-  return z('.z-org-search-results-mobile-row', [
+  return z('.z-nonprofit-search-results-mobile-row', [
     z('.name', row.name),
     z('.location', FormatService.location(row)),
     z('.focus-areas',
@@ -28,18 +28,18 @@ export default function $orgSearchResultsMobileRow ({ row }) {
     ),
     z('.stats', [
       z('.stat', [
-        z('.title', lang.get('org.assets')),
+        z('.title', lang.get('nonprofit.assets')),
         z('.value',
           FormatService.abbreviateDollar(row.assets))
       ]),
       z('.stat', [
-        z('.title', lang.get('org.medianGrant')),
+        z('.title', lang.get('nonprofit.medianGrant')),
         z('.value',
           FormatService.abbreviateDollar(row.lastYearStats?.grantMedian)
         )
       ]),
       z('.stat', [
-        z('.title', lang.get('org.grantsPerYear')),
+        z('.title', lang.get('nonprofit.grantsPerYear')),
         z('.value',
           FormatService.abbreviateDollar(row.lastYearStats?.grantSum)
         )

@@ -162,7 +162,7 @@ class SearchFiltersService {
     ]
   }
 
-  getOrgFilters (lang) {
+  getNonprofitFilters (lang) {
     return [
       // search-tags. not in filter bar
       {

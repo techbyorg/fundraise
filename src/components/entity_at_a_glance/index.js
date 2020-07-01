@@ -42,24 +42,24 @@ export default function $entityAtAGlance (props) {
         entity?.mission
       ]),
 
-    entityType === 'irsOrg' &&
+    entityType === 'irsNonprofit' &&
       [
         z('.divider'),
         z('.grant-summary', [
           z('.metric', [
-            z('.name', lang.get('org.assets')),
+            z('.name', lang.get('nonprofit.assets')),
             z('.value',
               FormatService.abbreviateDollar(entity?.assets)
             )
           ]),
           z('.metric', [
-            z('.name', lang.get('org.employees')),
+            z('.name', lang.get('nonprofit.employees')),
             z('.value',
               FormatService.abbreviateNumber(entity?.employeeCount)
             )
           ]),
           z('.metric', [
-            z('.name', lang.get('org.volunteers')),
+            z('.name', lang.get('nonprofit.volunteers')),
             z('.value',
               FormatService.abbreviateNumber(entity?.volunteerCount)
             )
@@ -98,7 +98,7 @@ export default function $entityAtAGlance (props) {
             )
           ]),
           z('.metric', [
-            z('.name', lang.get('org.assets')),
+            z('.name', lang.get('nonprofit.assets')),
             z('.value',
               FormatService.abbreviateDollar(entity?.assets)
             )

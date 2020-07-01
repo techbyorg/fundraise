@@ -16,7 +16,7 @@ export default function $entityGrants ({ entity, entityStream, entityType }) {
 
   const { contributionsStream } = useMemo(() => ({
     contributionsStream: entityStream.pipe(rx.switchMap(entity => {
-      if (entityType === 'irsOrg') {
+      if (entityType === 'irsNonprofit') {
         return model.irsContribution.getAllByToId(entity.ein, { limit: 100 })
       } else {
         return model.irsContribution.getAllByFromEin(entity.ein, { limit: 100 })
@@ -34,8 +34,8 @@ export default function $entityGrants ({ entity, entityStream, entityType }) {
       z($table, {
         breakpoint,
         data: contributions?.nodes,
-        mobileRowRenderer: entityType === 'irsOrg'
-          ? $orgGrantsMobileRow
+        mobileRowRenderer: entityType === 'irsNonprofit'
+          ? $nonprofitGrantsMobileRow
           : $fundGrantsMobileRow,
         columns: _.filter([
           {
@@ -46,7 +46,7 @@ export default function $entityGrants ({ entity, entityStream, entityType }) {
               return `$${FormatService.number(row.amount)}`
             }
           },
-          entityType === 'irsOrg' && {
+          entityType === 'irsNonprofit' && {
             key: 'fromEin',
             name: 'Name',
             width: 300,
@@ -56,7 +56,7 @@ export default function $entityGrants ({ entity, entityStream, entityType }) {
             key: 'toId',
             name: 'Name',
             width: 300,
-            content: $entityGrantOrgName
+            content: $entityGrantNonprofitName
           },
           {
             key: 'purpose',
@@ -87,11 +87,11 @@ export default function $entityGrants ({ entity, entityStream, entityType }) {
   ])
 };
 
-function $entityGrantOrgName ({ row }) {
+function $entityGrantNonprofitName ({ row }) {
   const { model, router } = useContext(context)
-  const hasEin = model.irsOrg.isEin(row.toId)
+  const hasEin = model.irsNonprofit.isEin(row.toId)
   return router.linkIfHref(z('.name', {
-    href: hasEin && router.get('orgByEin', {
+    href: hasEin && router.get('nonprofitByEin', {
       ein: row.toId,
       slug: _.kebabCase(row.toName)
     })
@@ -109,17 +109,17 @@ function $fundGrantsMobileRow ({ row }) {
   return z($entityGrantsMobileRow, { row, entityType: 'irsFund' })
 }
 
-function $orgGrantsMobileRow ({ row }) {
-  return z($entityGrantsMobileRow, { row, entityType: 'irsOrg' })
+function $nonprofitGrantsMobileRow ({ row }) {
+  return z($entityGrantsMobileRow, { row, entityType: 'irsNonprofit' })
 }
 
 function $entityGrantsMobileRow ({ row, entityType }) {
   const { lang } = useContext(context)
   return z('.z-entity-grants-mobile-row', [
     z('.name', [
-      entityType === 'irsOrg'
+      entityType === 'irsNonprofit'
         ? z($entityGrantFundName, { row })
-        : z($entityGrantOrgName, { row })
+        : z($entityGrantNonprofitName, { row })
     ]),
     z('.location', [
       FormatService.location({

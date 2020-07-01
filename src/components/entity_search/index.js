@@ -7,7 +7,7 @@ import $spinner from 'frontend-shared/components/spinner'
 import FormatService from 'frontend-shared/services/format'
 
 import $filterBar from '../filter_bar'
-import $orgSearchResults from '../org_search_results'
+import $nonprofitSearchResults from '../nonprofit_search_results'
 import $fundSearchResults from '../fund_search_results'
 import $entitySearchBox from '../entity_search_box'
 import SearchFiltersService from '../../services/search_filters'
@@ -43,8 +43,8 @@ export default function $entitySearch (props) {
       cookie,
       initialFiltersStream,
       persistentCookie: `${entityType}Filters`,
-      filters: entityType === 'irsOrg'
-        ? SearchFiltersService.getOrgFilters(lang)
+      filters: entityType === 'irsNonprofit'
+        ? SearchFiltersService.getNonprofitFilters(lang)
         : SearchFiltersService.getFundFilters(lang)
     })
     const nameStream = new Rx.BehaviorSubject('')
@@ -78,7 +78,7 @@ export default function $entitySearch (props) {
           rx.switchMap(function ([esQueryFilter, name]) {
             const bool = { filter: esQueryFilter }
             if (name) {
-              if (model.irsOrg.isEin(name)) {
+              if (model.irsNonprofit.isEin(name)) {
                 name = name.replace('-', '')
               }
               bool.must = {
@@ -92,7 +92,7 @@ export default function $entitySearch (props) {
 
             return model[entityType].search({
               query: { bool },
-              sort: entityType === 'irsOrg'
+              sort: entityType === 'irsNonprofit'
                 ? [{ volunteerCount: { order: 'desc' } }]
                 : [{ 'lastYearStats.grants': { order: 'desc' } }],
               limit: 100
@@ -111,8 +111,8 @@ export default function $entitySearch (props) {
     searchResults: searchResultsStream
   }))
 
-  const $searchResults = entityType === 'irsOrg'
-    ? $orgSearchResults
+  const $searchResults = entityType === 'irsNonprofit'
+    ? $nonprofitSearchResults
     : $fundSearchResults
 
   return z('.z-entity-search', {
