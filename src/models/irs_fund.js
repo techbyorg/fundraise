@@ -1,11 +1,9 @@
 export default class IrsFund {
   constructor ({ auth }) {
-    this.getByEin = this.getByEin.bind(this)
-    this.search = this.search.bind(this)
     this.auth = auth
   }
 
-  getByEin (ein) {
+  getByEin = (ein) => {
     return this.auth.stream({
       query: `
         query IrsFundGetByEin($ein: String!) {
@@ -33,7 +31,7 @@ export default class IrsFund {
     })
   }
 
-  search ({ query, sort, limit }) {
+  search = ({ query, sort, limit }) => {
     console.log('search')
     return this.auth.stream({
       query: `

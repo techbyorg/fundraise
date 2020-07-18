@@ -2,23 +2,16 @@ const DEFAULT_FIELDS = 'id, slug'
 
 export default class Entity {
   constructor ({ auth }) {
-    this.getAll = this.getAll.bind(this)
-    this.getAllByUserId = this.getAllByUserId.bind(this)
-    this.getById = this.getById.bind(this)
-    this.getBySlug = this.getBySlug.bind(this)
-    this.getDefaultEntity = this.getDefaultEntity.bind(this)
-    this.joinById = this.joinById.bind(this)
-    this.leaveById = this.leaveById.bind(this)
     this.auth = auth
   }
 
-  getAll () {
+  getAll = () => {
     return this.auth.stream({
       query: `query EntityGetAll { entities { ${DEFAULT_FIELDS} }`
     })
   }
 
-  getAllByUserId (userId) {
+  getAllByUserId = (userId) => {
     return this.auth.stream({
       query: `
         query EntityGetallByUserId($userId: ID!) {
@@ -30,27 +23,27 @@ export default class Entity {
     })
   }
 
-  getById (id) {
+  getById = (id) => {
     return this.auth.stream({
       query: `query EntityGetById($slug: ID!) { entity(id: $id) { ${DEFAULT_FIELDS} }`,
       variables: { id }
     })
   }
 
-  getBySlug (slug) {
+  getBySlug = (slug) => {
     return this.auth.stream({
       query: `query EntityGetBySlug($slug: String!) { entity(slug: $slug) { ${DEFAULT_FIELDS} }`,
       variables: { slug }
     })
   }
 
-  getDefaultEntity () {
+  getDefaultEntity = () => {
     return this.auth.stream({
       query: `query EntityGetDefault { entity { ${DEFAULT_FIELDS} } }`
     })
   }
 
-  joinById (id) {
+  joinById = (id) => {
     return this.auth.call({
       query: `
         mutation EntityJoinById($id: ID!) {
@@ -60,7 +53,7 @@ export default class Entity {
     }, { invalidateAll: true })
   }
 
-  leaveById (id) {
+  leaveById = (id) => {
     return this.auth.call({
       query: `
         mutation EntityLeaveById($id: ID!) {
@@ -70,11 +63,11 @@ export default class Entity {
     }, { invalidateAll: true })
   }
 
-  getDisplayName (entity) {
+  getDisplayName = (entity) => {
     return entity?.name || 'Nameless'
   }
 
-  getPath (entity, key, { replacements, router, language }) {
+  getPath = (entity, key, { replacements, router, language }) => {
     if (!router) {
       return '/'
     }
@@ -90,7 +83,7 @@ export default class Entity {
     return path
   }
 
-  goPath (entity, key, { replacements, router, language }, options) {
+  goPath = (entity, key, { replacements, router, language }, options) => {
     const subdomain = router.getSubdomain()
 
     if (replacements == null) { replacements = {} }

@@ -1,11 +1,9 @@
 export default class IrsPerson {
   constructor ({ auth }) {
-    this.getAllByEin = this.getAllByEin.bind(this)
-    this.search = this.search.bind(this)
     this.auth = auth
   }
 
-  getAllByEin (ein) {
+  getAllByEin = (ein) => {
     return this.auth.stream({
       query: `
         query IrsPersonGetAllByEin($ein: String!) {
@@ -18,7 +16,7 @@ export default class IrsPerson {
     })
   }
 
-  search ({ query, limit }) {
+  search = ({ query, limit }) => {
     return this.auth.stream({
       query: `
         query IrsPersonSearch($query: ESQuery!) {

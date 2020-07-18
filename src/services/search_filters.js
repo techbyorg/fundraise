@@ -32,10 +32,6 @@ function nteeGetTagsFn (lang) {
 }
 
 class SearchFiltersService {
-  constructor () {
-    this.getESQueryFilterFromFilters = this.getESQueryFilterFromFilters.bind(this)
-  }
-
   getFundFilters (lang) {
     return [
       // search-tags. not in filter bar
@@ -369,9 +365,9 @@ class SearchFiltersService {
     )
   }
 
-  getESQueryFilterFromFilters (filters) {
+  getESQueryFilterFromFilters = (filters) => {
     const groupedFilters = _.groupBy(filters, 'field')
-    var filter = _.filter(_.map(groupedFilters, (fieldFilters, field) => {
+    let filter = _.filter(_.map(groupedFilters, (fieldFilters, field) => {
       let range
       if (!_.some(fieldFilters, 'value')) {
         return

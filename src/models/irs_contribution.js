@@ -1,12 +1,9 @@
 export default class IrsContribution {
   constructor ({ auth }) {
-    this.getAllByFromEin = this.getAllByFromEin.bind(this)
-    this.getAllByToId = this.getAllByToId.bind(this)
-    this.search = this.search.bind(this)
     this.auth = auth
   }
 
-  getAllByFromEin (fromEin, { limit } = {}) {
+  getAllByFromEin = (fromEin, { limit } = {}) => {
     return this.auth.stream({
       query: `
         query IrsContributionGetAllByFromEin($fromEin: String!, $limit: Int) {
@@ -19,7 +16,7 @@ export default class IrsContribution {
     })
   }
 
-  getAllByToId (toId, { limit } = {}) {
+  getAllByToId = (toId, { limit } = {}) => {
     return this.auth.stream({
       query: `
         query IrsContributionGetAllByFromEin($toId: String!, $limit: Int) {
@@ -35,7 +32,7 @@ export default class IrsContribution {
     })
   }
 
-  search ({ query, limit }) {
+  search = ({ query, limit }) => {
     return this.auth.stream({
       query: 'query IrsContributionSearch($query: ESQuery!) { irsContributions(query: $query) { nodes { fromEin } } }',
       variables: { query },

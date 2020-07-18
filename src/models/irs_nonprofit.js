@@ -1,11 +1,9 @@
 export default class IrsNonprofit {
   constructor ({ auth }) {
-    this.getByEin = this.getByEin.bind(this)
-    this.search = this.search.bind(this)
     this.auth = auth
   }
 
-  getByEin (ein) {
+  getByEin = (ein) => {
     return this.auth.stream({
       query: `
         query IrsNonprofitGetByEin($ein: String!) {
@@ -22,7 +20,7 @@ export default class IrsNonprofit {
     })
   }
 
-  search ({ query, sort, limit }) {
+  search = ({ query, sort, limit }) => {
     return this.auth.stream({
       query: `
         query IrsNonprofitSearch($query: ESQuery!, $sort: JSON, $limit: Int) {

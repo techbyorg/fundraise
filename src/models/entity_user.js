@@ -6,58 +6,50 @@ import config from '../config'
 
 export default class EntityUser {
   constructor ({ auth }) {
-    this.addRoleByEntityIdAndUserId = this.addRoleByEntityIdAndUserId.bind(this)
-    this.removeRoleByEntityIdAndUserId = this.removeRoleByEntityIdAndUserId.bind(this)
-    this.getByEntityIdAndUserId = this.getByEntityIdAndUserId.bind(this)
-    this.getTopByEntityId = this.getTopByEntityId.bind(this)
-    this.getMeSettingsByEntityId = this.getMeSettingsByEntityId.bind(this)
-    this.getOnlineCountByEntityId = this.getOnlineCountByEntityId.bind(this)
-    this.updateMeSettingsByEntityId = this.updateMeSettingsByEntityId.bind(this)
-    this.updateMeSettingsByEntityIdAndChannelId = this.updateMeSettingsByEntityIdAndChannelId.bind(this)
     this.auth = auth
   }
 
-  addRoleByEntityIdAndUserId (entityId, userId, roleId) {
+  addRoleByEntityIdAndUserId = (entityId, userId, roleId) => {
     return this.auth.call(`${this.namespace}.addRoleByEntityIdAndUserId`, {
       userId, entityId, roleId
     }, { invalidateAll: true })
   }
 
-  removeRoleByEntityIdAndUserId (entityId, userId, roleId) {
+  removeRoleByEntityIdAndUserId = (entityId, userId, roleId) => {
     return this.auth.call(`${this.namespace}.removeRoleByEntityIdAndUserId`, {
       userId, entityId, roleId
     }, { invalidateAll: true })
   }
 
-  getByEntityIdAndUserId (entityId, userId) {
+  getByEntityIdAndUserId = (entityId, userId) => {
     return this.auth.stream(`${this.namespace}.getByEntityIdAndUserId`, { entityId, userId })
   }
 
-  getTopByEntityId (entityId) {
+  getTopByEntityId = (entityId) => {
     return this.auth.stream(`${this.namespace}.getTopByEntityId`, { entityId })
   }
 
-  getMeSettingsByEntityId (entityId) {
+  getMeSettingsByEntityId = (entityId) => {
     return this.auth.stream(`${this.namespace}.getMeSettingsByEntityId`, { entityId })
   }
 
-  getOnlineCountByEntityId (entityId) {
+  getOnlineCountByEntityId = (entityId) => {
     return this.auth.stream(`${this.namespace}.getOnlineCountByEntityId`, { entityId })
   }
 
-  updateMeSettingsByEntityId (entityId, { globalNotifications }) {
+  updateMeSettingsByEntityId = (entityId, { globalNotifications }) => {
     return this.auth.call(`${this.namespace}.updateMeSettingsByEntityId`, {
       entityId, globalNotifications
     }, { invalidateAll: true })
   }
 
-  updateMeSettingsByEntityIdAndChannelId ({ entityId, channelId, diff }) {
+  updateMeSettingsByEntityIdAndChannelId = ({ entityId, channelId, diff }) => {
     return this.auth.call(`${this.namespace}.updateMeSettingsByEntityIdAndChannelId`, {
       entityId, channelId, diff
     }, { invalidateAll: true })
   }
 
-  hasPermission ({ meEntityUser, me, permissions, channelId, roles }) {
+  hasPermission = ({ meEntityUser, me, permissions, channelId, roles }) => {
     if (roles == null) { roles = meEntityUser?.roles }
     const isGlobalModerator = me?.flags?.isModerator || (me?.email === 'austinhallock@gmail.com')
     return isGlobalModerator || _.every(permissions, permission => _.find(roles, function (role) {
