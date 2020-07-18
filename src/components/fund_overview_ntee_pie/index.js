@@ -9,8 +9,6 @@ if (typeof window !== 'undefined' && window !== null) {
   require('./index.styl')
 }
 
-const LEGEND_COUNT = 5
-
 export default function $fundOverviewNteePie ({ entity }) {
   const { lang } = useContext(context)
 
@@ -47,22 +45,6 @@ export default function $fundOverviewNteePie ({ entity }) {
   const colors = _.map(data, 'color')
 
   return z('.z-fund-overview-ntee-pie', [
-    z($chartPie, { data, colors }),
-    z('.legend',
-      _.map(_.take(nteeMajors, LEGEND_COUNT), ({ count, percent, key }) =>
-        z('.legend-item', [
-          z('.color', {
-            style: {
-              background: nteeColors[key].graph
-            }
-          }),
-          z('.info', [
-            z('.ntee', lang.get(`nteeMajor.${key}`))
-          ]),
-          // z '.dollars', FormatService.abbreviateDollar value
-          z('.percent', `${Math.round(percent)}%`)
-        ])
-      )
-    )
+    z($chartPie, { data, colors })
   ])
 };

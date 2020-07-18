@@ -22,7 +22,7 @@ else
 fi
 
 # Replace process.env.* with environment variable
-while read -d $'\0' -r file; do
+for file in $(find $paths_dist -maxdepth 1 -iname "bundle_*.js") ; do
   echo "replacing environment variables in $file"
   while read line; do
     if [[ $line =~ process\.env\.([A-Z0-9_]+) ]]; then
