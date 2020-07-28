@@ -20,19 +20,16 @@ class Language {
       // always need en for fallback
       return _.reduce(languages, (obj, lang) => {
         // be explicit about /lang/ and .json so webpack can strip from prod
-        obj[lang] = (() => {
-          try {
-            return require(`../lang/${lang}/${file}_${lang}.json`)
-          } catch { return null }
-        })()
+        try {
+          obj[lang] = require(`../lang/${lang}/${file}_${lang}.json`)
+        } catch (error) { console.log(error) }
         if (file === 'strings') {
           // add from frontend-shared
           // be explicit about /lang/ and .json so webpack can strip from prod
-          const sharedLang = (() => {
-            try {
-              return require(`frontend-shared/lang/${lang}/${file}_${lang}.json`)
-            } catch { return null }
-          })()
+          let sharedLang
+          try {
+            sharedLang = require(`frontend-shared/lang/${lang}/${file}_${lang}.json`)
+          } catch (error) { console.log(error) }
           obj[lang] = _.defaults(obj[lang], sharedLang)
         }
         return obj
@@ -41,7 +38,7 @@ class Language {
     })
   }
 
-  // used by gulp to concat lang to bundle
+  // used by webpack to concat lang to bundle
   getJsonString = (language) => {
     files = this.getLangFiles(language)
 

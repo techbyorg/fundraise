@@ -2,7 +2,7 @@
 export NODE_ENV=production
 
 # replacements necessary for serviceworker. bundle replacements are done before cdn in dist
-paths_dist=`node -r ./node_modules/@babel/register -e "process.stdout.write(require('./gulp_paths').dist)"`
+paths_dist=`node -r ./node_modules/@babel/register -e "process.stdout.write(require('./webpack_paths').dist)"`
 
 if [ ! -d $paths_dist ]; then
   echo "./dist directory not found. make sure to run 'npm run dist' beforehand"
@@ -38,5 +38,5 @@ for file in $(find $paths_dist -maxdepth 1 -iname "bundle_*.js") ; do
     fi
   done < <(grep -o "process\.env\.[A-Z0-9_]\+" $file | uniq)
 done < <(find $paths_dist -maxdepth 1 -iname '*.js' -print0)
-
+echo "done replacing"
 node -r ./babel.register.config.js ./bin/frontend_server.js

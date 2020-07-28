@@ -1,10 +1,10 @@
 import app from '../server'
 import config from '../src/config'
+import https from 'https'
+import fs from 'fs'
 
 let httpsServer
 if (config.DEV_USE_HTTPS) {
-  const https = require('https')
-  const fs = require('fs')
   const privateKey = fs.readFileSync('./bin/dev.key')
   const certificate = fs.readFileSync('./bin/dev.crt')
   const credentials = { key: privateKey, cert: certificate }
