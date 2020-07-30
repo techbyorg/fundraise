@@ -35,6 +35,9 @@ const _$filterContentNtee = lazy(() => getNtees().then(ntees => (props) => {
   const { filterValueStr, resetValue, valueStreams, filterValue } = props
   const { lang } = useContext(context)
 
+  const [error] = useErrorBoundary()
+  if (error) { console.log(error) }
+
   const {
     nteeValueStreams, groupTogglesStream, searchStream, groupsStream
   } = useMemo(() => {
@@ -120,9 +123,6 @@ const _$filterContentNtee = lazy(() => getNtees().then(ntees => (props) => {
     }, {})
   }
   , [filterValueStr, resetValue])
-
-  const [error] = useErrorBoundary()
-  if (error) { console.log(error) }
 
   const { groupToggles, search, groups } = useStream(() => ({
     groupToggles: groupTogglesStream,
