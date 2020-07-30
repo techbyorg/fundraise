@@ -4,7 +4,7 @@ import assertNoneMissing from 'assert-none-missing'
 let API_HOST, API_PATH, config
 
 // Don't let server environment variables leak into client code
-const serverEnv = process.env
+const serverEnv = process?.env
 
 const HOST = process.env.FUNDRAISE_HOST || '127.0.0.1'
 const HOSTNAME = HOST.split(':')[0]
@@ -25,7 +25,7 @@ if (isUrl) {
   API_PATH = ''
 }
 
-const CDN_URL = 'https://fdn.uno/d/images' // FIXME
+const CDN_URL = 'https://tdn.one/d/images'
 
 // All keys must have values at run-time (value may be null)
 const isomorphic = {
@@ -38,9 +38,9 @@ const isomorphic = {
   CDN_URL,
   // d folder has longer cache
   SCRIPTS_CDN_URL: 'https://tdn.one/d/scripts',
-  USER_CDN_URL: 'https://fdn.uno/images', // FIXME
-  FAVICON_URL: `${CDN_URL}/techby/fundraise/favicon.png?1`,
-  ICON_256_URL: `${CDN_URL}/techby/fundraise/web_icon_256.png`,
+  USER_CDN_URL: 'https://tdn.one/images',
+  FAVICON_URL: `${CDN_URL}/fundraise/favicon.png?1`,
+  ICON_256_URL: `${CDN_URL}/fundraise/web_icon_256.png`,
   HAS_MANIFEST: true,
   IOS_APP_URL: 'FIXME', // FIXME
   GOOGLE_PLAY_APP_URL:

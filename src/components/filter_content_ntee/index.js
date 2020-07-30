@@ -1,5 +1,5 @@
 import {
-  z, Boundary, Fragment, Suspense, classKebab, lazy, useContext,
+  z, Fragment, Suspense, useErrorBoundary, classKebab, lazy, useContext,
   useEffect, useMemo, useStream
 } from 'zorium'
 import * as _ from 'lodash-es'
@@ -121,6 +121,9 @@ const _$filterContentNtee = lazy(() => getNtees().then(ntees => (props) => {
   }
   , [filterValueStr, resetValue])
 
+  const [error] = useErrorBoundary()
+  if (error) { console.log(error) }
+
   const { groupToggles, search, groups } = useStream(() => ({
     groupToggles: groupTogglesStream,
     search: searchStream,
@@ -208,10 +211,8 @@ const _$filterContentNtee = lazy(() => getNtees().then(ntees => (props) => {
 
 export default function $filterContentNtee (props) {
   return z('.z-filter-content-ntee', [
-    z(Boundary, { fallback: z('.error', 'err') }, [
-      z(Suspense, { fallback: z($spinner) }, [
-        z(_$filterContentNtee, props)
-      ])
+    z(Suspense, { fallback: z($spinner) }, [
+      z(_$filterContentNtee, props)
     ])
   ])
 }

@@ -45,6 +45,6 @@ export default function $fundOverviewNteePie ({ entity }) {
   const colors = _.map(data, 'color')
 
   return z('.z-fund-overview-ntee-pie', [
-    z($chartPie, { data, colors })
+    z($chartPie, { data, colors, heightPx: 300 })
   ])
 };

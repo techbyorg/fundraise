@@ -23,7 +23,7 @@ export default function getSearchPage (entityType) {
 
     useMeta(() => ({
       openGraph: {
-        image: 'https://fdn.uno/d/images/techby/home/fundraise_thumbnail.png'
+        image: 'https://tdn.one/d/images/home/fundraise_thumbnail.png'
       }
     }), [])
 
