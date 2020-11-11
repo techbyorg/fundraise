@@ -5,6 +5,7 @@ import $tags from 'frontend-shared/components/tags'
 import FormatService from 'frontend-shared/services/format'
 
 import $nonprofitSearchResultsMobileRow from '../nonprofit_search_results_mobile_row'
+import RouterService from '../..services/router'
 import context from '../../context'
 import { nteeColors } from '../../colors'
 
@@ -23,7 +24,7 @@ export default function $nonprofitSearchResults ({ rows }) {
     z($table, {
       breakpoint,
       data: rows,
-      rowHrefFn: (i) => router.getNonprofit(rows[i]),
+      rowHrefFn: (i) => RouterService.getNonprofit(rows[i], null, router),
       mobileRowRenderer: $nonprofitSearchResultsMobileRow,
       columns: [
         { key: 'name', name: lang.get('general.name'), width: 240, isFlex: true },

@@ -6,6 +6,7 @@ import $tags from 'frontend-shared/components/tags'
 import FormatService from 'frontend-shared/services/format'
 
 import $fundSearchResultsMobileRow from '../fund_search_results_mobile_row'
+import RouterService from '../..services/router'
 import context from '../../context'
 import { nteeColors } from '../../colors'
 
@@ -26,7 +27,7 @@ export default function $fundSearchResults ({ rows }) {
     z($table, {
       breakpoint,
       data: rows,
-      rowHrefFn: (i) => router.getFund(rows[i]),
+      rowHrefFn: (i) => RouterService.getFund(rows[i], null, router),
       mobileRowRenderer: $fundSearchResultsMobileRow,
       columns: [
         { key: 'name', name: lang.get('general.name'), width: 240, isFlex: true },

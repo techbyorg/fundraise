@@ -5,6 +5,7 @@ import * as rx from 'rxjs/operators'
 import $table from 'frontend-shared/components/table'
 import FormatService from 'frontend-shared/services/format'
 
+import RouterService from '../..services/router'
 import context from '../../context'
 
 if (typeof window !== 'undefined' && window !== null) {
@@ -101,7 +102,7 @@ function $entityGrantNonprofitName ({ row }) {
 function $entityGrantFundName ({ row }) {
   const { router } = useContext(context)
   return router.linkIfHref(z('.name', {
-    href: router.getFund(row.irsFund)
+    href: RouterService.getFund(row.irsFund, null, router)
   }, row.irsFund?.name))
 }
 

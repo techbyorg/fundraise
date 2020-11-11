@@ -12,6 +12,7 @@ import $fundApplicationInfo from '../fund_application_info'
 import $fundOverview from '../fund_overview'
 import $entityGrants from '../entity_grants'
 import $nonprofitOverview from '../nonprofit_overview'
+import RouterService from '../..services/router'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -45,8 +46,8 @@ export default function $entity (props) {
       name: lang.get(`${entityType}.tabOverview`),
       slug: 'overview',
       route: entityType === 'irsNonprofit'
-        ? router.getNonprofit(entity, 'overview')
-        : router.getFund(entity, 'overview'),
+        ? RouterService.getNonprofit(entity, 'overview')
+        : RouterService.getFund(entity, 'overview'),
       $el: entityType === 'irsNonprofit'
         ? $nonprofitOverview
         : $fundOverview
@@ -55,32 +56,32 @@ export default function $entity (props) {
       name: lang.get('entity.tabGrants'),
       slug: 'grants',
       route: entityType === 'irsNonprofit'
-        ? router.getNonprofit(entity, 'grants')
-        : router.getFund(entity, 'grants'),
+        ? RouterService.getNonprofit(entity, 'grants', router)
+        : RouterService.getFund(entity, 'grants', router),
       $el: $entityGrants
     },
     {
       name: lang.get('entity.tabPersons'),
       slug: 'persons',
       route: entityType === 'irsNonprofit'
-        ? router.getNonprofit(entity, 'persons')
-        : router.getFund(entity, 'persons'),
+        ? RouterService.getNonprofit(entity, 'persons', router)
+        : RouterService.getFund(entity, 'persons', router),
       $el: $entityPersons
     },
     entityType === 'irsFund' && {
       name: lang.get('irsFund.tabApplicationInfo'),
       slug: 'application-info',
       route: entityType === 'irsNonprofit'
-        ? router.getNonprofit(entity, 'application-info')
-        : router.getFund(entity, 'application-info'),
+        ? RouterService.getNonprofit(entity, 'application-info', router)
+        : RouterService.getFund(entity, 'application-info', router),
       $el: $fundApplicationInfo
     },
     {
       name: lang.get('entity.tab990s'),
       slug: '990s',
       route: entityType === 'irsNonprofit'
-        ? router.getNonprofit(entity, '990s')
-        : router.getFund(entity, '990s'),
+        ? RouterService.getNonprofit(entity, '990s', router)
+        : RouterService.getFund(entity, '990s', router),
       $el: $entity990s
     }
   ])
