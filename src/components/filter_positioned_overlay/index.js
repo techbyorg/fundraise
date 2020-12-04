@@ -4,6 +4,7 @@ import * as rx from 'rxjs/operators'
 
 import $positionedOverlay from 'frontend-shared/components/positioned_overlay'
 import $button from 'frontend-shared/components/button'
+import { streams } from 'frontend-shared/services/obs'
 
 import $filterContent from '../filter_content'
 import context from '../../context'
@@ -20,8 +21,7 @@ export default function $filterPositionedOverlay (props) {
   const $$overlayRef = useRef() // have all child positionedOverlays be inside me
 
   const { valueStreams } = useMemo(function () {
-    const valueStreams = new Rx.ReplaySubject(1)
-    valueStreams.next(filter.valueStreams.pipe(rx.switchAll()))
+    const valueStreams = streams(filter.valueStreams.stream)
     return {
       valueStreams
     }
@@ -32,7 +32,7 @@ export default function $filterPositionedOverlay (props) {
   }, [])
 
   const { filterValue, hasValue } = useStream(() => ({
-    filterValue: filter.valueStreams.pipe(rx.switchAll()),
+    filterValue: filter.valueStreams.stream,
     hasValue: valueStreams.pipe(
       rx.switchAll(),
       rx.map(value => Boolean(value)),
@@ -76,7 +76,7 @@ export default function $filterPositionedOverlay (props) {
                 text: lang.get('general.save'),
                 isPrimary: true,
                 onclick: () => {
-                  filter.valueStreams.next(valueStreams.pipe(rx.switchAll()))
+                  filter.valueStreams.next(valueStreams.stream)
                   return onClose()
                 }
               })

@@ -4,6 +4,7 @@ import * as rx from 'rxjs/operators'
 
 import $sheet from 'frontend-shared/components/sheet'
 import $button from 'frontend-shared/components/button'
+import { streams } from 'frontend-shared/services/obs'
 
 import $filterContent from '../filter_content'
 import context from '../../context'
@@ -16,15 +17,14 @@ export default function $filterSheet ({ id, filter, onClose }) {
   const { lang } = useContext(context)
 
   const { valueStreams } = useMemo(function () {
-    const valueStreams = new Rx.ReplaySubject(1)
-    valueStreams.next(filter.valueStreams.pipe(rx.switchAll()))
+    const valueStreams = streams(filter.valueStreams.stream)
     return {
       valueStreams
     }
   }, [])
 
   const { filterValue, hasValue } = useStream(() => ({
-    filterValue: filter.valueStreams.pipe(rx.switchAll()),
+    filterValue: filter.valueStreams.stream,
     hasValue: valueStreams.pipe(
       rx.switchAll(),
       rx.map(value => Boolean(value)),
@@ -55,7 +55,7 @@ export default function $filterSheet ({ id, filter, onClose }) {
                 text: lang.get('general.save'),
                 isPrimary: true,
                 onclick () {
-                  filter.valueStreams.next(valueStreams.pipe(rx.switchAll()))
+                  filter.valueStreams.next(valueStreams.stream)
                   return onClose()
                 }
               }

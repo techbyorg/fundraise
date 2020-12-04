@@ -1,9 +1,9 @@
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $tapTabs from 'frontend-shared/components/tap_tabs'
+import { streams } from 'frontend-shared/services/obs'
 
 import $entity990s from '../entity_990s'
 import $entityAtAGlance from '../entity_at_a_glance'
@@ -22,8 +22,7 @@ export default function $entity (props) {
   const { lang, router } = useContext(context)
 
   const { selectedIndexStreams } = useMemo(() => {
-    const selectedIndexStreams = new Rx.ReplaySubject(1)
-    selectedIndexStreams.next(
+    const selectedIndexStreams = streams(
       tabStream.pipe(rx.map((tab) => {
         console.log('check', tabs, tab)
         let index = _.findIndex(tabs, { slug: tab })
@@ -38,7 +37,7 @@ export default function $entity (props) {
 
   let { entity, selectedIndex } = useStream(() => ({
     entity: entityStream,
-    selectedIndex: selectedIndexStreams.pipe(rx.switchAll())
+    selectedIndex: selectedIndexStreams.stream
   }))
 
   const tabs = _.filter([

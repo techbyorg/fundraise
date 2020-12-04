@@ -3,6 +3,7 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import FormatService from 'frontend-shared/services/format'
+import { streams } from 'frontend-shared/services/obs'
 
 import { nteeColors } from '../colors'
 
@@ -312,11 +313,9 @@ class SearchFiltersService {
 
         console.log('initial', initialValue, savedValueKey, initialFilters)
 
-        const valueStreams = new Rx.ReplaySubject(1)
-        valueStreams.next(Rx.of(
+        const valueStreams = streams(Rx.of(
           (initialValue != null) ? initialValue : filter.defaultValue
-        )
-        )
+        ))
 
         return _.defaults({ dataType, valueStreams }, filter)
       })
@@ -326,7 +325,7 @@ class SearchFiltersService {
       }
 
       return Rx.combineLatest(
-        _.map(filters, ({ valueStreams }) => valueStreams.pipe(rx.switchAll())),
+        _.map(filters, ({ valueStreams }) => valueStreams.stream),
         (...vals) => vals)
       // ^^ updates a lot since $filterContent sets valueStreams on a lot
       // on load. this prevents a bunch of extra lodash loops from getting called
