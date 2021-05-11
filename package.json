@@ -29,7 +29,7 @@
     "assert-none-missing": "github:claydotio/assert-none-missing#es",
     "babel-plugin-replace-imports": "^1.0.2",
     "frontend-shared": "file:frontend-shared",
-    "lodash": "^4.17.2",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.15",
     "module-alias": "^2.2.2",
     "rxjs": "^7.0.0-beta.0",
